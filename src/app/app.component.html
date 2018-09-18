@@ -1,0 +1,15 @@
+<!--The content below is only a placeholder and can be replaced.-->
+<div style="text-align:center">
+  <h1>
+    Welcome to {{ title }}!
+  </h1>
+</div>
+
+<div>
+  <input type="text" [(ngModel)]="feed_url">
+  <button (click)="getFeed()">Get</button>
+  <br>
+  {{ feed_url }}
+</div>
+
+<app-feed-items-list></app-feed-items-list>
