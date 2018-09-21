@@ -7,7 +7,8 @@
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "feed2json": "node ./node_modules/feed2json-server/bin/feed2json-server"
   },
   "private": true,
   "dependencies": {
@@ -25,6 +26,7 @@
     "core-js": "^2.5.4",
     "feed": "^2.0.1",
     "hammerjs": "^2.0.8",
+    "material-design-icons": "^3.0.1",
     "rxjs": "~6.2.0",
     "zone.js": "~0.8.26"
   },
@@ -37,6 +39,7 @@
     "@types/jasminewd2": "~2.0.3",
     "@types/node": "~8.9.4",
     "codelyzer": "~4.3.0",
+    "feed2json-server": "^1.0.1",
     "jasmine-core": "~2.99.1",
     "jasmine-spec-reporter": "~4.2.1",
     "karma": "~3.0.0",

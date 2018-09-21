@@ -1,15 +1,15 @@
-<!--The content below is only a placeholder and can be replaced.-->
-<div style="text-align:center">
-  <h1>
-    Welcome to {{ title }}!
-  </h1>
-</div>
+<mat-toolbar color="primary">
+  <span>
+    <mat-icon style="vertical-align: middle">rss_feed</mat-icon> Feedmixer
+  </span>
 
-<div>
-  <input type="text" [(ngModel)]="feed_url">
-  <button (click)="getFeed()">Get</button>
-  <br>
-  {{ feed_url }}
-</div>
+  <mat-form-field class="fill-remaining-space" style="padding: 0 30px">
+    <input matInput [(ngModel)]="feed_url">
+  </mat-form-field>
 
-<app-feed-items-list></app-feed-items-list>
+  <button mat-button (click)="getFeed()">Get RSS feed</button>
+</mat-toolbar>
+
+<div class="basic-container">
+  <app-feed-items-list></app-feed-items-list>
+</div>

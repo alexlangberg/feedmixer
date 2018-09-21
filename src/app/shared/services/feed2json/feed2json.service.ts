@@ -11,7 +11,7 @@ export class Feed2jsonService {
   ) {}
 
   getFeed(rss_url: string) {
-    this.http.get('https://feed2json.org/convert?url=' + rss_url).subscribe(
+    this.http.get('http://localhost:4201/convert?url=' + rss_url).subscribe(
         (response: Jsonfeed) => {
           this.feedItemsListService.setFeed(response);
         }

@@ -9,19 +9,14 @@ import { JsonfeedItem } from '../shared/models/jsonfeed-item.model';
   styleUrls: ['./feed-items-list.component.css']
 })
 export class FeedItemsListComponent implements OnInit {
-  public feed: Jsonfeed;
+  feedItems: JsonfeedItem[];
+  displayedColumns: string[] = ['date_published', 'title', 'url'];
 
   constructor(private feedItemsListService: FeedItemsListService) {}
 
   ngOnInit() {
-    this.feed = new Jsonfeed(
-      '1',
-      'Testpost',
-      [new JsonfeedItem('id1')]
-    );
-
     this.feedItemsListService.feedChanged.subscribe((newFeed: Jsonfeed) => {
-      this.feed = newFeed;
+      this.feedItems = newFeed.items;
     });
   }
 }
