@@ -9,10 +9,6 @@ export class FeedItemsListService {
 
   constructor() {}
 
-  getFeed(): Jsonfeed {
-    return this.feed;
-  }
-
   setFeed(feed: Jsonfeed) {
     this.feed = feed;
     this.feedChanged.next(this.feed);

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FeedItemsListService } from './feed-items-list.service';
 import { Jsonfeed } from '../shared/models/jsonfeed.model';
 import { JsonfeedItem } from '../shared/models/jsonfeed-item.model';
@@ -9,8 +9,9 @@ import { JsonfeedItem } from '../shared/models/jsonfeed-item.model';
   styleUrls: ['./feed-items-list.component.css']
 })
 export class FeedItemsListComponent implements OnInit {
+  @Input() isSidenavAlwaysOpen: boolean;
   feedItems: JsonfeedItem[];
-  displayedColumns: string[] = ['date_published', 'title', 'url'];
+  displayedColumns: string[] = ['title', 'date_published'];
 
   constructor(private feedItemsListService: FeedItemsListService) {}
 

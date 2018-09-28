@@ -8,25 +8,35 @@ import { HttpClientModule } from '@angular/common/http';
 import { Feed2jsonService } from './shared/services/feed2json/feed2json.service';
 import { FeedItemsListService } from './feed-items-list/feed-items-list.service';
 import { FormsModule } from '@angular/forms';
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { MainNavComponent } from './main-nav/main-nav.component';
 
 import {
+  MatAutocompleteModule,
+  MatBadgeModule,
   MatButtonModule,
   MatCardModule,
+  MatExpansionModule,
   MatIconModule,
-  MatInputModule,
-  MatPaginatorModule,
-  MatTableModule,
+  MatInputModule, MatListModule,
+  MatPaginatorModule, MatRadioModule, MatSelectModule,
+  MatSidenavModule, MatSlideToggleModule,
+  MatTableModule, MatTabsModule,
   MatToolbarModule
 } from '@angular/material';
+import { ToolbarComponent } from './toolbar/toolbar.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    FeedItemsListComponent
+    FeedItemsListComponent,
+    MainNavComponent,
+    ToolbarComponent
   ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
+    FlexLayoutModule,
     MatIconModule,
     MatTableModule,
     MatPaginatorModule,
@@ -34,6 +44,15 @@ import {
     MatButtonModule,
     MatCardModule,
     MatToolbarModule,
+    MatSidenavModule,
+    MatExpansionModule,
+    MatListModule,
+    MatTabsModule,
+    MatRadioModule,
+    MatSlideToggleModule,
+    MatSelectModule,
+    MatBadgeModule,
+    MatAutocompleteModule,
     HttpClientModule,
     FormsModule
   ],
