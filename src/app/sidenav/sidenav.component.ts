@@ -5,7 +5,7 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
   templateUrl: './sidenav.component.html',
   styleUrls: ['./sidenav.component.css']
 })
-export class Sidenav implements OnInit {
+export class SidenavComponent implements OnInit {
   @Output() searchChanged = new EventEmitter<string>();
   searchValue = '';
 

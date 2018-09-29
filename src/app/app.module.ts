@@ -8,7 +8,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { FeedItemsListService } from './feed-items-list/feed-items-list.service';
 import { FormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { Sidenav } from './sidenav/sidenav';
+import { SidenavComponent } from './sidenav/sidenav.component';
 
 import {
   MatAutocompleteModule,
@@ -29,7 +29,7 @@ import { ToolbarComponent } from './toolbar/toolbar.component';
   declarations: [
     AppComponent,
     FeedItemsListComponent,
-    Sidenav,
+    SidenavComponent,
     ToolbarComponent
   ],
   imports: [
