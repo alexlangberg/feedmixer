@@ -7,11 +7,15 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 })
 export class SidenavComponent implements OnInit {
   @Output() searchChanged = new EventEmitter<string>();
-  searchValue = '';
+  value = '';
 
   constructor() { }
 
   ngOnInit() {
   }
 
+  doSearch(searchValue: string) {
+    this.value = searchValue;
+    this.searchChanged.emit(searchValue);
+  }
 }
