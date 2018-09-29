@@ -9,7 +9,7 @@ mat-panel-title {
   align-items: center;
 }
 
-mat-panel-title > mat-icon {
+mat-expansion-panel mat-icon {
   margin-right: 16px;
 }
 

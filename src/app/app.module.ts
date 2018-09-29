@@ -5,7 +5,6 @@ import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FeedItemsListComponent } from './feed-items-list/feed-items-list.component';
 import { HttpClientModule } from '@angular/common/http';
-import { Feed2jsonService } from './shared/services/feed2json/feed2json.service';
 import { FeedItemsListService } from './feed-items-list/feed-items-list.service';
 import { FormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -57,7 +56,6 @@ import { ToolbarComponent } from './toolbar/toolbar.component';
     FormsModule
   ],
   providers: [
-    Feed2jsonService,
     FeedItemsListService
   ],
   bootstrap: [AppComponent]

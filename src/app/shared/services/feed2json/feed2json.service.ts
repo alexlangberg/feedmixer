@@ -3,7 +3,9 @@ import { HttpClient } from '@angular/common/http';
 import { Jsonfeed } from '../../models/jsonfeed.model';
 import { FeedItemsListService } from '../../../feed-items-list/feed-items-list.service';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class Feed2jsonService {
   constructor(
     private http: HttpClient,
