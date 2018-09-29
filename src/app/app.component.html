@@ -12,7 +12,7 @@
                  fixedInViewport="true"
                  [fixedTopGap]="layout.toolbarHeight"
                  class="mat-elevation-z16">
-      <app-main-nav (searchChanged)="feed.doFilter($event)"></app-main-nav>
+      <app-sidenav (searchChanged)="feed.doFilter($event)"></app-sidenav>
     </mat-sidenav>
     <mat-sidenav-content>
       <app-feed-items-list #feed
