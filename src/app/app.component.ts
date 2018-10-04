@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { Feed2jsonService } from './shared/services/feed2json/feed2json.service';
 import { LayoutService } from './shared/services/layout/layout.service';
+import { HttpClient } from '@angular/common/http';
+import { SettingsFile } from './shared/models/settings-file.model';
+import { FeedService } from './feed/feed.service';
 
 @Component({
   selector: 'app-root',
@@ -8,19 +10,19 @@ import { LayoutService } from './shared/services/layout/layout.service';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  feedUrl = 'http://feeds.bbci.co.uk/news/rss.xml';
-  title = 'feedmixer';
+  settings: SettingsFile;
 
   constructor(
-    private feed2json: Feed2jsonService,
-    public layout: LayoutService
+    private http: HttpClient,
+    public layout: LayoutService,
+    private feedService: FeedService
   ) {}
 
-  getFeed() {
-    this.feed2json.getFeed(this.feedUrl);
-  }
-
   ngOnInit() {
-    this.getFeed();
+    this.http.get('./../../../settings.json')
+      .subscribe((result: SettingsFile) => {
+        this.settings = result;
+        this.feedService.setup(this.settings);
+      });
   }
 }

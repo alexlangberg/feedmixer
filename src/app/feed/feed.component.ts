@@ -18,8 +18,8 @@ export class FeedComponent implements OnInit, AfterViewInit {
   constructor(private feedItemsListService: FeedService) {}
 
   ngOnInit() {
-    this.feedItemsListService.feedChanged.subscribe((newFeed: Jsonfeed) => {
-      this.dataSource.data = newFeed.items;
+    this.feedItemsListService.feedChanged.subscribe((newFeed: JsonfeedItem[]) => {
+      this.dataSource.data = newFeed;
     });
   }
 

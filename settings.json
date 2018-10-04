@@ -1,0 +1,24 @@
+{
+  "feeds": [
+    {
+      "name": "BBC",
+      "url": "http://feeds.bbci.co.uk/news/world/rss.xml",
+      "language": "en"
+    },
+    {
+      "name": "CNN",
+      "url": "http://rss.cnn.com/rss/edition_world.rss",
+      "language": "en"
+    },
+    {
+      "name": "Al-Jazeera",
+      "url": "https://www.aljazeera.com/xml/rss/all.xml",
+      "language": "en"
+    },
+    {
+      "name": "Danmarks Radio",
+      "url": "https://www.dr.dk/nyheder/service/feeds/allenyheder",
+      "language": "da"
+    }
+  ]
+}
