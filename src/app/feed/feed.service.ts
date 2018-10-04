@@ -3,7 +3,7 @@ import { Jsonfeed } from '../shared/models/jsonfeed.model';
 import { Subject } from 'rxjs';
 
 @Injectable()
-export class FeedItemsListService {
+export class FeedService {
   feedChanged = new Subject<Jsonfeed>();
   private feed: Jsonfeed;
 

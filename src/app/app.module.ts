@@ -3,9 +3,9 @@ import { NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { FeedItemsListComponent } from './feed-items-list/feed-items-list.component';
+import { FeedComponent } from './feed/feed.component';
 import { HttpClientModule } from '@angular/common/http';
-import { FeedItemsListService } from './feed-items-list/feed-items-list.service';
+import { FeedService } from './feed/feed.service';
 import { FormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { SidenavComponent } from './sidenav/sidenav.component';
@@ -28,7 +28,7 @@ import { ToolbarComponent } from './toolbar/toolbar.component';
 @NgModule({
   declarations: [
     AppComponent,
-    FeedItemsListComponent,
+    FeedComponent,
     SidenavComponent,
     ToolbarComponent
   ],
@@ -56,7 +56,7 @@ import { ToolbarComponent } from './toolbar/toolbar.component';
     FormsModule
   ],
   providers: [
-    FeedItemsListService
+    FeedService
   ],
   bootstrap: [AppComponent]
 })

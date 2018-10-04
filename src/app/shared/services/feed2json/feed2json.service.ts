@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Jsonfeed } from '../../models/jsonfeed.model';
-import { FeedItemsListService } from '../../../feed-items-list/feed-items-list.service';
+import { FeedService } from '../../../feed/feed.service';
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +9,7 @@ import { FeedItemsListService } from '../../../feed-items-list/feed-items-list.s
 export class Feed2jsonService {
   constructor(
     private http: HttpClient,
-    private feedItemsListService: FeedItemsListService
+    private feedItemsListService: FeedService
   ) {}
 
   getFeed(rss_url: string) {

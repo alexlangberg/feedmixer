@@ -1,16 +1,16 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { FeedItemsListComponent } from './feed-items-list.component';
+import { FeedComponent } from './feed.component';
 import { Feed2jsonService } from '../shared/services/feed2json/feed2json.service';
 import { HttpClientModule } from '@angular/common/http';
 
-describe('FeedItemsListComponent', () => {
-  let component: FeedItemsListComponent;
-  let fixture: ComponentFixture<FeedItemsListComponent>;
+describe('FeedComponent', () => {
+  let component: FeedComponent;
+  let fixture: ComponentFixture<FeedComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ FeedItemsListComponent ],
+      declarations: [ FeedComponent ],
       imports: [HttpClientModule],
       providers: [ Feed2jsonService ]
     })
@@ -18,7 +18,7 @@ describe('FeedItemsListComponent', () => {
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(FeedItemsListComponent);
+    fixture = TestBed.createComponent(FeedComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
