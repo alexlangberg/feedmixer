@@ -39,13 +39,12 @@
              placeholder="Search feed"
              [(ngModel)]="value"
              (keyup)="doSearch(value)">
-      <button mat-button
+      <button mat-icon-button
               *ngIf="value"
               matSuffix
-              mat-icon-button
               aria-label="Clear"
               (click)="value = ''">
-        <mat-icon>close</mat-icon>
+        <mat-icon style="margin-right: 0">close</mat-icon>
       </button>
       <!--<mat-autocomplete #auto="matAutocomplete">-->
         <!--<mat-option [value]="Climate">Climate</mat-option>-->
