@@ -1,20 +1,52 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { Jsonfeed } from '../shared/models/jsonfeed.model';
-import { from, Observable, Subject } from 'rxjs';
+import { from, Observable, Subject, Subscription, timer } from 'rxjs';
 import { SettingsFile } from '../shared/models/settings-file.model';
 import { Feed2jsonService } from '../shared/services/feed2json/feed2json.service';
-import { map, mergeMap, tap } from 'rxjs/operators';
+import { map, mergeMap, scan, tap } from 'rxjs/operators';
 import { JsonfeedItem } from '../shared/models/jsonfeed-item.model';
 
 @Injectable({
   providedIn: 'root'
 })
-export class FeedService {
+export class FeedService implements OnDestroy {
   feedChanged = new Subject<JsonfeedItem[]>();
   private feeds: Jsonfeed[] = [];
   private settings: SettingsFile;
+  private autoRefresher: Subscription;
 
   constructor(private feed2json: Feed2jsonService) {}
+
+  setup(settings: SettingsFile) {
+    this.settings = settings;
+    this.updateAllFeeds();
+  }
+
+  ngOnDestroy() {
+    if (this.autoRefresher) {
+      this.autoRefresher.unsubscribe();
+    }
+  }
+
+  toggleAutoRefresher(state: boolean) {
+    if (!state) {
+      if (this.autoRefresher) {
+        this.autoRefresher.unsubscribe();
+      }
+    } else {
+      this.autoRefresher = timer(
+        0,
+        this.settings.autoRefreshIntervalMinutes * 60000
+      ).subscribe(() => {
+        this.updateAllFeeds();
+      });
+    }
+  }
+
+  private sortByDate(a: JsonfeedItem, b: JsonfeedItem) {
+    return new Date(b.date_published || 0).getTime()
+      - new Date(a.date_published || 0).getTime();
+  }
 
   getFeeds(): Observable<Jsonfeed> {
     return from(this.settings.feeds)
@@ -27,13 +59,20 @@ export class FeedService {
 
   saveNewFeeds(feedRequests$: Observable<Jsonfeed>): Observable<Jsonfeed> {
     return feedRequests$.pipe(tap((newFeed: Jsonfeed) => {
-        const currentFeed = this.feeds.find((feed) => {
-          return feed.feed_url === newFeed.feed_url;
+        const oldFeed = this.feeds.find((feed) => {
+          return feed.home_page_url === newFeed.home_page_url;
         });
 
-        if (currentFeed) {
-          // TODO: only add if not already exists
-          currentFeed.items.push(...newFeed.items);
+        if (oldFeed) {
+          newFeed.items.forEach(newItem => {
+            const oldItem = oldFeed.items.find(
+              item => item.guid === newItem.guid
+            );
+
+            if (! oldItem) {
+              oldFeed.items.push(newItem);
+            }
+          });
         } else {
           this.feeds.push(newFeed);
         }
@@ -47,13 +86,17 @@ export class FeedService {
         this.saveNewFeeds.bind(this)
       ).subscribe(() => {
         from(this.feeds).pipe(
-          map(feed => feed.items)
-        ).subscribe(result => this.feedChanged.next(result));
+          map(feed => feed.items),
+          scan((acc: JsonfeedItem[], curr: JsonfeedItem[]) => {
+              acc.push(...curr);
+              return acc;
+            },
+            []
+          ),
+          map(items => items.sort(this.sortByDate))
+        ).subscribe(result => {
+          this.feedChanged.next(result);
+        });
     });
-  }
-
-  setup(settings: SettingsFile): void {
-    this.settings = settings;
-    this.updateAllFeeds();
   }
 }

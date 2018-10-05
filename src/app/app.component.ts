@@ -21,7 +21,10 @@ export class AppComponent implements OnInit {
   ngOnInit() {
     this.http.get('./../../../settings.json')
       .subscribe((result: SettingsFile) => {
+        result.feeds = result.feeds.map(feed => ({...feed, active: true}));
+
         this.settings = result;
+
         this.feedService.setup(this.settings);
       });
   }

@@ -4,6 +4,6 @@ app-toolbar {
   z-index: 2;
 }
 
-app-feed-items-list {
+app-feed {
   display: block;
 }

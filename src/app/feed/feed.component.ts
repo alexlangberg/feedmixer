@@ -1,24 +1,25 @@
-import { AfterViewInit, Component, EventEmitter, Input, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, Input, OnInit, ViewChild } from '@angular/core';
 import { FeedService } from './feed.service';
-import { Jsonfeed } from '../shared/models/jsonfeed.model';
 import { JsonfeedItem } from '../shared/models/jsonfeed-item.model';
 import { MatPaginator, MatTableDataSource } from '@angular/material';
 
 @Component({
-  selector: 'app-feed-items-list',
+  selector: 'app-feed',
   templateUrl: './feed.component.html',
   styleUrls: ['./feed.component.css']
 })
 export class FeedComponent implements OnInit, AfterViewInit {
   @Input() isSidenavAlwaysOpen: boolean;
+  @Input() refresh: void;
+  @Input() autoRefresh = false;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   dataSource: MatTableDataSource<JsonfeedItem> = new MatTableDataSource<JsonfeedItem>();
   displayedColumns: string[] = ['title', 'date_published'];
 
-  constructor(private feedItemsListService: FeedService) {}
+  constructor(private feedService: FeedService) {}
 
   ngOnInit() {
-    this.feedItemsListService.feedChanged.subscribe((newFeed: JsonfeedItem[]) => {
+    this.feedService.feedChanged.subscribe((newFeed: JsonfeedItem[]) => {
       this.dataSource.data = newFeed;
     });
   }
@@ -29,5 +30,13 @@ export class FeedComponent implements OnInit, AfterViewInit {
 
   doFilter(filterValue: any) {
     this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
+
+  doRefresh() {
+    this.feedService.updateAllFeeds();
+  }
+
+  toggleAutoRefresher(state: boolean) {
+    this.feedService.toggleAutoRefresher(state);
   }
 }

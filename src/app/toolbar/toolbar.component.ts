@@ -8,6 +8,9 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 export class ToolbarComponent implements OnInit {
   @Input() isSidenavCloseDisabled: boolean;
   @Output() sidenavToggle = new EventEmitter<void>();
+  @Output() refresh = new EventEmitter<void>();
+  @Output() autoRefresh = new EventEmitter<boolean>();
+  public isAutoRefresh = false;
 
   constructor() { }
 
@@ -16,5 +19,15 @@ export class ToolbarComponent implements OnInit {
 
   onToggleSidenav() {
     this.sidenavToggle.emit();
+  }
+
+  onRefresh() {
+    this.refresh.emit();
+  }
+
+  onAutoRefreshToggle() {
+    this.isAutoRefresh = !this.isAutoRefresh;
+
+    this.autoRefresh.emit(this.isAutoRefresh);
   }
 }
