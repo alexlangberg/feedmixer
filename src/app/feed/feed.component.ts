@@ -28,7 +28,7 @@ export class FeedComponent implements OnInit, AfterViewInit {
     this.dataSource.paginator = this.paginator;
   }
 
-  doFilter(filterValue: any) {
+  doFilter(filterValue: string) {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 

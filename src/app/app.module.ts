@@ -24,13 +24,19 @@ import {
   MatToolbarModule
 } from '@angular/material';
 import { ToolbarComponent } from './toolbar/toolbar.component';
+import { SearchComponent } from './search/search.component';
+import { FeedsSelectorComponent } from './feeds-selector/feeds-selector.component';
+import { TopTermsComponent } from './top-terms/top-terms.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     FeedComponent,
     SidenavComponent,
-    ToolbarComponent
+    ToolbarComponent,
+    SearchComponent,
+    FeedsSelectorComponent,
+    TopTermsComponent
   ],
   imports: [
     BrowserModule,

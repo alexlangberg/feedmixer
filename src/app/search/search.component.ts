@@ -1,12 +1,13 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 
 @Component({
-  selector: 'app-sidenav',
-  templateUrl: './sidenav.component.html',
-  styleUrls: ['./sidenav.component.css']
+  selector: 'app-search',
+  templateUrl: './search.component.html',
+  styleUrls: ['./search.component.css']
 })
-export class SidenavComponent implements OnInit {
+export class SearchComponent implements OnInit {
   @Output() searchChanged = new EventEmitter<string>();
+  value = '';
 
   constructor() { }
 
@@ -14,6 +15,7 @@ export class SidenavComponent implements OnInit {
   }
 
   doSearch(searchValue: string) {
+    this.value = searchValue;
     this.searchChanged.emit(searchValue);
   }
 }

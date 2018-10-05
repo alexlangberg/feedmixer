@@ -1,0 +1,20 @@
+<mat-form-field>
+  <input matInput
+         placeholder="Search feed"
+         [(ngModel)]="value"
+         (keyup)="doSearch(value)">
+  <button mat-icon-button
+          *ngIf="value"
+          matSuffix
+          aria-label="Clear"
+          (click)="doSearch('')">
+    <mat-icon style="margin-right: 0">close</mat-icon>
+  </button>
+  <!--<mat-autocomplete #auto="matAutocomplete">-->
+  <!--<mat-option [value]="Climate">Climate</mat-option>-->
+  <!--<mat-option [value]="Deal">Deal</mat-option>-->
+  <!--<mat-option [value]="Paris">Paris</mat-option>-->
+  <!--<mat-option [value]="Pollution">Pollution</mat-option>-->
+  <!--<mat-option [value]="World">World</mat-option>-->
+  <!--</mat-autocomplete>-->
+</mat-form-field>
