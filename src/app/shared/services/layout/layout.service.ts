@@ -1,11 +1,13 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { MediaChange, ObservableMedia } from '@angular/flex-layout';
+import { MatSidenav } from '@angular/material';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LayoutService implements OnDestroy {
+  sidenav: MatSidenav;
   screenSize: string;
   isSidenavOpen: boolean;
   isSidenavAlwaysOpen: boolean;
@@ -39,5 +41,9 @@ export class LayoutService implements OnDestroy {
     if (this.mediaWatcher) {
       this.mediaWatcher.unsubscribe();
     }
+  }
+
+  doToggleSidenav() {
+    this.sidenav.toggle();
   }
 }

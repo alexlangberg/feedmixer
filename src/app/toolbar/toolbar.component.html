@@ -1,7 +1,7 @@
 <mat-toolbar color="primary">
   <button mat-icon-button
           (click)="onToggleSidenav()"
-          [fxShow]="!isSidenavCloseDisabled">
+          [fxShow]="! layoutService.isSidenavAlwaysOpen">
     <mat-icon>menu</mat-icon>
   </button>
 
@@ -15,12 +15,4 @@
       <mat-icon>refresh</mat-icon>
     </button>
   </div>
-
-  <!--<mat-form-field class="fill-remaining-space"-->
-  <!--style="padding: 0 30px">-->
-  <!--<input matInput-->
-  <!--[(ngModel)]="feedUrl">-->
-  <!--</mat-form-field>-->
-
-  <!--<button mat-button (click)="getFeed()">Get RSS feed</button>-->
 </mat-toolbar>

@@ -1,15 +1,15 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { Jsonfeed } from '../shared/models/jsonfeed.model';
+import { Jsonfeed } from '../../models/jsonfeed.model';
 import { from, Observable, Subject, Subscription, timer } from 'rxjs';
-import { SettingsFile } from '../shared/models/settings-file.model';
-import { Feed2jsonService } from '../shared/services/feed2json/feed2json.service';
+import { SettingsFile } from '../../models/settings-file.model';
+import { Feed2jsonService } from '../feed2json/feed2json.service';
 import { map, mergeMap, scan, tap } from 'rxjs/operators';
-import { JsonfeedItem } from '../shared/models/jsonfeed-item.model';
+import { JsonfeedItem } from '../../models/jsonfeed-item.model';
 
 @Injectable({
   providedIn: 'root'
 })
-export class FeedService implements OnDestroy {
+export class FeedsService implements OnDestroy {
   feedChanged = new Subject<JsonfeedItem[]>();
   private feeds: Jsonfeed[] = [];
   private settings: SettingsFile;
@@ -19,7 +19,7 @@ export class FeedService implements OnDestroy {
 
   setup(settings: SettingsFile) {
     this.settings = settings;
-    this.updateAllFeeds();
+    this.refreshFeeds();
   }
 
   ngOnDestroy() {
@@ -38,7 +38,7 @@ export class FeedService implements OnDestroy {
         0,
         this.settings.autoRefreshIntervalMinutes * 60000
       ).subscribe(() => {
-        this.updateAllFeeds();
+        this.refreshFeeds();
       });
     }
   }
@@ -80,7 +80,7 @@ export class FeedService implements OnDestroy {
     ));
   }
 
-  updateAllFeeds() {
+  refreshFeeds() {
     this.getFeeds()
       .pipe(
         this.saveNewFeeds.bind(this)

@@ -7,6 +7,9 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 })
 export class SidenavComponent implements OnInit {
   @Output() searchChanged = new EventEmitter<string>();
+  @Output() refreshFeed = new EventEmitter<void>();
+  @Output() autoRefreshFeed = new EventEmitter<boolean>();
+  searchExpanded: boolean;
 
   constructor() { }
 
@@ -15,5 +18,9 @@ export class SidenavComponent implements OnInit {
 
   doSearch(searchValue: string) {
     this.searchChanged.emit(searchValue);
+
+    if (! this.searchExpanded) {
+      this.searchExpanded = true;
+    }
   }
 }

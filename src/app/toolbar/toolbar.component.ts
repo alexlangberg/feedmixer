@@ -1,4 +1,6 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { FeedsService } from '../shared/services/feeds/feeds.service';
+import { LayoutService } from '../shared/services/layout/layout.service';
 
 @Component({
   selector: 'app-toolbar',
@@ -7,27 +9,24 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 })
 export class ToolbarComponent implements OnInit {
   @Input() isSidenavCloseDisabled: boolean;
-  @Output() sidenavToggle = new EventEmitter<void>();
-  @Output() refresh = new EventEmitter<void>();
-  @Output() autoRefresh = new EventEmitter<boolean>();
-  public isAutoRefresh = false;
 
-  constructor() { }
+  constructor(
+    private feedsSelectorService: FeedsService,
+    public layoutService: LayoutService
+  ) {}
 
   ngOnInit() {
   }
 
   onToggleSidenav() {
-    this.sidenavToggle.emit();
+    this.layoutService.doToggleSidenav();
   }
 
   onRefresh() {
-    this.refresh.emit();
+    this.feedsSelectorService.refreshFeeds();
   }
 
-  onAutoRefreshToggle() {
-    this.isAutoRefresh = !this.isAutoRefresh;
-
-    this.autoRefresh.emit(this.isAutoRefresh);
+  onAutoRefreshToggle($event: boolean) {
+    this.feedsSelectorService.toggleAutoRefresher($event);
   }
 }
