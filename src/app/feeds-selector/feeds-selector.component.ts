@@ -1,5 +1,6 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FeedsService } from '../shared/services/feeds/feeds.service';
+import { SettingsFeed } from '../shared/models/settings-feed.model';
 
 @Component({
   selector: 'app-feeds-selector',
@@ -7,19 +8,13 @@ import { FeedsService } from '../shared/services/feeds/feeds.service';
   styleUrls: ['./feeds-selector.component.css']
 })
 export class FeedsSelectorComponent implements OnInit {
-  @Input() refresh: void;
-  @Input() autoRefresh = false;
+  feeds: SettingsFeed[];
 
   constructor(private feedService: FeedsService) { }
 
   ngOnInit() {
-  }
-
-  doRefresh() {
-    this.feedService.refreshFeeds();
-  }
-
-  toggleAutoRefresher(state: boolean) {
-    this.feedService.toggleAutoRefresher(state);
+    this.feedService.feedsSettingsChanged.subscribe(
+      newFeeds => this.feeds = newFeeds
+    );
   }
 }

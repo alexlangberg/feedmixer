@@ -25,7 +25,11 @@ export class AppComponent implements OnInit {
     this.layout.sidenav = this.sidenav;
     this.http.get('./../../../settings.json')
       .subscribe((result: SettingsFile) => {
-        result.feeds = result.feeds.map(feed => ({...feed, active: true}));
+        result.feeds = result.feeds
+          .map(feed => ({...feed, active: true}))
+          .sort((a, b) => {
+            return a.name.localeCompare(b.name, undefined, {sensitivity: 'base'});
+          });
 
         this.settings = result;
 

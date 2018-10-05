@@ -5,11 +5,13 @@ import { SettingsFile } from '../../models/settings-file.model';
 import { Feed2jsonService } from '../feed2json/feed2json.service';
 import { map, mergeMap, scan, tap } from 'rxjs/operators';
 import { JsonfeedItem } from '../../models/jsonfeed-item.model';
+import { SettingsFeed } from '../../models/settings-feed.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class FeedsService implements OnDestroy {
+  feedsSettingsChanged = new Subject<SettingsFeed[]>();
   feedChanged = new Subject<JsonfeedItem[]>();
   private feeds: Jsonfeed[] = [];
   private settings: SettingsFile;
@@ -19,12 +21,25 @@ export class FeedsService implements OnDestroy {
 
   setup(settings: SettingsFile) {
     this.settings = settings;
+    this.feedsSettingsChanged.next(settings.feeds);
     this.refreshFeeds();
   }
 
   ngOnDestroy() {
+    if (this.feedsSettingsChanged) {
+      this.feedsSettingsChanged.unsubscribe();
+    }
+
     if (this.autoRefresher) {
       this.autoRefresher.unsubscribe();
+    }
+  }
+
+  toggleFeed(settings: SettingsFeed, state: boolean) {
+    const oldFeed = this.settings.feeds.find(item => item.url === settings.url);
+
+    if (oldFeed) {
+      oldFeed.active = state;
     }
   }
 
@@ -48,7 +63,7 @@ export class FeedsService implements OnDestroy {
       - new Date(a.date_published || 0).getTime();
   }
 
-  getFeeds(): Observable<Jsonfeed> {
+  fetchFeeds(): Observable<Jsonfeed> {
     return from(this.settings.feeds)
       .pipe(
         mergeMap((feed) => {
@@ -81,7 +96,7 @@ export class FeedsService implements OnDestroy {
   }
 
   refreshFeeds() {
-    this.getFeeds()
+    this.fetchFeeds()
       .pipe(
         this.saveNewFeeds.bind(this)
       ).subscribe(() => {
