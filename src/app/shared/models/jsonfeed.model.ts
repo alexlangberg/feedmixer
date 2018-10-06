@@ -5,6 +5,7 @@ import { SettingsFeed } from './settings-feed.model';
 
 export class Jsonfeed {
   constructor(
+    public _feedmixer: { url: string },
     public version: string,
     public title: string,
     public items: JsonfeedItem[],
@@ -17,7 +18,6 @@ export class Jsonfeed {
     public favicon?: string,
     public author?: JsonfeedAuthor,
     public expired?: boolean,
-    public hubs?: JsonfeedHub[],
-    public _feedmixer?: SettingsFeed
+    public hubs?: JsonfeedHub[]
   ) {}
 }

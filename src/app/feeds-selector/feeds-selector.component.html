@@ -5,12 +5,9 @@
                         (ngModelChange)="optionChanged($event)">
       <mat-list-option value="all">All</mat-list-option>
       <mat-divider></mat-divider>
-      <mat-list-option *ngFor="let feed of feeds" [value]="feed">
+      <mat-list-option *ngFor="let feed of feeds" [value]="feed.url">
         {{feed.name}}
       </mat-list-option>
-      <!--<mat-list-option>BBC</mat-list-option>-->
-      <!--<mat-list-option>CNN</mat-list-option>-->
-      <!--<mat-list-option>Al-Jazeera</mat-list-option>-->
     </mat-selection-list>
   <!--</mat-tab>-->
   <!--<mat-tab label="Single">-->

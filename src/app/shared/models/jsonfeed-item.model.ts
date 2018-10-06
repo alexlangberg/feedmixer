@@ -2,7 +2,8 @@ import { JsonfeedItemAttachment } from './jsonfeed-item-attachment.model';
 
 export class JsonfeedItem {
   constructor(
-    public guid: string,
+    public id: string,
+    public guid?: string,
     public url?: string,
     public external_url?: string,
     public title?: string,

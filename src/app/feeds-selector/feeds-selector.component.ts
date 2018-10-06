@@ -10,7 +10,7 @@ import { Subscription } from 'rxjs';
 })
 export class FeedsSelectorComponent implements OnInit, OnDestroy {
   feeds: SettingsFeed[];
-  selectedFeeds: SettingsFeed[];
+  selectedFeeds: string[];
   feedsSettingsSubscription: Subscription;
 
   constructor(private feedService: FeedsService) { }
@@ -25,7 +25,9 @@ export class FeedsSelectorComponent implements OnInit, OnDestroy {
     this.feedsSettingsSubscription.unsubscribe();
   }
 
-  optionChanged(feeds: SettingsFeed[]) {
-    this.feedService.setSelectedFeeds(feeds);
+  optionChanged(feeds: string[]) {
+    const safe = feeds.filter(v => v !== 'all');
+
+    this.feedService.setSelectedFeeds(safe);
   }
 }

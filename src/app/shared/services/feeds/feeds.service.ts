@@ -3,7 +3,7 @@ import { Jsonfeed } from '../../models/jsonfeed.model';
 import { from, Observable, Subject, Subscription, timer } from 'rxjs';
 import { SettingsFile } from '../../models/settings-file.model';
 import { Feed2jsonService } from '../feed2json/feed2json.service';
-import { map, mergeMap, scan, tap } from 'rxjs/operators';
+import { filter, map, mergeMap, scan, tap } from 'rxjs/operators';
 import { JsonfeedItem } from '../../models/jsonfeed-item.model';
 import { SettingsFeed } from '../../models/settings-feed.model';
 
@@ -14,7 +14,7 @@ export class FeedsService implements OnDestroy {
   feedsSettingsChanged = new Subject<SettingsFeed[]>();
   feedChanged = new Subject<JsonfeedItem[]>();
   private feeds: Jsonfeed[] = [];
-  private selectedFeeds: SettingsFeed[] = [];
+  private selectedFeeds: string[] = [];
   private settings: SettingsFile;
   private autoRefresher: Subscription;
 
@@ -22,6 +22,7 @@ export class FeedsService implements OnDestroy {
 
   setup(settings: SettingsFile) {
     this.settings = settings;
+    // this.selectedFeeds = settings.feeds.map(feed => feed.url);
     this.feedsSettingsChanged.next(settings.feeds);
     this.refreshFeeds();
   }
@@ -36,8 +37,9 @@ export class FeedsService implements OnDestroy {
     }
   }
 
-  setSelectedFeeds(feeds: SettingsFeed[]) {
+  setSelectedFeeds(feeds: string[]) {
     this.selectedFeeds = feeds;
+    console.log(feeds);
     this.refreshFeeds();
   }
 
@@ -65,7 +67,7 @@ export class FeedsService implements OnDestroy {
     return from(this.selectedFeeds)
       .pipe(
         mergeMap((feed) => {
-          return <Observable<Jsonfeed>>this.feed2json.getFeedFromUrl(feed.url);
+          return this.feed2json.getFeedFromUrl(feed);
         })
       );
   }
@@ -73,7 +75,7 @@ export class FeedsService implements OnDestroy {
   saveNewFeeds(feedRequests$: Observable<Jsonfeed>): Observable<Jsonfeed> {
     return feedRequests$.pipe(tap((newFeed: Jsonfeed) => {
         const oldFeed = this.feeds.find((feed) => {
-          return feed.home_page_url === newFeed.home_page_url;
+          return feed._feedmixer.url === newFeed._feedmixer.url;
         });
 
         if (oldFeed) {
@@ -87,7 +89,6 @@ export class FeedsService implements OnDestroy {
             }
           });
         } else {
-          console.log(newFeed);
           this.feeds.push(newFeed);
         }
       }
@@ -95,11 +96,17 @@ export class FeedsService implements OnDestroy {
   }
 
   refreshFeeds() {
+    if (this.selectedFeeds.length === 0) {
+      this.feedChanged.next([]);
+      return;
+    }
+
     this.fetchFeeds()
       .pipe(
         this.saveNewFeeds.bind(this)
       ).subscribe(() => {
         from(this.feeds).pipe(
+          filter(feed => this.selectedFeeds.includes(feed._feedmixer.url)),
           map(feed => feed.items),
           scan((acc: JsonfeedItem[], curr: JsonfeedItem[]) => {
               acc.push(...curr);
