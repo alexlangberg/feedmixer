@@ -14,7 +14,7 @@ export class FeedsService implements OnDestroy {
   feedsSettingsChanged = new Subject<SettingsFeed[]>();
   feedChanged = new Subject<JsonfeedItem[]>();
   private feeds: Jsonfeed[] = [];
-  private selectedFeeds: string[] = [];
+  private selectedFeeds: SettingsFeed[] = [];
   private settings: SettingsFile;
   private autoRefresher: Subscription;
 
@@ -22,7 +22,6 @@ export class FeedsService implements OnDestroy {
 
   setup(settings: SettingsFile) {
     this.settings = settings;
-    // this.selectedFeeds = settings.feeds.map(feed => feed.url);
     this.feedsSettingsChanged.next(settings.feeds);
     this.refreshFeeds();
   }
@@ -37,7 +36,7 @@ export class FeedsService implements OnDestroy {
     }
   }
 
-  setSelectedFeeds(feeds: string[]) {
+  setSelectedFeeds(feeds: SettingsFeed[]) {
     this.selectedFeeds = feeds;
     console.log(feeds);
     this.refreshFeeds();
@@ -67,7 +66,7 @@ export class FeedsService implements OnDestroy {
     return from(this.selectedFeeds)
       .pipe(
         mergeMap((feed) => {
-          return this.feed2json.getFeedFromUrl(feed);
+          return this.feed2json.getFeedFromUrl(feed.url);
         })
       );
   }
@@ -106,7 +105,7 @@ export class FeedsService implements OnDestroy {
         this.saveNewFeeds.bind(this)
       ).subscribe(() => {
         from(this.feeds).pipe(
-          filter(feed => this.selectedFeeds.includes(feed._feedmixer.url)),
+          // filter(feed => this.selectedFeeds.includes(feed._feedmixer.url)),
           map(feed => feed.items),
           scan((acc: JsonfeedItem[], curr: JsonfeedItem[]) => {
               acc.push(...curr);

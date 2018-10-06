@@ -5,7 +5,7 @@
                         (ngModelChange)="optionChanged($event)">
       <mat-list-option value="all">All</mat-list-option>
       <mat-divider></mat-divider>
-      <mat-list-option *ngFor="let feed of feeds" [value]="feed.url">
+      <mat-list-option *ngFor="let feed of feeds" [value]="feed">
         {{feed.name}}
       </mat-list-option>
     </mat-selection-list>

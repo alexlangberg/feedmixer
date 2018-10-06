@@ -9,15 +9,22 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./feeds-selector.component.css']
 })
 export class FeedsSelectorComponent implements OnInit, OnDestroy {
-  feeds: SettingsFeed[];
-  selectedFeeds: string[];
+  feeds: SettingsFeed[] = [];
+  selectedFeeds: SettingsFeed[] = [];
   feedsSettingsSubscription: Subscription;
 
   constructor(private feedService: FeedsService) { }
 
   ngOnInit() {
     this.feedsSettingsSubscription = this.feedService.feedsSettingsChanged.subscribe(
-      newFeeds => this.feeds = newFeeds
+      newFeeds => {
+        this.feeds = newFeeds;
+
+        if (this.selectedFeeds.length < 1) {
+          this.selectedFeeds = newFeeds;
+          this.optionChanged();
+        }
+      }
     );
   }
 
@@ -25,9 +32,7 @@ export class FeedsSelectorComponent implements OnInit, OnDestroy {
     this.feedsSettingsSubscription.unsubscribe();
   }
 
-  optionChanged(feeds: string[]) {
-    const safe = feeds.filter(v => v !== 'all');
-
-    this.feedService.setSelectedFeeds(safe);
+  optionChanged() {
+    this.feedService.setSelectedFeeds(this.selectedFeeds);
   }
 }
