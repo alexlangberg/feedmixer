@@ -14,6 +14,7 @@ export class FeedsService implements OnDestroy {
   feedsSettingsChanged = new Subject<SettingsFeed[]>();
   feedChanged = new Subject<JsonfeedItem[]>();
   private feeds: Jsonfeed[] = [];
+  private selectedFeeds: SettingsFeed[] = [];
   private settings: SettingsFile;
   private autoRefresher: Subscription;
 
@@ -35,12 +36,9 @@ export class FeedsService implements OnDestroy {
     }
   }
 
-  toggleFeed(settings: SettingsFeed, state: boolean) {
-    const oldFeed = this.settings.feeds.find(item => item.url === settings.url);
-
-    if (oldFeed) {
-      oldFeed.active = state;
-    }
+  setSelectedFeeds(feeds: SettingsFeed[]) {
+    this.selectedFeeds = feeds;
+    this.refreshFeeds();
   }
 
   toggleAutoRefresher(state: boolean) {
@@ -64,7 +62,7 @@ export class FeedsService implements OnDestroy {
   }
 
   fetchFeeds(): Observable<Jsonfeed> {
-    return from(this.settings.feeds)
+    return from(this.selectedFeeds)
       .pipe(
         mergeMap((feed) => {
           return <Observable<Jsonfeed>>this.feed2json.getFeedFromUrl(feed.url);
@@ -89,6 +87,7 @@ export class FeedsService implements OnDestroy {
             }
           });
         } else {
+          console.log(newFeed);
           this.feeds.push(newFeed);
         }
       }

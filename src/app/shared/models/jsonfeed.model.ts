@@ -1,6 +1,7 @@
 import { JsonfeedAuthor } from './jsonfeed-author.model';
 import { JsonfeedHub } from './jsonfeed-hub.model';
 import { JsonfeedItem } from './jsonfeed-item.model';
+import { SettingsFeed } from './settings-feed.model';
 
 export class Jsonfeed {
   constructor(
@@ -17,5 +18,6 @@ export class Jsonfeed {
     public author?: JsonfeedAuthor,
     public expired?: boolean,
     public hubs?: JsonfeedHub[],
+    public _feedmixer?: SettingsFeed
   ) {}
 }
