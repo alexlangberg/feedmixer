@@ -38,7 +38,7 @@ export class FeedsService implements OnDestroy {
 
   setSelectedFeeds(feeds: SettingsFeed[]) {
     this.selectedFeeds = feeds;
-    console.log(feeds);
+    // console.log(feeds);
     this.refreshFeeds();
   }
 
@@ -60,6 +60,10 @@ export class FeedsService implements OnDestroy {
   private sortByDate(a: JsonfeedItem, b: JsonfeedItem) {
     return new Date(b.date_published || 0).getTime()
       - new Date(a.date_published || 0).getTime();
+  }
+
+  private feedUrlIsSelected(url: string) {
+    return this.selectedFeeds.find(feed => feed.url === url) !== undefined;
   }
 
   fetchFeeds(): Observable<Jsonfeed> {
@@ -105,7 +109,7 @@ export class FeedsService implements OnDestroy {
         this.saveNewFeeds.bind(this)
       ).subscribe(() => {
         from(this.feeds).pipe(
-          // filter(feed => this.selectedFeeds.includes(feed._feedmixer.url)),
+          filter(feed => this.feedUrlIsSelected(feed._feedmixer.url)),
           map(feed => feed.items),
           scan((acc: JsonfeedItem[], curr: JsonfeedItem[]) => {
               acc.push(...curr);
