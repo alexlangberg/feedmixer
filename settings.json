@@ -1,5 +1,6 @@
 {
   "autoRefreshIntervalMinutes": 5,
+  "cacheFeedsSeconds": 60,
   "feeds": [
     {
       "name": "BBC",

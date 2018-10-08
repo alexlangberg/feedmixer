@@ -23,7 +23,7 @@ export class ToolbarComponent implements OnInit {
   }
 
   onRefresh() {
-    this.feedsSelectorService.refreshFeeds();
+    this.feedsSelectorService.refreshAllFeeds();
   }
 
   onAutoRefreshToggle($event: boolean) {

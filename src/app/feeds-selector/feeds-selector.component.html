@@ -1,22 +1,11 @@
-<!--<mat-tab-group>-->
-  <!--<mat-tab label="Mix">-->
-    <mat-selection-list #feedsSelector
-                        [(ngModel)]="selectedFeeds"
-                        (ngModelChange)="optionChanged($event)">
-      <mat-list-option value="all">All</mat-list-option>
-      <mat-divider></mat-divider>
-      <mat-list-option *ngFor="let feed of feeds" [value]="feed">
-        {{feed.name}}
-      </mat-list-option>
-    </mat-selection-list>
-  <!--</mat-tab>-->
-  <!--<mat-tab label="Single">-->
-    <!--<mat-form-field class="single-feed-select">-->
-      <!--<mat-select placeholder="Select a feed">-->
-        <!--<mat-option value="BBC">BBC</mat-option>-->
-        <!--<mat-option value="CNN">CNN</mat-option>-->
-        <!--<mat-option value="ALJ">Al-Jazeera</mat-option>-->
-      <!--</mat-select>-->
-    <!--</mat-form-field>-->
-  <!--</mat-tab>-->
-<!--</mat-tab-group>-->
+<mat-selection-list #feedsSelector
+                    [(ngModel)]="selectedFeedsByUrl"
+                    (selectionChange)="onOptionChanged($event)">
+  <mat-list-option #selectAll value="all">All</mat-list-option>
+
+  <mat-divider></mat-divider>
+
+  <mat-list-option *ngFor="let feed of settingsFeeds" [value]="feed.url">
+    {{feed.name}}
+  </mat-list-option>
+</mat-selection-list>

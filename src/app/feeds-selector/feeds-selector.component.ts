@@ -1,7 +1,8 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FeedsService } from '../shared/services/feeds/feeds.service';
 import { SettingsFeed } from '../shared/models/settings-feed.model';
 import { Subscription } from 'rxjs';
+import { MatListOption, MatSelectionList, MatSelectionListChange } from '@angular/material';
 
 @Component({
   selector: 'app-feeds-selector',
@@ -9,8 +10,10 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./feeds-selector.component.css']
 })
 export class FeedsSelectorComponent implements OnInit, OnDestroy {
-  feeds: SettingsFeed[] = [];
-  selectedFeeds: SettingsFeed[] = [];
+  @ViewChild('feedsSelector') private feedsSelector: MatSelectionList;
+  @ViewChild('selectAll') private selectAll: MatListOption;
+  settingsFeeds: SettingsFeed[] = [];
+  selectedFeedsByUrl: string[] = [];
   feedsSettingsSubscription: Subscription;
 
   constructor(private feedService: FeedsService) { }
@@ -18,12 +21,8 @@ export class FeedsSelectorComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.feedsSettingsSubscription = this.feedService.feedsSettingsChanged.subscribe(
       newFeeds => {
-        this.feeds = newFeeds;
-
-        if (this.selectedFeeds.length < 1) {
-          this.selectedFeeds = newFeeds;
-          this.optionChanged();
-        }
+        this.settingsFeeds = newFeeds;
+        this.markSelectedOptions();
       }
     );
   }
@@ -32,7 +31,29 @@ export class FeedsSelectorComponent implements OnInit, OnDestroy {
     this.feedsSettingsSubscription.unsubscribe();
   }
 
-  optionChanged() {
-    this.feedService.setSelectedFeeds(this.selectedFeeds);
+  markSelectedOptions() {
+    this.selectedFeedsByUrl = this.settingsFeeds
+      .filter(feed => feed.active)
+      .map(feed => feed.url);
+
+    if (this.settingsFeeds.length === this.selectedFeedsByUrl.length) {
+      this.selectedFeedsByUrl.push('all');
+    }
+  }
+
+  onOptionChanged($event: MatSelectionListChange) {
+    if ($event.option.value === 'all') {
+      if ($event.option.selected) {
+        this.feedService.setAllFeedsEnabled();
+      } else {
+        this.feedService.setAllFeedsDisabled();
+      }
+    } else {
+      if ($event.option.selected) {
+        this.feedService.setFeedEnabled($event.option.value);
+      } else {
+        this.feedService.setFeedDisabled($event.option.value);
+      }
+    }
   }
 }
