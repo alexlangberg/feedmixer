@@ -1,7 +1,8 @@
-import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { TokenizerService } from '../shared/services/tokenizer/tokenizer.service';
 import { Subscription } from 'rxjs';
 import { Token } from '../shared/models/token.model';
+import { MatSelect, MatSelectChange } from '@angular/material';
 
 @Component({
   selector: 'app-top-terms',
@@ -9,6 +10,7 @@ import { Token } from '../shared/models/token.model';
   styleUrls: ['./top-terms.component.css']
 })
 export class TopTermsComponent implements OnInit, OnDestroy {
+  @ViewChild('selector') selector: MatSelect;
   @Output() searchChanged = new EventEmitter<string>();
   private tokensChanged$: Subscription;
   tokens: Token[] = [];
@@ -25,6 +27,10 @@ export class TopTermsComponent implements OnInit, OnDestroy {
     if (this.tokensChanged$) {
       this.tokensChanged$.unsubscribe();
     }
+  }
+
+  onSelectionChange($event: MatSelectChange) {
+    this.doSearch($event.value);
   }
 
   doSearch(searchValue: string) {

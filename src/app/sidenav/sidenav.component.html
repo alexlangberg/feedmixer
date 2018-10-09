@@ -10,24 +10,13 @@
 
   <mat-divider></mat-divider>
 
-  <mat-expansion-panel [(expanded)]="searchExpanded" class="mat-elevation-z0">
+  <mat-expansion-panel class="mat-elevation-z0" expanded="true">
     <mat-expansion-panel-header>
       <mat-panel-title>
         <mat-icon>search</mat-icon>Search
       </mat-panel-title>
     </mat-expansion-panel-header>
-    <app-search #search (searchChanged)="doSearch($event)"></app-search>
-  </mat-expansion-panel>
-
-  <mat-divider></mat-divider>
-
-  <mat-expansion-panel class="mat-elevation-z0">
-    <mat-expansion-panel-header>
-      <mat-panel-title>
-        <mat-icon>format_list_numbered</mat-icon>Top 100 terms
-      </mat-panel-title>
-    </mat-expansion-panel-header>
-    <app-top-terms (searchChanged)="search.doSearch($event)"></app-top-terms>
+    <app-search></app-search>
   </mat-expansion-panel>
 
   <mat-divider></mat-divider>

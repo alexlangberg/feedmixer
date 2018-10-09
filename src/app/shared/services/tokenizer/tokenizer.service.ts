@@ -25,6 +25,40 @@ export class TokenizerService implements OnDestroy {
     });
   }
 
+  /**
+   * Remove special characters
+   * Courtesy of Seagull: http://stackoverflow.com/a/26482650
+   */
+  static removeSpecials(text: string) {
+    const whitelist = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', ' '];
+    const spacelist = ['-'];
+    const lower = text.toLowerCase();
+    const upper = text.toUpperCase();
+    let result = '';
+
+    for (let i = 0; i < lower.length; ++i) {
+      if (lower[i] !== upper[i] || whitelist.indexOf(lower[i]) > -1) {
+        result += (spacelist.indexOf(lower[i]) > -1 ? ' ' : text[i]);
+      }
+    }
+
+    return result;
+  }
+
+  static tokenize(text: string, language?: string) {
+    const sanitized = TokenizerService.removeSpecials(
+      text
+        .toLowerCase()
+        .replace(/<(.|\n)*?>/g, '')
+    );
+
+    const words = sanitized.split(' ');
+
+    const stopWords = stopword[language || 'en'];
+
+    return stopword.removeStopwords(words, stopWords);
+  }
+
   emitNewTokens() {
     const activeFeeds = this.feedService.getActiveFeeds();
     const totalMap = new Map;
@@ -49,7 +83,7 @@ export class TokenizerService implements OnDestroy {
 
     tokens.sort((a, b) => b.count - a.count);
 
-    this.tokensChanged$.next(tokens.slice(0, 100));
+    this.tokensChanged$.next(tokens.slice(0, 1000));
   }
 
   ngOnDestroy() {
@@ -71,8 +105,12 @@ export class TokenizerService implements OnDestroy {
       item => {
         // use texts from both title and summary
 
-        return this.tokenize(item.title || '', feed._feedmixer.language)
-          .concat(this.tokenize(item.summary || '', feed._feedmixer.language));
+        return TokenizerService
+          .tokenize(item.title || '', feed._feedmixer.language)
+          .concat(
+            TokenizerService
+              .tokenize(item.summary || '', feed._feedmixer.language)
+          );
       })
       .reduce((total, item) => {
         // concat into single array
@@ -93,39 +131,5 @@ export class TokenizerService implements OnDestroy {
       }, new Map);
 
     this.feedsTokenMaps.set(feed._feedmixer.url, tokensList);
-  }
-
-  tokenize(text: string, language?: string) {
-    const sanitized = this.removeSpecials(
-      text
-        .toLowerCase()
-        .replace(/<(.|\n)*?>/g, '')
-    );
-
-    const words = sanitized.split(' ');
-
-    const stopWords = stopword[language || 'en'];
-
-    return stopword.removeStopwords(words, stopWords);
-  }
-
-  /**
-   * Remove special characters
-   * Courtesy of Seagull: http://stackoverflow.com/a/26482650
-   */
-  removeSpecials(text: string) {
-    const whitelist = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', ' '];
-    const spacelist = ['-'];
-    const lower = text.toLowerCase();
-    const upper = text.toUpperCase();
-    let result = '';
-
-    for (let i = 0; i < lower.length; ++i) {
-      if (lower[i] !== upper[i] || whitelist.indexOf(lower[i]) > -1) {
-        result += (spacelist.indexOf(lower[i]) > -1 ? ' ' : text[i]);
-      }
-    }
-
-    return result;
   }
 }

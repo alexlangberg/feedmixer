@@ -1,5 +1,11 @@
-<mat-nav-list>
-  <a mat-list-item (click)="doSearch(token.word)" *ngFor="let token of tokens">
-    <mat-icon>search</mat-icon>{{ token.word }}
-  </a>
-</mat-nav-list>
+<!--<mat-nav-list>-->
+  <!--<a mat-list-item (click)="doSearch(token.word)" *ngFor="let token of tokens">-->
+    <!--<mat-icon>search</mat-icon>{{ token.word }}-->
+  <!--</a>-->
+<!--</mat-nav-list>-->
+
+<mat-form-field>
+  <mat-select placeholder="Top 100 terms" (selectionChange)="onSelectionChange($event)">
+    <mat-option *ngFor="let token of tokens" [value]="token.word">{{ token.word }}</mat-option>
+  </mat-select>
+</mat-form-field>
