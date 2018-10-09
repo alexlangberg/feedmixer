@@ -17,7 +17,7 @@ export class FeedComponent implements OnInit, AfterViewInit {
   constructor(private feedService: FeedsService) {}
 
   ngOnInit() {
-    this.feedService.feedChanged.subscribe((newFeed: JsonfeedItem[]) => {
+    this.feedService.feedMixChanged$.subscribe((newFeed: JsonfeedItem[]) => {
       this.dataSource.data = newFeed;
     });
   }

@@ -19,7 +19,7 @@ export class FeedsSelectorComponent implements OnInit, OnDestroy {
   constructor(private feedService: FeedsService) { }
 
   ngOnInit() {
-    this.feedsSettingsSubscription = this.feedService.feedsSettingsChanged.subscribe(
+    this.feedsSettingsSubscription = this.feedService.feedsSettingsChanged$.subscribe(
       newFeeds => {
         this.settingsFeeds = newFeeds;
         this.markSelectedOptions();

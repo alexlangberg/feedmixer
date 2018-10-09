@@ -1,11 +1,10 @@
 import { JsonfeedAuthor } from './jsonfeed-author.model';
 import { JsonfeedHub } from './jsonfeed-hub.model';
 import { JsonfeedItem } from './jsonfeed-item.model';
-import { SettingsFeed } from './settings-feed.model';
 
 export class Jsonfeed {
   constructor(
-    public _feedmixer: { url: string },
+    public _feedmixer: { url: string, language?: string },
     public version: string,
     public title: string,
     public items: JsonfeedItem[],

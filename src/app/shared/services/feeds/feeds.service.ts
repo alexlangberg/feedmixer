@@ -12,11 +12,12 @@ import * as moment from 'moment';
   providedIn: 'root'
 })
 export class FeedsService implements OnDestroy {
-  feedsSettingsChanged = new Subject<SettingsFeed[]>();
-  feedChanged = new Subject<JsonfeedItem[]>();
+  feedsSettingsChanged$ = new Subject<SettingsFeed[]>();
+  feedChanged$ = new Subject<Jsonfeed>();
+  feedMixChanged$ = new Subject<JsonfeedItem[]>();
+  private autoRefresher$: Subscription;
   private feeds: Jsonfeed[] = [];
   private settings: SettingsFile;
-  private autoRefresher: Subscription;
 
   constructor(private feed2json: Feed2jsonService) {}
 
@@ -27,16 +28,24 @@ export class FeedsService implements OnDestroy {
   }
 
   private emitNewFeedSettings() {
-    this.feedsSettingsChanged.next(this.settings.feeds);
+    this.feedsSettingsChanged$.next(this.settings.feeds);
   }
 
   ngOnDestroy() {
-    if (this.feedsSettingsChanged) {
-      this.feedsSettingsChanged.unsubscribe();
+    if (this.feedsSettingsChanged$) {
+      this.feedsSettingsChanged$.unsubscribe();
     }
 
-    if (this.autoRefresher) {
-      this.autoRefresher.unsubscribe();
+    if (this.feedChanged$) {
+      this.feedChanged$.unsubscribe();
+    }
+
+    if (this.feedMixChanged$) {
+      this.feedMixChanged$.unsubscribe();
+    }
+
+    if (this.autoRefresher$) {
+      this.autoRefresher$.unsubscribe();
     }
   }
 
@@ -88,11 +97,11 @@ export class FeedsService implements OnDestroy {
 
   toggleAutoRefresher(state: boolean) {
     if (!state) {
-      if (this.autoRefresher) {
-        this.autoRefresher.unsubscribe();
+      if (this.autoRefresher$) {
+        this.autoRefresher$.unsubscribe();
       }
     } else {
-      this.autoRefresher = timer(
+      this.autoRefresher$ = timer(
         0,
         this.settings.autoRefreshIntervalMinutes * 60000
       ).subscribe(() => {
@@ -143,8 +152,17 @@ export class FeedsService implements OnDestroy {
               oldFeed.items.push(newItem);
             }
           });
+
+          this.feedChanged$.next(oldFeed);
         } else {
+          const settingsFeed = this.getSettingsFeed(newFeed._feedmixer.url);
+
+          if (settingsFeed) {
+            newFeed._feedmixer.language = settingsFeed.language;
+          }
+
           this.feeds.push(newFeed);
+          this.feedChanged$.next(newFeed);
         }
       }
     ));
@@ -188,7 +206,7 @@ export class FeedsService implements OnDestroy {
 
   private emitNewFeedMix() {
     if (!this.getActiveFeeds().length) {
-      this.feedChanged.next([]);
+      this.feedMixChanged$.next([]);
       return;
     }
 
@@ -203,7 +221,7 @@ export class FeedsService implements OnDestroy {
       ),
       map(items => items.sort(this.sortByDate))
     ).subscribe(result => {
-      this.feedChanged.next(result);
+      this.feedMixChanged$.next(result);
     });
   }
 }

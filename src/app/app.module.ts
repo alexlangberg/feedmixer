@@ -5,7 +5,6 @@ import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FeedComponent } from './feed/feed.component';
 import { HttpClientModule } from '@angular/common/http';
-import { FeedsService } from './shared/services/feeds/feeds.service';
 import { FormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { SidenavComponent } from './sidenav/sidenav.component';
@@ -61,9 +60,7 @@ import { TopTermsComponent } from './top-terms/top-terms.component';
     HttpClientModule,
     FormsModule
   ],
-  providers: [
-    FeedsService
-  ],
+  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

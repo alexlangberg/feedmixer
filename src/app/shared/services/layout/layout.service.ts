@@ -13,10 +13,10 @@ export class LayoutService implements OnDestroy {
   isSidenavAlwaysOpen: boolean;
   sidenavPosition: string;
   toolbarHeight: number;
-  private readonly mediaWatcher: Subscription;
+  private readonly mediaWatcher$: Subscription;
 
   constructor(private media$: ObservableMedia) {
-    this.mediaWatcher = media$.subscribe((change: MediaChange) => {
+    this.mediaWatcher$ = media$.subscribe((change: MediaChange) => {
       this.screenSize = change.mqAlias;
 
       if (['xs'].includes(this.screenSize)) {
@@ -38,8 +38,8 @@ export class LayoutService implements OnDestroy {
   }
 
   ngOnDestroy() {
-    if (this.mediaWatcher) {
-      this.mediaWatcher.unsubscribe();
+    if (this.mediaWatcher$) {
+      this.mediaWatcher$.unsubscribe();
     }
   }
 

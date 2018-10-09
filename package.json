@@ -30,6 +30,7 @@
     "material-design-icons": "^3.0.1",
     "moment": "^2.22.2",
     "rxjs": "~6.2.0",
+    "stopword": "^0.1.13",
     "zone.js": "~0.8.26"
   },
   "devDependencies": {
