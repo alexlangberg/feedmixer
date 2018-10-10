@@ -6,14 +6,34 @@
     [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
     [mode]="(isHandset$ | async) ? 'over' : 'side'"
     [opened]="!(isHandset$ | async)">
-    <mat-toolbar color="primary" class="mat-elevation-z4">
+    <mat-toolbar
+      color="primary"
+      class="mat-elevation-z4">
       <span *ngIf="isHandset$ | async">Menu</span>
       <span *ngIf="!(isHandset$ | async)">Feedmixer</span>
     </mat-toolbar>
-    <app-sidenav #appSidenav></app-sidenav>
+    <app-sidenav></app-sidenav>
   </mat-sidenav>
+
+  <mat-sidenav
+    #endDrawer
+    class="sidenav mat-elevation-z16"
+    fixedinviewport="true"
+    [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
+    mode="over"
+    [opened]="!(isHandset$ | async)"
+    position="end">
+    <mat-toolbar
+      color="primary"
+      class="mat-elevation-z4">
+      <span>Info</span>
+    </mat-toolbar>
+  </mat-sidenav>
+
   <mat-sidenav-content>
-    <mat-toolbar color="primary" class="mat-elevation-z4">
+    <mat-toolbar
+      color="primary"
+      class="mat-elevation-z4">
       <button
         type="button"
         aria-label="Toggle sidenav"
@@ -23,14 +43,19 @@
         <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
       </button>
       <span *ngIf="isHandset$ | async">Feedmixer</span>
-      <div fxFlex fxLayoutAlign="flex-end center">
-        <mat-slide-toggle labelPosition="before"
-                          (toggleChange)="onAutoRefreshToggle()"
-                          title="Automatically refresh feed every 5 minutes">
+      <div
+        fxFlex
+        fxLayoutAlign="flex-end center">
+        <mat-slide-toggle
+          labelPosition="before"
+          (toggleChange)="onAutoRefreshToggle()"
+          title="Automatically refresh feed every 5 minutes">
           Autorefresh
         </mat-slide-toggle>
-        <button mat-icon-button
-                (click)="onRefresh()">
+        <button
+          mat-button
+          mat-icon-button
+          (click)="onRefresh()">
           <mat-icon>refresh</mat-icon>
         </button>
       </div>
