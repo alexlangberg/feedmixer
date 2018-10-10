@@ -1,9 +1,11 @@
-import { AfterViewInit, Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FeedsService } from '../shared/services/feeds/feeds.service';
 import { JsonfeedItem } from '../shared/models/jsonfeed-item.model';
 import { MatPaginator, MatTableDataSource } from '@angular/material';
 import { SearchService } from '../shared/services/search/search.service';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-feed',
@@ -11,14 +13,20 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./feed.component.css']
 })
 export class FeedComponent implements OnInit, OnDestroy, AfterViewInit {
-  @Input() isSidenavAlwaysOpen: boolean;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   dataSource: MatTableDataSource<JsonfeedItem> = new MatTableDataSource<JsonfeedItem>();
   displayedColumns: string[] = ['date_published', 'title', 'options'];
   private feedMixChanged$: Subscription;
   private searchChanged$: Subscription;
 
+  isHandset$: Observable<boolean> = this.breakpointObserver
+    .observe(Breakpoints.Handset)
+    .pipe(
+      map(result => result.matches)
+    );
+
   constructor(
+    private breakpointObserver: BreakpointObserver,
     private feedService: FeedsService,
     private searchService: SearchService
   ) {}

@@ -1,9 +1,11 @@
-<table mat-table [dataSource]="dataSource" [ngClass]="{'largeScreen': isSidenavAlwaysOpen}">
+<table mat-table [dataSource]="dataSource" [ngClass]="{'handset': isHandset$ | async}">
 
   <ng-container matColumnDef="date_published">
     <!--<th mat-header-cell *matHeaderCellDef>Date</th>-->
     <td mat-cell *matCellDef="let element">
-      <span class="date mat-caption">{{ element.date_published | date : 'short' }}</span>
+      <span class="date mat-caption" *ngIf="!(isHandset$ | async)">
+        {{ element.date_published | date : 'short' }}
+      </span>
     </td>
   </ng-container>
 
@@ -13,7 +15,11 @@
       <a [href]="element.url"
          target="_blank"
          [title]="element.summary"
-         class="mat-subheading-2">{{ element.title }}</a>
+         class="headline">{{ element.title }}</a>
+      <br>
+      <span class="date mat-caption" *ngIf="isHandset$ | async">
+        {{ element.date_published | date : 'short' }}
+      </span>
     </td>
   </ng-container>
 

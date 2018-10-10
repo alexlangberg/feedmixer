@@ -11,7 +11,8 @@ import { FeedsService } from '../shared/services/feeds/feeds.service';
 })
 export class NavigationComponent {
 
-  isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
+  isHandset$: Observable<boolean> = this.breakpointObserver
+    .observe(Breakpoints.Handset)
     .pipe(
       map(result => result.matches)
     );
