@@ -2,9 +2,9 @@ table {
   width: 100%;
 }
 
-.mat-cell, .mat-header-cell {
-  font-size: 16px;
-}
+/*.mat-cell, .mat-header-cell {*/
+  /*font-size: 16px;*/
+/*}*/
 
 table.largeScreen td.mat-cell:first-of-type,
 table.largeScreen td.mat-footer-cell:first-of-type,
