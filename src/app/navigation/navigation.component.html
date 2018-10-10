@@ -1,11 +1,11 @@
 <mat-sidenav-container class="sidenav-container">
   <mat-sidenav
-    #drawer
+    #sidenav
     class="sidenav mat-elevation-z16"
     fixedInViewport="true"
-    [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
-    [mode]="(isHandset$ | async) ? 'over' : 'side'"
-    [opened]="!(isHandset$ | async)">
+    [attr.role]="uiService.small ? 'dialog' : 'navigation'"
+    [mode]="uiService.sidenavMode"
+    [opened]="uiService.isSidenavOpen">
     <mat-toolbar
       color="primary"
       class="mat-elevation-z4">
@@ -16,12 +16,12 @@
   </mat-sidenav>
 
   <mat-sidenav
-    #endDrawer
+    #sidenavDrawer
     class="sidenav mat-elevation-z16"
     fixedinviewport="true"
-    [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
-    mode="over"
-    [opened]="!(isHandset$ | async)"
+    [attr.role]="uiService.small ? 'dialog' : 'navigation'"
+    [mode]="uiService.sidenavEndMode"
+    [opened]="uiService.isSidenavOpen"
     position="end">
     <mat-toolbar
       color="primary"
@@ -38,11 +38,11 @@
         type="button"
         aria-label="Toggle sidenav"
         mat-icon-button
-        (click)="drawer.toggle()"
-        *ngIf="isHandset$ | async">
+        (click)="uiService.doToggleSidenav()"
+        *ngIf="uiService.small">
         <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
       </button>
-      <span *ngIf="isHandset$ | async">Feedmixer</span>
+      <span *ngIf="uiService.small">Feedmixer</span>
       <div
         fxFlex
         fxLayoutAlign="flex-end center">
