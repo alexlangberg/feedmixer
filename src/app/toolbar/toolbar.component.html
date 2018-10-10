@@ -9,7 +9,10 @@
 
   <div fxFlex fxLayoutAlign="flex-end center">
     <mat-slide-toggle labelPosition="before"
-                      (toggleChange)="onAutoRefreshToggle()">Autorefresh</mat-slide-toggle>
+                      (toggleChange)="onAutoRefreshToggle()"
+                      title="Automatically refresh feed every 5 minutes">
+      Autorefresh
+    </mat-slide-toggle>
     <button mat-icon-button
             (click)="onRefresh()">
       <mat-icon>refresh</mat-icon>
