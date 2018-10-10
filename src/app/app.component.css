@@ -1,9 +1,1 @@
-app-toolbar {
-  width: 100%;
-  position: fixed;
-  z-index: 2;
-}
 
-app-feed {
-  display: block;
-}

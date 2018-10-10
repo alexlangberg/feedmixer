@@ -14,7 +14,7 @@ export class FeedComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input() isSidenavAlwaysOpen: boolean;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   dataSource: MatTableDataSource<JsonfeedItem> = new MatTableDataSource<JsonfeedItem>();
-  displayedColumns: string[] = ['title', 'date_published'];
+  displayedColumns: string[] = ['date_published', 'title', 'options'];
   private feedMixChanged$: Subscription;
   private searchChanged$: Subscription;
 

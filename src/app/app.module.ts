@@ -22,20 +22,21 @@ import {
   MatTableModule, MatTabsModule,
   MatToolbarModule
 } from '@angular/material';
-import { ToolbarComponent } from './toolbar/toolbar.component';
 import { SearchComponent } from './search/search.component';
 import { FeedsSelectorComponent } from './feeds-selector/feeds-selector.component';
 import { TopTermsComponent } from './top-terms/top-terms.component';
+import { NavigationComponent } from './navigation/navigation.component';
+import { LayoutModule } from '@angular/cdk/layout';
 
 @NgModule({
   declarations: [
     AppComponent,
     FeedComponent,
     SidenavComponent,
-    ToolbarComponent,
     SearchComponent,
     FeedsSelectorComponent,
-    TopTermsComponent
+    TopTermsComponent,
+    NavigationComponent
   ],
   imports: [
     BrowserModule,
@@ -59,7 +60,8 @@ import { TopTermsComponent } from './top-terms/top-terms.component';
     MatAutocompleteModule,
     HttpClientModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    LayoutModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-sidenav',
@@ -6,9 +6,6 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
   styleUrls: ['./sidenav.component.css']
 })
 export class SidenavComponent implements OnInit {
-  @Output() searchChanged = new EventEmitter<string>();
-  @Output() refreshFeed = new EventEmitter<void>();
-  @Output() autoRefreshFeed = new EventEmitter<boolean>();
 
   constructor() { }
 

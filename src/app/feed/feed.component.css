@@ -26,3 +26,7 @@ a {
 a:visited {
   color: grey;
 }
+
+.date {
+  color: rgba(0,0,0,0.4);
+}
