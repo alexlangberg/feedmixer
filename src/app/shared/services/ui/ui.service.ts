@@ -1,5 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { ReplaySubject, Subscription } from 'rxjs';
 import { MediaChange, ObservableMedia } from '@angular/flex-layout';
 import { MatSidenav } from '@angular/material';
 
@@ -11,6 +11,7 @@ export class UIService implements OnDestroy {
   small: boolean;
   medium: boolean;
   large: boolean;
+  screenSizeChanged$ = new ReplaySubject<string>(1);
   sidenav: MatSidenav;
   sidenavEnd: MatSidenav;
   isSidenavOpen: boolean;
@@ -26,12 +27,15 @@ export class UIService implements OnDestroy {
       if (['xs', 'sm'].includes(this.screenSize)) {
         this.small = true;
         this.medium = this.large = false;
+        this.screenSizeChanged$.next('small');
       } else if (['md'].includes(this.screenSize)) {
         this.medium = true;
         this.small = this.large = false;
+        this.screenSizeChanged$.next('medium');
       } else {
         this.large = true;
         this.small = this.medium = false;
+        this.screenSizeChanged$.next('large');
       }
 
       if (this.small) {
@@ -47,6 +51,10 @@ export class UIService implements OnDestroy {
   ngOnDestroy() {
     if (this.mediaWatcher$) {
       this.mediaWatcher$.unsubscribe();
+    }
+
+    if (this.screenSizeChanged$) {
+      this.screenSizeChanged$.unsubscribe();
     }
   }
 

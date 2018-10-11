@@ -3,7 +3,7 @@ import { FeedsService } from '../shared/services/feeds/feeds.service';
 import { JsonfeedItem } from '../shared/models/jsonfeed-item.model';
 import { MatPaginator, MatTableDataSource } from '@angular/material';
 import { SearchService } from '../shared/services/search/search.service';
-import { Subscription } from 'rxjs';
+import { ReplaySubject, Subscription } from 'rxjs';
 import { UIService } from '../shared/services/ui/ui.service';
 
 @Component({
@@ -17,6 +17,8 @@ export class FeedComponent implements OnInit, OnDestroy, AfterViewInit {
   displayedColumns: string[] = ['date_published', 'title', 'options'];
   private feedMixChanged$: Subscription;
   private searchChanged$: Subscription;
+  private screenSizeChanged$: Subscription;
+  columnsChanged$ = new ReplaySubject<string[]>(1);
 
   constructor(
     public uiService: UIService,
@@ -34,6 +36,15 @@ export class FeedComponent implements OnInit, OnDestroy, AfterViewInit {
       .subscribe(text => {
         this.doFilter(text);
       });
+
+    this.screenSizeChanged$ = this.uiService.screenSizeChanged$
+      .subscribe(screenSize => {
+        if (screenSize === 'small') {
+          this.columnsChanged$.next(['title', 'options']);
+        } else {
+          this.columnsChanged$.next(['date_published', 'title', 'options']);
+        }
+      });
   }
 
   ngOnDestroy() {
@@ -43,6 +54,10 @@ export class FeedComponent implements OnInit, OnDestroy, AfterViewInit {
 
     if (this.searchChanged$) {
       this.searchChanged$.unsubscribe();
+    }
+
+    if (this.screenSizeChanged$) {
+      this.screenSizeChanged$.unsubscribe();
     }
   }
 
