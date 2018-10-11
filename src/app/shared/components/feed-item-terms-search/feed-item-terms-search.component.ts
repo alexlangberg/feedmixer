@@ -17,8 +17,7 @@ export class FeedItemTermsSearchComponent implements OnInit, OnChanges {
   constructor(
     private tokenizerService: TokenizerService,
     private search: SearchService
-  ) {
-  }
+  ) {}
 
   ngOnInit() {
   }
