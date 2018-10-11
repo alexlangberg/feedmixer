@@ -1,7 +1,7 @@
 import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
-import { TokenizerService } from '../shared/services/tokenizer/tokenizer.service';
+import { TokenizerService } from '../../services/tokenizer/tokenizer.service';
 import { Subscription } from 'rxjs';
-import { Token } from '../shared/models/token.model';
+import { Token } from '../../models/token.model';
 import { MatSelect, MatSelectChange } from '@angular/material';
 
 @Component({

@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { FeedsSelectorComponent } from './feeds-selector.component';
+import { FeedSelectorComponent } from './feed-selector.component';
 
-describe('FeedsSelectorComponent', () => {
-  let component: FeedsSelectorComponent;
-  let fixture: ComponentFixture<FeedsSelectorComponent>;
+describe('FeedSelectorComponent', () => {
+  let component: FeedSelectorComponent;
+  let fixture: ComponentFixture<FeedSelectorComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ FeedsSelectorComponent ]
+      declarations: [ FeedSelectorComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(FeedsSelectorComponent);
+    fixture = TestBed.createComponent(FeedSelectorComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

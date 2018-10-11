@@ -65,7 +65,11 @@ export class TokenizerService implements OnDestroy {
       );
   }
 
-  emitNewTokens() {
+  getRepeatTokens() {
+    return this.getAllTokens().filter(token => token.count > 1);
+  }
+
+  getAllTokens() {
     const activeFeeds = this.feedService.getActiveFeeds();
     const totalMap = new Map;
 
@@ -89,7 +93,11 @@ export class TokenizerService implements OnDestroy {
 
     tokens.sort((a, b) => b.count - a.count);
 
-    this.tokensChanged$.next(tokens.slice(0, 1000));
+    return tokens;
+  }
+
+  emitNewTokens() {
+    this.tokensChanged$.next(this.getAllTokens().slice(0, 1000));
   }
 
   ngOnDestroy() {
@@ -117,8 +125,8 @@ export class TokenizerService implements OnDestroy {
       .reduce((total, item) => total.concat(item))
       .filter((item: string) => item !== '' && item.length > 3)
       .reduce((map: Map<string, number>, word: string) => {
-        // create a map with each word as keys
 
+        // create a map with each word as keys
         map.has(word)
           ? map.set(word, (map.get(word) || 0) + 1)
           : map.set(word, 1);

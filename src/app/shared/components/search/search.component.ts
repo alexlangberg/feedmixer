@@ -1,9 +1,9 @@
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
-import { Token } from '../shared/models/token.model';
+import { Token } from '../../models/token.model';
 import { FormControl } from '@angular/forms';
 import { debounceTime, map, startWith } from 'rxjs/operators';
-import { SearchService } from '../shared/services/search/search.service';
+import { SearchService } from '../../services/search/search.service';
 
 @Component({
   selector: 'app-search',
@@ -12,6 +12,7 @@ import { SearchService } from '../shared/services/search/search.service';
 })
 export class SearchComponent implements OnInit, OnDestroy {
   @ViewChild('searchInput') searchInput: ElementRef;
+  private searchChanged$: Subscription;
   private tokensChanged$: Subscription;
   searchControl = new FormControl();
   tokens: Token[] = [];
@@ -20,6 +21,10 @@ export class SearchComponent implements OnInit, OnDestroy {
   constructor(private search: SearchService) { }
 
   ngOnInit() {
+    this.searchChanged$ = this.search.searchChanged$.subscribe(text => {
+      this.searchControl.setValue(text);
+    });
+
     this.tokensChanged$ = this.search.autocompleteTokensChanged$
       .subscribe(tokens => {
         this.tokens = tokens;
@@ -43,6 +48,10 @@ export class SearchComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     if (this.tokensChanged$) {
       this.tokensChanged$.unsubscribe();
+    }
+
+    if (this.searchChanged$) {
+      this.searchChanged$.unsubscribe();
     }
   }
 

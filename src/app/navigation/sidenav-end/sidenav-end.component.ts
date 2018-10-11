@@ -1,8 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { UIService } from '../shared/services/ui/ui.service';
+import { UIService } from '../../shared/services/ui/ui.service';
 import { Subscription } from 'rxjs';
-import { FeedsService } from '../shared/services/feeds/feeds.service';
-import { JsonfeedItem } from '../shared/models/jsonfeed-item.model';
+import { FeedsService } from '../../shared/services/feeds/feeds.service';
+import { JsonfeedItem } from '../../shared/models/jsonfeed-item.model';
 
 @Component({
   selector: 'app-sidenav-end',
@@ -28,5 +28,9 @@ export class SidenavEndComponent implements OnInit, OnDestroy {
     if (this.showItemInfo$) {
       this.showItemInfo$.unsubscribe();
     }
+  }
+
+  doCloseSidenavEnd() {
+    this.uiService.doToggleSidenavEnd();
   }
 }

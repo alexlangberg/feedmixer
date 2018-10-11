@@ -1,15 +1,15 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { FeedsService } from '../shared/services/feeds/feeds.service';
-import { SettingsFeed } from '../shared/models/settings-feed.model';
+import { FeedsService } from '../../services/feeds/feeds.service';
+import { SettingsFeed } from '../../models/settings-feed.model';
 import { Subscription } from 'rxjs';
 import { MatListOption, MatSelectionList, MatSelectionListChange } from '@angular/material';
 
 @Component({
   selector: 'app-feeds-selector',
-  templateUrl: './feeds-selector.component.html',
-  styleUrls: ['./feeds-selector.component.css']
+  templateUrl: './feed-selector.component.html',
+  styleUrls: ['./feed-selector.component.css']
 })
-export class FeedsSelectorComponent implements OnInit, OnDestroy {
+export class FeedSelectorComponent implements OnInit, OnDestroy {
   @ViewChild('feedsSelector') private feedsSelector: MatSelectionList;
   @ViewChild('selectAll') private selectAll: MatListOption;
   settingsFeeds: SettingsFeed[] = [];

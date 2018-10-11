@@ -1,0 +1,12 @@
+<div fxLayout="column" fxLayoutGap="16px">
+  <div fxFlex>
+    <a [href]="item.url"
+       target="_blank"
+       class="headline">{{ item.title }}</a>
+  </div>
+  <div fxFlex class="mat-body-1">{{ item.summary }}</div>
+  <div fxLayout="column">
+    <div fxFlex class="meta mat-caption">{{ item.date_published | date : 'short' }}</div>
+    <div fxFlex class="meta mat-caption">{{ item.url }}</div>
+  </div>
+</div>

@@ -1,0 +1,8 @@
+mat-panel-title {
+  display: flex;
+  align-items: center;
+}
+
+mat-expansion-panel mat-icon {
+  margin-right: 16px;
+}

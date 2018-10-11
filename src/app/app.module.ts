@@ -7,27 +7,37 @@ import { FeedComponent } from './feed/feed.component';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { SidenavComponent } from './sidenav/sidenav.component';
+import { SidenavComponent } from './navigation/sidenav/sidenav.component';
+import { SearchComponent } from './shared/components/search/search.component';
+import { FeedSelectorComponent } from './shared/components/feed-selector/feed-selector.component';
+import { TopTermsComponent } from './shared/components/top-terms/top-terms.component';
+import { NavigationComponent } from './navigation/navigation.component';
+import { LayoutModule } from '@angular/cdk/layout';
+import { SidenavEndComponent } from './navigation/sidenav-end/sidenav-end.component';
+import { SettingsComponent } from './shared/components/settings/settings.component';
+import { FeedItemInfoComponent } from './shared/components/feed-item-info/feed-item-info.component';
+import { RedditUrlLookupComponent } from './shared/components/reddit-url-lookup/reddit-url-lookup.component';
+import { FeedItemTermsSearchComponent } from './shared/components/feed-item-terms-search/feed-item-terms-search.component';
 
 import {
   MatAutocompleteModule,
   MatBadgeModule,
   MatButtonModule,
   MatCardModule,
+  MatChipsModule,
   MatExpansionModule,
   MatIconModule,
-  MatInputModule, MatListModule,
-  MatPaginatorModule, MatRadioModule, MatSelectModule,
-  MatSidenavModule, MatSlideToggleModule,
-  MatTableModule, MatTabsModule,
+  MatInputModule,
+  MatListModule,
+  MatPaginatorModule,
+  MatRadioModule,
+  MatSelectModule,
+  MatSidenavModule,
+  MatSlideToggleModule,
+  MatTableModule,
+  MatTabsModule,
   MatToolbarModule
 } from '@angular/material';
-import { SearchComponent } from './search/search.component';
-import { FeedsSelectorComponent } from './feeds-selector/feeds-selector.component';
-import { TopTermsComponent } from './top-terms/top-terms.component';
-import { NavigationComponent } from './navigation/navigation.component';
-import { LayoutModule } from '@angular/cdk/layout';
-import { SidenavEndComponent } from './sidenav-end/sidenav-end.component';
 
 @NgModule({
   declarations: [
@@ -35,10 +45,14 @@ import { SidenavEndComponent } from './sidenav-end/sidenav-end.component';
     FeedComponent,
     SidenavComponent,
     SearchComponent,
-    FeedsSelectorComponent,
+    FeedSelectorComponent,
     TopTermsComponent,
     NavigationComponent,
-    SidenavEndComponent
+    SidenavEndComponent,
+    SettingsComponent,
+    FeedItemInfoComponent,
+    RedditUrlLookupComponent,
+    FeedItemTermsSearchComponent
   ],
   imports: [
     BrowserModule,
@@ -60,6 +74,7 @@ import { SidenavEndComponent } from './sidenav-end/sidenav-end.component';
     MatSelectModule,
     MatBadgeModule,
     MatAutocompleteModule,
+    MatChipsModule,
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,

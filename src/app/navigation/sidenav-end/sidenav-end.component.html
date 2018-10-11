@@ -1,26 +1,19 @@
 <div *ngIf="item">
-  <div fxLayout="column" fxLayoutGap="16px" style="padding: 24px">
-    <div fxFlex>
-      <a [href]="item?.url"
-         target="_blank"
-         [title]="item?.summary"
-         class="headline">{{ item?.title }}</a>
-    </div>
-    <div fxFlex class="mat-body-1">{{ item?.summary }}</div>
-    <div fxLayout="column">
-      <div fxFlex class="meta mat-caption">{{ item?.date_published | date : 'short' }}</div>
-      <div fxFlex class="meta mat-caption">{{ item?.url }}</div>
-    </div>
+  <div style="padding: 16px 24px">
+    <app-feed-item-info [item]="item"></app-feed-item-info>
   </div>
+
   <mat-divider></mat-divider>
 
   <mat-expansion-panel class="mat-elevation-z0" expanded="true">
     <mat-expansion-panel-header>
       <mat-panel-title>
-        <mat-icon>search</mat-icon>Search terms
+        <mat-icon>search</mat-icon>Other items by related term
       </mat-panel-title>
     </mat-expansion-panel-header>
-    <!--<app-feeds-selector></app-feeds-selector>-->
+    <app-feed-item-terms-search
+      [item]="item"
+      (search$)="doCloseSidenavEnd()"></app-feed-item-terms-search>
   </mat-expansion-panel>
 
   <mat-divider></mat-divider>
@@ -31,7 +24,7 @@
         <mat-icon>insert_emoticon</mat-icon>Reddit
       </mat-panel-title>
     </mat-expansion-panel-header>
-    <!--<app-feeds-selector></app-feeds-selector>-->
+    <app-reddit-url-lookup></app-reddit-url-lookup>
   </mat-expansion-panel>
 
   <mat-divider></mat-divider>

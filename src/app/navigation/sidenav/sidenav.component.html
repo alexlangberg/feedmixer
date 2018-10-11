@@ -27,13 +27,7 @@
         <mat-icon>settings</mat-icon>Settings
       </mat-panel-title>
     </mat-expansion-panel-header>
-
-    <mat-slide-toggle
-      labelPosition="after"
-      (change)="onAutoRefreshToggle($event.checked)"
-      title="Automatically refresh feed every 5 minutes">
-      Autorefresh
-    </mat-slide-toggle>
+    <app-settings></app-settings>
   </mat-expansion-panel>
 
   <mat-divider></mat-divider>
