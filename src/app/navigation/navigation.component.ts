@@ -35,8 +35,4 @@ export class NavigationComponent implements OnInit {
   onRefresh() {
     this.feedsSelectorService.refreshAllFeeds();
   }
-
-  onAutoRefreshToggle($event: boolean) {
-    this.feedsSelectorService.toggleAutoRefresher($event);
-  }
 }

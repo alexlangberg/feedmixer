@@ -21,6 +21,11 @@ export class FeedsService implements OnDestroy {
 
   constructor(private feed2json: Feed2jsonService) {}
 
+  static sortByDate(a: JsonfeedItem, b: JsonfeedItem) {
+    return new Date(b.date_published || 0).getTime()
+      - new Date(a.date_published || 0).getTime();
+  }
+
   setup(settings: SettingsFile) {
     this.settings = settings;
     this.emitNewFeedSettings();
@@ -47,6 +52,13 @@ export class FeedsService implements OnDestroy {
     if (this.autoRefresher$) {
       this.autoRefresher$.unsubscribe();
     }
+  }
+
+  getFeedItem(url: string): JsonfeedItem | undefined {
+    return this.feeds
+      .map(feed => feed.items)
+      .reduce((acc, val) => acc.concat(val))
+      .find(item => item.url === url);
   }
 
   getSettingsFeed(url: string) {
@@ -108,11 +120,6 @@ export class FeedsService implements OnDestroy {
         this.refreshAllFeeds();
       });
     }
-  }
-
-  private sortByDate(a: JsonfeedItem, b: JsonfeedItem) {
-    return new Date(b.date_published || 0).getTime()
-      - new Date(a.date_published || 0).getTime();
   }
 
   private fetchFeed(url: string): Observable<Jsonfeed> {
@@ -219,7 +226,7 @@ export class FeedsService implements OnDestroy {
         },
         []
       ),
-      map(items => items.sort(this.sortByDate))
+      map(items => items.sort(FeedsService.sortByDate))
     ).subscribe(result => {
       this.feedMixChanged$.next(result);
     });

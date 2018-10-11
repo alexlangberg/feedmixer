@@ -1,0 +1,42 @@
+<div *ngIf="item">
+  <div fxLayout="column" fxLayoutGap="16px" style="padding: 24px">
+    <div fxFlex>
+      <a [href]="item?.url"
+         target="_blank"
+         [title]="item?.summary"
+         class="headline">{{ item?.title }}</a>
+    </div>
+    <div fxFlex class="mat-body-1">{{ item?.summary }}</div>
+    <div fxLayout="column">
+      <div fxFlex class="meta mat-caption">{{ item?.date_published | date : 'short' }}</div>
+      <div fxFlex class="meta mat-caption">{{ item?.url }}</div>
+    </div>
+  </div>
+  <mat-divider></mat-divider>
+
+  <mat-expansion-panel class="mat-elevation-z0" expanded="true">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <mat-icon>search</mat-icon>Search terms
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <!--<app-feeds-selector></app-feeds-selector>-->
+  </mat-expansion-panel>
+
+  <mat-divider></mat-divider>
+
+  <mat-expansion-panel class="mat-elevation-z0">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <mat-icon>insert_emoticon</mat-icon>Reddit
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <!--<app-feeds-selector></app-feeds-selector>-->
+  </mat-expansion-panel>
+
+  <mat-divider></mat-divider>
+</div>
+
+<div *ngIf="!item" style="padding: 24px">
+  Click the info icon on an item in the list to see more info here.
+</div>

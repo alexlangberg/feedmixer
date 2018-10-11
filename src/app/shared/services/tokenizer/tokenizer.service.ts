@@ -4,6 +4,7 @@ import { FeedsService } from '../feeds/feeds.service';
 import { Subject, Subscription } from 'rxjs';
 import { Jsonfeed } from '../../models/jsonfeed.model';
 import { Token } from '../../models/token.model';
+import { JsonfeedItem } from '../../models/jsonfeed-item.model';
 
 @Injectable({
   providedIn: 'root'
@@ -45,18 +46,23 @@ export class TokenizerService implements OnDestroy {
     return result;
   }
 
-  static tokenize(text: string, language?: string) {
-    const sanitized = TokenizerService.removeSpecials(
-      text
-        .toLowerCase()
-        .replace(/<(.|\n)*?>/g, '')
-    );
+  static tokenize(text: string, language?: string): string[] {
+    const sanitized = TokenizerService.removeSpecials(text.toLowerCase());
 
     const words = sanitized.split(' ');
 
     const stopWords = stopword[language || 'en'];
 
     return stopword.removeStopwords(words, stopWords);
+  }
+
+  static tokenizeFeedItem(item: JsonfeedItem, language: string): string[] {
+    return TokenizerService
+      .tokenize(item.title || '', language)
+      .concat(
+        TokenizerService
+          .tokenize(item.summary || '', language)
+      );
   }
 
   emitNewTokens() {
@@ -101,25 +107,15 @@ export class TokenizerService implements OnDestroy {
   }
 
   mapFeed(feed: Jsonfeed) {
-    const tokensList = feed.items.map(
-      item => {
-        // use texts from both title and summary
+    const language = feed._feedmixer.language || 'en';
 
-        return TokenizerService
-          .tokenize(item.title || '', feed._feedmixer.language)
-          .concat(
-            TokenizerService
-              .tokenize(item.summary || '', feed._feedmixer.language)
-          );
-      })
-      .reduce((total, item) => {
-        // concat into single array
+    const tokensList = feed.items.map(item => {
+        const tokens = TokenizerService.tokenizeFeedItem(item, language);
 
-        return total.concat(item);
+        return [...new Set(tokens)]; // return only unique
       })
-      .filter((item: string) => {
-        return item !== '' && item.length > 2;
-      })
+      .reduce((total, item) => total.concat(item))
+      .filter((item: string) => item !== '' && item.length > 3)
       .reduce((map: Map<string, number>, word: string) => {
         // create a map with each word as keys
 

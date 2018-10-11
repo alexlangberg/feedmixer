@@ -27,6 +27,7 @@ import { FeedsSelectorComponent } from './feeds-selector/feeds-selector.componen
 import { TopTermsComponent } from './top-terms/top-terms.component';
 import { NavigationComponent } from './navigation/navigation.component';
 import { LayoutModule } from '@angular/cdk/layout';
+import { SidenavEndComponent } from './sidenav-end/sidenav-end.component';
 
 @NgModule({
   declarations: [
@@ -36,7 +37,8 @@ import { LayoutModule } from '@angular/cdk/layout';
     SearchComponent,
     FeedsSelectorComponent,
     TopTermsComponent,
-    NavigationComponent
+    NavigationComponent,
+    SidenavEndComponent
   ],
   imports: [
     BrowserModule,

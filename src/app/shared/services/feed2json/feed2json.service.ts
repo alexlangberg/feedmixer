@@ -21,6 +21,14 @@ export class Feed2jsonService {
       item.items = item.items.map(post => {
         if (!post.hasOwnProperty('id') && post.guid) { post.id = post.guid; }
 
+        post.title = post.title
+          ? post.title.replace(/<(.|\n)*?>/g, '')
+          : '';
+
+        post.summary = post.summary
+          ? post.summary.replace(/<(.|\n)*?>/g, '')
+          : '';
+
         return post;
       });
 
