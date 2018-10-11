@@ -16,10 +16,12 @@
          target="_blank"
          [title]="element.summary"
          class="headline">{{ element.title }}</a>
-      <br>
-      <span class="meta mat-caption" *ngIf="uiService.small">
+      <div
+        class="meta mat-caption"
+        *ngIf="uiService.small"
+        style="margin-top: 8px">
         {{ element.date_published | date : 'short' }}
-      </span>
+      </div>
     </td>
   </ng-container>
 
