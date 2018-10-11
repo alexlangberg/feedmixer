@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { FeedsService } from '../../shared/services/feeds/feeds.service';
 
 @Component({
   selector: 'app-sidenav',
