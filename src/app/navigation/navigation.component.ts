@@ -28,8 +28,8 @@ export class NavigationComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.uiService.sidenav = this.sidenav;
-    this.uiService.sidenavEnd = this.sidenavEnd;
+    this.uiService.setSidenav(this.sidenav);
+    this.uiService.setSidenavEnd(this.sidenavEnd);
   }
 
   onRefresh() {

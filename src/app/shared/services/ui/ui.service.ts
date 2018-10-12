@@ -20,6 +20,10 @@ export class UIService implements OnDestroy {
   sidenavEndMode: string;
   showItemInfo$ = new Subject<string>();
   private readonly mediaWatcher$: Subscription;
+  private sidenavOpening$: Subscription;
+  private sidenavClosing$: Subscription;
+  private sidenavEndOpening$: Subscription;
+  private sidenavEndClosing$: Subscription;
 
   constructor(private media$: ObservableMedia) {
     this.mediaWatcher$ = media$.subscribe((change: MediaChange) => {
@@ -74,16 +78,55 @@ export class UIService implements OnDestroy {
     if (this.showItemInfo$) {
       this.showItemInfo$.unsubscribe();
     }
+
+    if (this.sidenavOpening$) {
+      this.sidenavOpening$.unsubscribe();
+    }
+
+    if (this.sidenavClosing$) {
+      this.sidenavClosing$.unsubscribe();
+    }
+
+    if (this.sidenavEndOpening$) {
+      this.sidenavOpening$.unsubscribe();
+    }
+
+    if (this.sidenavEndClosing$) {
+      this.sidenavClosing$.unsubscribe();
+    }
   }
 
+  setSidenav(sidenav: MatSidenav) {
+    this.sidenav = sidenav;
+
+    this.sidenavOpening$ = this.sidenav.openedStart.subscribe(() => {
+      this.isSidenavOpen = true;
+    });
+
+    this.sidenavClosing$ = this.sidenav.closedStart.subscribe(() => {
+      this.isSidenavOpen = false;
+    });
+  }
+
+  setSidenavEnd(sidenavEnd: MatSidenav) {
+    this.sidenavEnd = sidenavEnd;
+
+    this.sidenavEndOpening$ = this.sidenavEnd.openedStart.subscribe(() => {
+      this.isSidenavEndOpen = true;
+    });
+
+    this.sidenavEndClosing$ = this.sidenavEnd.closedStart.subscribe(() => {
+      this.isSidenavEndOpen = false;
+    });
+  }
+
+  // TODO fix problem where not called if closed by clicking overlay
   doToggleSidenav() {
     this.sidenav.toggle();
-    this.isSidenavOpen = this.sidenav.opened;
   }
 
   doToggleSidenavEnd() {
     this.sidenavEnd.toggle();
-    this.isSidenavEndOpen = this.sidenavEnd.opened;
   }
 
   onShowItemInfo(url: string) {

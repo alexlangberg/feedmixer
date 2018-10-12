@@ -40,7 +40,6 @@ export class FeedSelectorComponent implements OnInit, OnDestroy {
   }
 
   onOptionChangedSlider($event: MatSlideToggleChange) {
-    console.log($event);
     if ($event.source.id === 'all') {
       if ($event.checked) {
         this.feedService.setAllFeedsEnabled();
