@@ -3,6 +3,7 @@ import { TokenizerService } from '../tokenizer/tokenizer.service';
 import { Subject } from 'rxjs';
 import { Token } from '../../models/token.model';
 
+// TODO change to use pills and be able to save searches?
 @Injectable({
   providedIn: 'root'
 })
