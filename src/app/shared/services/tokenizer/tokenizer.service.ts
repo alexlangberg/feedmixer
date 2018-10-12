@@ -15,6 +15,7 @@ export class TokenizerService implements OnDestroy {
   private readonly feedsSettingsChanged$: Subscription;
   tokensChanged$ = new Subject<Token[]>();
 
+  // TODO should be done differently to not have this dependency
   constructor(private feedService: FeedsService) {
     this.feedChanged$ = feedService.feedChanged$.subscribe(feed => {
       this.mapFeed(feed);
@@ -46,7 +47,7 @@ export class TokenizerService implements OnDestroy {
     return result;
   }
 
-  static tokenize(text: string, language?: string): string[] {
+  static getTags(text: string, language?: string): string[] {
     const sanitized = TokenizerService.removeSpecials(text.toLowerCase());
 
     const words = sanitized.split(' ');
@@ -56,12 +57,12 @@ export class TokenizerService implements OnDestroy {
     return stopword.removeStopwords(words, stopWords);
   }
 
-  static tokenizeFeedItem(item: JsonfeedItem, language: string): string[] {
+  static getTagsFromFeedItem(item: JsonfeedItem, language: string): string[] {
     return TokenizerService
-      .tokenize(item.title || '', language)
+      .getTags(item.title || '', language)
       .concat(
         TokenizerService
-          .tokenize(item.summary || '', language)
+          .getTags(item.summary || '', language)
       );
   }
 
@@ -118,7 +119,7 @@ export class TokenizerService implements OnDestroy {
     const language = feed._feedmixer.language || 'en';
 
     const tokensList = feed.items.map(item => {
-        const tokens = TokenizerService.tokenizeFeedItem(item, language);
+        const tokens = TokenizerService.getTagsFromFeedItem(item, language);
 
         return [...new Set(tokens)]; // return only unique
       })

@@ -2,6 +2,7 @@ import { JsonfeedItemAttachment } from './jsonfeed-item-attachment.model';
 
 export class JsonfeedItem {
   constructor(
+    public _feedmixer: { tags: string[] },
     public id: string,
     public guid?: string,
     public url?: string,
@@ -16,6 +17,6 @@ export class JsonfeedItem {
     public date_modified?: string,
     public author?: string,
     public tags?: string[],
-    public attachments?: JsonfeedItemAttachment[],
+    public attachments?: JsonfeedItemAttachment[]
   ) {}
 }

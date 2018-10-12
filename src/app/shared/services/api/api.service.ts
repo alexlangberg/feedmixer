@@ -20,6 +20,9 @@ export class ApiService {
       item._feedmixer = { url: rss_url };
 
       item.items = item.items.map(post => {
+        // post._feedmixer.tags = TokenizerService
+        //   .getTagsFromFeedItem(post, item._feedmixer.language || 'en');
+
         if (!post.hasOwnProperty('id') && post.guid) { post.id = post.guid; }
 
         post.title = post.title
@@ -38,7 +41,6 @@ export class ApiService {
   }
 
   getRedditPostsFromUrl(url: string) {
-    // TODO clean up interfaces in here
     const request = this.http.get<{ data: { children: [{ data: RedditPost }]}}>(
       'https://www.reddit.com/api/info.json?url=' + url
     );
