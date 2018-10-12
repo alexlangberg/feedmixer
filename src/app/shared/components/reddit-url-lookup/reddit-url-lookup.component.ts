@@ -11,6 +11,7 @@ import { RedditPost } from '../../models/reddit-post.model';
 export class RedditUrlLookupComponent implements OnInit, OnChanges {
   @Input() item: JsonfeedItem;
   posts: RedditPost[];
+  isLoading: boolean;
 
   constructor(private apiService: ApiService) { }
 
@@ -19,8 +20,12 @@ export class RedditUrlLookupComponent implements OnInit, OnChanges {
 
   ngOnChanges() {
     if (this.item && this.item.url) {
+      this.isLoading = true;
+
       this.apiService.getRedditPostsFromUrl(this.item.url).subscribe(posts => {
         this.posts = posts;
+
+        this.isLoading = false;
       });
     }
   }
