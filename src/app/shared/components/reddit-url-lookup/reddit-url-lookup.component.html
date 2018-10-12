@@ -17,7 +17,7 @@
            class="headline">{{ post.title }}</a>
       </div>
       <div fxFlex class="meta mat-caption">
-        <a href="https://www.reddit.com/r/' + post.subreddit">{{ post.subreddit }}</a>
+        <a [href]="'https://www.reddit.com/r/' + post.subreddit">{{ post.subreddit }}</a>
         <br>
         <span class="no-wrap">{{ post.num_comments }} comments</span>
         |
