@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FeedsService } from '../../services/feeds/feeds.service';
 import { SettingsFeed } from '../../models/settings-feed.model';
 import { Subscription } from 'rxjs';
-import { MatListOption, MatSelectionList, MatSelectionListChange } from '@angular/material';
+import { MatSlideToggleChange } from '@angular/material';
 
 @Component({
   selector: 'app-feeds-selector',
@@ -10,8 +10,6 @@ import { MatListOption, MatSelectionList, MatSelectionListChange } from '@angula
   styleUrls: ['./feed-selector.component.css']
 })
 export class FeedSelectorComponent implements OnInit, OnDestroy {
-  @ViewChild('feedsSelector') private feedsSelector: MatSelectionList;
-  @ViewChild('selectAll') private selectAll: MatListOption;
   settingsFeeds: SettingsFeed[] = [];
   selectedFeedsByUrl: string[] = [];
   feedsSettingsSubscription: Subscription;
@@ -41,18 +39,19 @@ export class FeedSelectorComponent implements OnInit, OnDestroy {
     }
   }
 
-  onOptionChanged($event: MatSelectionListChange) {
-    if ($event.option.value === 'all') {
-      if ($event.option.selected) {
+  onOptionChangedSlider($event: MatSlideToggleChange) {
+    console.log($event);
+    if ($event.source.id === 'all') {
+      if ($event.checked) {
         this.feedService.setAllFeedsEnabled();
       } else {
         this.feedService.setAllFeedsDisabled();
       }
     } else {
-      if ($event.option.selected) {
-        this.feedService.setFeedEnabled($event.option.value);
+      if ($event.checked) {
+        this.feedService.setFeedEnabled($event.source.id);
       } else {
-        this.feedService.setFeedDisabled($event.option.value);
+        this.feedService.setFeedDisabled($event.source.id);
       }
     }
   }
