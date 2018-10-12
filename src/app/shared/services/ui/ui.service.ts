@@ -120,7 +120,6 @@ export class UIService implements OnDestroy {
     });
   }
 
-  // TODO fix problem where not called if closed by clicking overlay
   doToggleSidenav() {
     this.sidenav.toggle();
   }
