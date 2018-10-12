@@ -7,10 +7,19 @@
     [mode]="uiService.sidenavMode"
     [opened]="uiService.isSidenavOpen">
     <mat-toolbar
+      fxLayout="row"
       color="primary"
       class="mat-elevation-z4">
-      <span>Menu</span>
-      <!--<span *ngIf="!(isHandset$ | async)">Feedmixer</span>-->
+      <span fxFlex>Menu</span>
+      <button
+        fxFlexAlign="end middle"
+        type="button"
+        aria-label="Toggle sidenav"
+        mat-button
+        mat-icon-button
+        (click)="uiService.doToggleSidenav()">
+        <mat-icon aria-label="Side nav toggle icon">chevron_left</mat-icon>
+      </button>
     </mat-toolbar>
     <app-sidenav></app-sidenav>
   </mat-sidenav>
@@ -25,9 +34,19 @@
     [opened]="uiService.isSidenavEndOpen"
     position="end">
     <mat-toolbar
+      fxLayout="row"
       color="primary"
       class="mat-elevation-z4">
-      <span>Info</span>
+      <span fxFlex>Info</span>
+      <button
+        fxFlexAlign="end middle"
+        type="button"
+        aria-label="Toggle end sidenav"
+        mat-button
+        mat-icon-button
+        (click)="uiService.doToggleSidenavEnd()">
+        <mat-icon aria-label="Side nav end toggle icon">chevron_right</mat-icon>
+      </button>
     </mat-toolbar>
     <app-sidenav-end></app-sidenav-end>
   </mat-sidenav>
@@ -37,6 +56,7 @@
       color="primary"
       class="mat-elevation-z4">
       <button
+        *ngIf="!uiService.isSidenavOpen"
         type="button"
         aria-label="Toggle sidenav"
         mat-button

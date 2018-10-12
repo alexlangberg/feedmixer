@@ -78,10 +78,12 @@ export class UIService implements OnDestroy {
 
   doToggleSidenav() {
     this.sidenav.toggle();
+    this.isSidenavOpen = this.sidenav.opened;
   }
 
   doToggleSidenavEnd() {
     this.sidenavEnd.toggle();
+    this.isSidenavEndOpen = this.sidenavEnd.opened;
   }
 
   onShowItemInfo(url: string) {
