@@ -3,11 +3,12 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Jsonfeed } from '../../models/jsonfeed.model';
 import { map } from 'rxjs/operators';
+import { RedditPost } from '../../models/reddit-post.model';
 
 @Injectable({
   providedIn: 'root'
 })
-export class Feed2jsonService {
+export class ApiService {
   constructor(private http: HttpClient) {}
 
   getFeedFromUrl(rss_url: string): Observable<Jsonfeed> {
@@ -33,6 +34,27 @@ export class Feed2jsonService {
       });
 
       return item;
+    }));
+  }
+
+  getRedditPostsFromUrl(url: string) {
+    // TODO clean up interfaces in here
+    const request = this.http.get<{ data: { children: [{ data: RedditPost }]}}>(
+      'https://www.reddit.com/api/info.json?url=' + url
+    );
+
+    return request.pipe(map(response => {
+      const result = response.data.children.map((post: any) => {
+        return new RedditPost(
+          post.data.title,
+          post.data.subreddit,
+          post.data.permalink,
+          new Date(post.data.created_utc * 1000),
+          post.data.num_comments
+        );
+      }).sort((a, b) => b.num_comments - a.num_comments);
+
+      return result;
     }));
   }
 }

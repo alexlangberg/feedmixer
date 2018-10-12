@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { FeedComponent } from './feed.component';
-import { Feed2jsonService } from '../shared/services/feed2json/feed2json.service';
+import { ApiService } from '../shared/services/api/api.service';
 import { HttpClientModule } from '@angular/common/http';
 
 describe('FeedComponent', () => {
@@ -12,7 +12,7 @@ describe('FeedComponent', () => {
     TestBed.configureTestingModule({
       declarations: [ FeedComponent ],
       imports: [HttpClientModule],
-      providers: [ Feed2jsonService ]
+      providers: [ ApiService ]
     })
     .compileComponents();
   }));

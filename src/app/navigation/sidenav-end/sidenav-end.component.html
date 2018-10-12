@@ -18,15 +18,14 @@
 
   <mat-divider></mat-divider>
 
-  <mat-expansion-panel class="mat-elevation-z0">
+  <mat-expansion-panel class="mat-elevation-z0" expanded="true">
     <mat-expansion-panel-header>
       <mat-panel-title>
         <mat-icon>insert_emoticon</mat-icon>Reddit
       </mat-panel-title>
     </mat-expansion-panel-header>
-    <app-reddit-url-lookup></app-reddit-url-lookup>
+    <app-reddit-url-lookup [item]="item"></app-reddit-url-lookup>
   </mat-expansion-panel>
-
   <mat-divider></mat-divider>
 </div>
 

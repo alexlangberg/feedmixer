@@ -1,17 +1,17 @@
 import { TestBed } from '@angular/core/testing';
-import { Feed2jsonService } from './feed2json.service';
+import { ApiService } from './api.service';
 import { HttpClientModule } from '@angular/common/http';
 import { Feed } from 'feed';
 
-describe('Feed2jsonService', () => {
-  let service: Feed2jsonService;
+describe('ApiService', () => {
+  let service: ApiService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientModule],
-      providers: [Feed2jsonService]
+      providers: [ApiService]
     });
-    service = TestBed.get(Feed2jsonService);
+    service = TestBed.get(ApiService);
   });
 
   it('should create', () => {

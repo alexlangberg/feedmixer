@@ -1,3 +1,33 @@
-<p>
-  reddit-url-lookup works!
-</p>
+<div>
+  <a
+    href="https://www.reddit.com/submit?title={{ item.title }}&url={{ item.url }}"
+    target="_blank">
+    Submit to reddit!
+  </a>
+</div>
+
+<mat-divider></mat-divider>
+
+<div *ngIf="posts?.length > 0">
+  <div *ngFor="let post of posts">
+    <div fxLayout="column">
+      <div fxFlex>
+        <a [href]="'https://www.reddit.com/' + post.permalink"
+           target="_blank"
+           class="headline">{{ post.title }}</a>
+      </div>
+      <div fxFlex class="meta mat-caption">
+        <a href="https://www.reddit.com/r/' + post.subreddit">{{ post.subreddit }}</a>
+        <br>
+        <span class="no-wrap">{{ post.num_comments }} comments</span>
+        |
+        <span class="no-wrap">{{ post.created_at_utc | date : 'short' }}</span>
+      </div>
+    </div>
+    <mat-divider></mat-divider>
+  </div>
+</div>
+
+<div *ngIf="posts?.length < 1">
+  No posts found.
+</div>

@@ -1,0 +1,29 @@
+a {
+  text-decoration: none;
+  color: #3f51b5;
+}
+
+a:visited {
+  color: grey;
+}
+
+.meta {
+  margin-top: 8px;
+  color: rgba(0,0,0,0.4);
+}
+
+.meta > a {
+  color: rgba(0,0,0,0.4);
+}
+
+.meta > a:hover {
+  text-decoration: underline;
+}
+
+mat-divider {
+  margin: 16px 0;
+}
+
+.no-wrap {
+  white-space: nowrap;
+}

@@ -31,6 +31,8 @@ export class SidenavEndComponent implements OnInit, OnDestroy {
   }
 
   doCloseSidenavEnd() {
-    this.uiService.doToggleSidenavEnd();
+    if (!this.uiService.large) {
+      this.uiService.doToggleSidenavEnd();
+    }
   }
 }

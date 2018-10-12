@@ -2,7 +2,7 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { Jsonfeed } from '../../models/jsonfeed.model';
 import { from, Observable, Subject, Subscription, timer } from 'rxjs';
 import { SettingsFile } from '../../models/settings-file.model';
-import { Feed2jsonService } from '../feed2json/feed2json.service';
+import { ApiService } from '../api/api.service';
 import { filter, map, mergeMap, scan, tap } from 'rxjs/operators';
 import { JsonfeedItem } from '../../models/jsonfeed-item.model';
 import { SettingsFeed } from '../../models/settings-feed.model';
@@ -19,7 +19,7 @@ export class FeedsService implements OnDestroy {
   private feeds: Jsonfeed[] = [];
   private settings: SettingsFile;
 
-  constructor(private feed2json: Feed2jsonService) {}
+  constructor(private apiService: ApiService) {}
 
   static sortByDate(a: JsonfeedItem, b: JsonfeedItem) {
     return new Date(b.date_published || 0).getTime()
@@ -129,7 +129,7 @@ export class FeedsService implements OnDestroy {
       feed.lastUpdated = new Date();
     }
 
-    return from(this.feed2json.getFeedFromUrl(url));
+    return from(this.apiService.getFeedFromUrl(url));
   }
 
   private fetchActiveFeeds(): Observable<Jsonfeed> {
