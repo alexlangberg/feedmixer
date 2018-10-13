@@ -1,56 +1,39 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { FeedsService } from '../../services/feeds/feeds.service';
+import { Component, OnInit } from '@angular/core';
 import { SettingsFeed } from '../../models/settings-feed.model';
-import { Subscription } from 'rxjs';
+import { Observable } from 'rxjs';
 import { MatSlideToggleChange } from '@angular/material';
+import { Select, Store } from '@ngxs/store';
+import { SettingsState } from '../../state/settings.state';
+import {
+  SetAllFeedsDisabled,
+  SetAllFeedsEnabled,
+  SetFeedDisabled,
+  SetFeedEnabled
+} from '../../actions/settings.actions';
 
 @Component({
   selector: 'app-feeds-selector',
   templateUrl: './feed-selector.component.html',
   styleUrls: ['./feed-selector.component.css']
 })
-export class FeedSelectorComponent implements OnInit, OnDestroy {
-  settingsFeeds: SettingsFeed[] = [];
-  selectedFeedsByUrl: string[] = [];
-  feedsSettingsSubscription: Subscription;
+export class FeedSelectorComponent {
+  @Select(SettingsState.getFeeds) feeds$: Observable<SettingsFeed[]>;
+  @Select(SettingsState.getActiveFeedsUrls) activeFeedsUrls$: Observable<SettingsFeed[]>;
 
-  constructor(private feedService: FeedsService) { }
-
-  ngOnInit() {
-    this.feedsSettingsSubscription = this.feedService.feedsSettingsChanged$.subscribe(
-      newFeeds => {
-        this.settingsFeeds = newFeeds;
-        this.markSelectedOptions();
-      }
-    );
-  }
-
-  ngOnDestroy() {
-    this.feedsSettingsSubscription.unsubscribe();
-  }
-
-  markSelectedOptions() {
-    this.selectedFeedsByUrl = this.settingsFeeds
-      .filter(feed => feed.active)
-      .map(feed => feed.url);
-
-    if (this.settingsFeeds.length === this.selectedFeedsByUrl.length) {
-      this.selectedFeedsByUrl.push('all');
-    }
-  }
+  constructor(private store: Store) { }
 
   onOptionChangedSlider($event: MatSlideToggleChange) {
     if ($event.source.id === 'all') {
       if ($event.checked) {
-        this.feedService.setAllFeedsEnabled();
+        this.store.dispatch(new SetAllFeedsEnabled());
       } else {
-        this.feedService.setAllFeedsDisabled();
+        this.store.dispatch(new SetAllFeedsDisabled());
       }
     } else {
       if ($event.checked) {
-        this.feedService.setFeedEnabled($event.source.id);
+        this.store.dispatch(new SetFeedEnabled($event.source.id));
       } else {
-        this.feedService.setFeedDisabled($event.source.id);
+        this.store.dispatch(new SetFeedDisabled($event.source.id));
       }
     }
   }

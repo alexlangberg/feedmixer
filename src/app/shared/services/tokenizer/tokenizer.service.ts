@@ -1,30 +1,38 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import * as stopword from 'stopword';
 import { FeedsService } from '../feeds/feeds.service';
-import { Subject, Subscription } from 'rxjs';
+import { Observable, Subject, Subscription } from 'rxjs';
 import { Jsonfeed } from '../../models/jsonfeed.model';
 import { Token } from '../../models/token.model';
 import { JsonfeedItem } from '../../models/jsonfeed-item.model';
+import { Select, Store } from '@ngxs/store';
+import { SettingsState } from '../../state/settings.state';
+import { SettingsFeed } from '../../models/settings-feed.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TokenizerService implements OnDestroy {
+  @Select(SettingsState.getActiveFeedsUrls) activeFeedsUrls$: Observable<SettingsFeed[]>;
+
   private feedsTokenMaps: Map<string, Map<string, number>> = new Map;
   private readonly feedChanged$: Subscription;
   private readonly feedsSettingsChanged$: Subscription;
   tokensChanged$ = new Subject<Token[]>();
 
   // TODO should be done differently to not have this dependency
-  constructor(private feedService: FeedsService) {
+  constructor(
+    private feedService: FeedsService,
+    private store: Store
+  ) {
     this.feedChanged$ = feedService.feedChanged$.subscribe(feed => {
       this.mapFeed(feed);
       this.emitNewTokens();
     });
 
-    // this.feedsSettingsChanged$ = feedService.feedsSettingsChanged$.subscribe(() => {
-    //   this.emitNewTokens();
-    // });
+    this.activeFeedsUrls$.subscribe(() => {
+      this.emitNewTokens();
+    });
   }
 
   /**

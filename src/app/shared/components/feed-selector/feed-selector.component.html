@@ -1,6 +1,6 @@
 <div fxLayout="column" fxLayoutGap="8px">
   <mat-slide-toggle
-    [checked]="selectedFeedsByUrl.includes('all')"
+    [checked]="(activeFeedsUrls$ | async).length === (feeds$ | async).length"
     (change)="onOptionChangedSlider($event)"
     id="all"
     fxFlex>
@@ -8,8 +8,8 @@
   </mat-slide-toggle>
   <mat-divider></mat-divider>
   <mat-slide-toggle
-    *ngFor="let feed of settingsFeeds"
-    [checked]="selectedFeedsByUrl.includes(feed.url)"
+    *ngFor="let feed of feeds$ | async"
+    [checked]="(activeFeedsUrls$ | async).includes(feed.url)"
     (change)="onOptionChangedSlider($event)"
     [id]="feed.url"
     fxFlex>

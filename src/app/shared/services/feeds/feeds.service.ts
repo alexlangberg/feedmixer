@@ -17,7 +17,6 @@ export class FeedsService implements OnDestroy {
   @Select(SettingsState.getSettings) settings$: Observable<SettingsFile>;
   private settings: SettingsFile;
 
-  feedsSettingsChanged$ = new Subject<SettingsFeed[]>();
   feedChanged$ = new Subject<Jsonfeed>();
   feedMixChanged$ = new Subject<JsonfeedItem[]>();
   private autoRefresher$: Subscription;
@@ -26,8 +25,8 @@ export class FeedsService implements OnDestroy {
   constructor(private apiService: ApiService) {
     this.settings$.subscribe(settings => {
       this.settings = settings;
-      this.emitNewFeedSettings();
       this.refreshAllFeeds();
+      this.emitNewFeedMix();
     });
   }
 
@@ -36,15 +35,7 @@ export class FeedsService implements OnDestroy {
       - new Date(a.date_published || 0).getTime();
   }
 
-  private emitNewFeedSettings() {
-    this.feedsSettingsChanged$.next(this.settings.feeds);
-  }
-
   ngOnDestroy() {
-    if (this.feedsSettingsChanged$) {
-      this.feedsSettingsChanged$.unsubscribe();
-    }
-
     if (this.feedChanged$) {
       this.feedChanged$.unsubscribe();
     }
@@ -71,34 +62,6 @@ export class FeedsService implements OnDestroy {
 
   getActiveFeeds(): SettingsFeed[] {
     return this.settings.feeds.filter(feed => feed.active);
-  }
-
-  setFeedEnabled(url: string) {
-    const feed = this.getSettingsFeed(url);
-
-    if (feed) {
-      feed.active = true;
-      this.emitNewFeedSettings();
-      this.refreshFeed(url);
-    }
-  }
-
-  setAllFeedsEnabled() {
-    this.settings.feeds.forEach(feed => this.setFeedEnabled(feed.url));
-  }
-
-  setAllFeedsDisabled() {
-    this.settings.feeds.forEach(feed => this.setFeedDisabled(feed.url));
-  }
-
-  setFeedDisabled(url: string) {
-    const feed = this.getSettingsFeed(url);
-
-    if (feed) {
-      feed.active = false;
-      this.emitNewFeedSettings();
-      this.emitNewFeedMix();
-    }
   }
 
   isFeedActive(url: string): boolean {
