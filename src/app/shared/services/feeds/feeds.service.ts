@@ -7,11 +7,15 @@ import { filter, map, mergeMap, scan, tap } from 'rxjs/operators';
 import { JsonfeedItem } from '../../models/jsonfeed-item.model';
 import { SettingsFeed } from '../../models/settings-feed.model';
 import * as moment from 'moment';
+import { SettingsState } from '../../state/settings.state';
+import { Select } from '@ngxs/store';
 
 @Injectable({
   providedIn: 'root'
 })
 export class FeedsService implements OnDestroy {
+  @Select(SettingsState) settings$: Observable<SettingsFile>;
+
   feedsSettingsChanged$ = new Subject<SettingsFeed[]>();
   feedChanged$ = new Subject<Jsonfeed>();
   feedMixChanged$ = new Subject<JsonfeedItem[]>();
@@ -19,7 +23,14 @@ export class FeedsService implements OnDestroy {
   private feeds: Jsonfeed[] = [];
   private settings: SettingsFile;
 
-  constructor(private apiService: ApiService) {}
+  constructor(private apiService: ApiService) {
+    this.settings$.subscribe(settings => {
+      console.log(settings);
+      // this.settings = settings;
+      // this.emitNewFeedSettings();
+      // this.refreshAllFeeds();
+    });
+  }
 
   static sortByDate(a: JsonfeedItem, b: JsonfeedItem) {
     return new Date(b.date_published || 0).getTime()

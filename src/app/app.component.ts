@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { SettingsFile } from './shared/models/settings-file.model';
 import { FeedsService } from './shared/services/feeds/feeds.service';
+import { Store } from '@ngxs/store';
+import { SetSettings } from './shared/actions/settings.actions';
 
 @Component({
   selector: 'app-root',
@@ -13,10 +15,15 @@ export class AppComponent implements OnInit {
 
   constructor(
     private http: HttpClient,
-    private feedService: FeedsService
+    private feedService: FeedsService,
+    private store: Store
   ) {}
 
   ngOnInit() {
+    this.fetchSettings();
+  }
+
+  fetchSettings() {
     this.http.get('./../../../settings.json')
       .subscribe((result: SettingsFile) => {
         result.feeds = result.feeds
@@ -26,6 +33,8 @@ export class AppComponent implements OnInit {
           });
 
         this.settings = result;
+
+        this.store.dispatch(new SetSettings(result));
 
         this.feedService.setup(this.settings);
       });

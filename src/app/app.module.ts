@@ -18,26 +18,26 @@ import { SettingsComponent } from './shared/components/settings/settings.compone
 import { FeedItemInfoComponent } from './shared/components/feed-item-info/feed-item-info.component';
 import { RedditUrlLookupComponent } from './shared/components/reddit-url-lookup/reddit-url-lookup.component';
 import { FeedItemTermsSearchComponent } from './shared/components/feed-item-terms-search/feed-item-terms-search.component';
+import { NgxsModule } from '@ngxs/store';
+import { NgxsReduxDevtoolsPluginModule } from '@ngxs/devtools-plugin';
+import { NgxsLoggerPluginModule } from '@ngxs/logger-plugin';
 
 import {
   MatAutocompleteModule,
-  MatBadgeModule,
   MatButtonModule,
-  MatCardModule,
   MatChipsModule,
+  MatDividerModule,
   MatExpansionModule,
   MatIconModule,
   MatInputModule,
-  MatListModule,
   MatPaginatorModule,
-  MatRadioModule,
   MatSelectModule,
   MatSidenavModule,
   MatSlideToggleModule,
   MatTableModule,
-  MatTabsModule,
   MatToolbarModule
 } from '@angular/material';
+import { SettingsState } from './shared/state/settings.state';
 
 @NgModule({
   declarations: [
@@ -63,22 +63,23 @@ import {
     MatPaginatorModule,
     MatInputModule,
     MatButtonModule,
-    MatCardModule,
     MatToolbarModule,
     MatSidenavModule,
     MatExpansionModule,
-    MatListModule,
-    MatTabsModule,
-    MatRadioModule,
     MatSlideToggleModule,
     MatSelectModule,
-    MatBadgeModule,
     MatAutocompleteModule,
     MatChipsModule,
+    MatDividerModule,
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
-    LayoutModule
+    LayoutModule,
+    NgxsModule.forRoot([
+      SettingsState
+    ]),
+    NgxsReduxDevtoolsPluginModule.forRoot(),
+    NgxsLoggerPluginModule.forRoot()
   ],
   providers: [],
   bootstrap: [AppComponent]
