@@ -4,6 +4,6 @@ export class SettingsFeed {
     public url: string,
     public language: string,
     public active: boolean,
-    public lastUpdated: Date | undefined
+    public updatedAt: Date | undefined
   ) {}
 }

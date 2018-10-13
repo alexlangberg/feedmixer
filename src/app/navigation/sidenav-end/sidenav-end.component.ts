@@ -19,9 +19,9 @@ export class SidenavEndComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    this.showItemInfo$ = this.uiService.showItemInfo$.subscribe(url => {
-      this.item = this.feedService.getFeedItem(url);
-    });
+    // this.showItemInfo$ = this.uiService.showItemInfo$.subscribe(url => {
+    //   this.item = this.feedService.getFeedItem(url);
+    // });
   }
 
   ngOnDestroy() {

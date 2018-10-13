@@ -3,8 +3,10 @@ import { FeedsService } from '../shared/services/feeds/feeds.service';
 import { JsonfeedItem } from '../shared/models/jsonfeed-item.model';
 import { MatPaginator, MatTableDataSource } from '@angular/material';
 import { SearchService } from '../shared/services/search/search.service';
-import { ReplaySubject, Subscription } from 'rxjs';
+import { Observable, ReplaySubject, Subscription } from 'rxjs';
 import { UIService } from '../shared/services/ui/ui.service';
+import { Select } from '@ngxs/store';
+import { FeedsState } from '../shared/state/feeds.state';
 
 @Component({
   selector: 'app-feed',
@@ -12,13 +14,12 @@ import { UIService } from '../shared/services/ui/ui.service';
   styleUrls: ['./feed.component.css']
 })
 export class FeedComponent implements OnInit, OnDestroy, AfterViewInit {
+  @Select(FeedsState.getFeedsItems) feeds$: Observable<JsonfeedItem[]>;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   dataSource: MatTableDataSource<JsonfeedItem> = new MatTableDataSource<JsonfeedItem>();
-  displayedColumns: string[] = ['date_published', 'title', 'options'];
-  private feedMixChanged$: Subscription;
+  columnsChanged$ = new ReplaySubject<string[]>(1);
   private searchChanged$: Subscription;
   private screenSizeChanged$: Subscription;
-  columnsChanged$ = new ReplaySubject<string[]>(1);
 
   constructor(
     public uiService: UIService,
@@ -27,10 +28,9 @@ export class FeedComponent implements OnInit, OnDestroy, AfterViewInit {
   ) {}
 
   ngOnInit() {
-    this.feedMixChanged$ = this.feedService.feedMixChanged$
-      .subscribe((newFeed: JsonfeedItem[]) => {
-        this.dataSource.data = newFeed;
-      });
+    this.feeds$.subscribe(items => {
+      this.dataSource.data = items;
+    });
 
     this.searchChanged$ = this.searchService.searchChanged$
       .subscribe(text => {
@@ -48,10 +48,6 @@ export class FeedComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnDestroy() {
-    if (this.feedMixChanged$) {
-      this.feedMixChanged$.unsubscribe();
-    }
-
     if (this.searchChanged$) {
       this.searchChanged$.unsubscribe();
     }

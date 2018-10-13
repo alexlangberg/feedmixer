@@ -38,6 +38,7 @@ import {
   MatToolbarModule
 } from '@angular/material';
 import { SettingsState } from './shared/state/settings.state';
+import { FeedsState } from './shared/state/feeds.state';
 
 @NgModule({
   declarations: [
@@ -76,7 +77,8 @@ import { SettingsState } from './shared/state/settings.state';
     ReactiveFormsModule,
     LayoutModule,
     NgxsModule.forRoot([
-      SettingsState
+      SettingsState,
+      FeedsState
     ]),
     NgxsReduxDevtoolsPluginModule.forRoot(),
     NgxsLoggerPluginModule.forRoot()

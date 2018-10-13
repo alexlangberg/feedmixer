@@ -33,6 +33,6 @@ export class NavigationComponent implements OnInit {
   }
 
   onRefresh() {
-    this.feedsSelectorService.refreshAllFeeds();
+    this.feedsSelectorService.ngxsRefreshAllFeeds();
   }
 }

@@ -25,10 +25,10 @@ export class TokenizerService implements OnDestroy {
     private feedService: FeedsService,
     private store: Store
   ) {
-    this.feedChanged$ = feedService.feedChanged$.subscribe(feed => {
-      this.mapFeed(feed);
-      this.emitNewTokens();
-    });
+    // this.feedChanged$ = feedService.feedChanged$.subscribe(feed => {
+    //   this.mapFeed(feed);
+    //   this.emitNewTokens();
+    // });
 
     this.activeFeedsUrls$.subscribe(() => {
       this.emitNewTokens();
@@ -79,7 +79,8 @@ export class TokenizerService implements OnDestroy {
   }
 
   getAllTokens() {
-    const activeFeeds = this.feedService.getActiveFeeds();
+    // const activeFeeds = this.feedService.getActiveFeeds();
+    const activeFeeds = this.store.select(state => state.settings.feeds.filter((feed: SettingsFeed) => feed.active));
     const totalMap = new Map;
 
     activeFeeds.forEach(feed => {

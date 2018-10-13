@@ -1,7 +1,8 @@
 import { Action, Selector, State, StateContext } from '@ngxs/store';
 import {
-  SetAllFeedsStatus,
-  SetFeedStatus,
+  SetAllSettingsFeedsStatus,
+  SetSettingsFeedStatus,
+  SetSettingsFeedsUpdatedAt,
   UpdateSettingsFromFile
 } from '../actions/settings.actions';
 import { SettingsFeed } from '../models/settings-feed.model';
@@ -29,23 +30,23 @@ export class SettingsState {
   }
 
   @Selector()
-  static getFeeds(state: SettingsStateModel) {
+  static getSettingsFeeds(state: SettingsStateModel) {
     return SettingsState
       .getSettings(state)
       .feeds;
   }
 
   @Selector()
-  static getActiveFeeds(state: SettingsStateModel) {
+  static getActiveSettingsFeeds(state: SettingsStateModel) {
     return SettingsState
-      .getFeeds(state)
+      .getSettingsFeeds(state)
       .filter(feed => feed.active);
   }
 
   @Selector()
   static getActiveFeedsUrls(state: SettingsStateModel) {
     return SettingsState
-      .getActiveFeeds(state)
+      .getActiveSettingsFeeds(state)
       .map(feed => feed.url);
   }
 
@@ -54,8 +55,8 @@ export class SettingsState {
     ctx.patchState(action.payload);
   }
 
-  @Action(SetAllFeedsStatus)
-  setAllFeedsStatus(ctx: StateContext<SettingsStateModel>, action: SetAllFeedsStatus) {
+  @Action(SetAllSettingsFeedsStatus)
+  setAllFeedsStatus(ctx: StateContext<SettingsStateModel>, action: SetAllSettingsFeedsStatus) {
     ctx.patchState({
       feeds: ctx.getState().feeds.map(feed => {
         feed.active = action.payload;
@@ -65,12 +66,25 @@ export class SettingsState {
     });
   }
 
-  @Action(SetFeedStatus)
-  setFeedStatus(ctx: StateContext<SettingsStateModel>, action: SetFeedStatus) {
+  @Action(SetSettingsFeedStatus)
+  setFeedStatus(ctx: StateContext<SettingsStateModel>, action: SetSettingsFeedStatus) {
     ctx.patchState({
       feeds: ctx.getState().feeds.map(item => {
         if (item.url === action.payload.url) {
           item.active = action.payload.active;
+        }
+
+        return item;
+      })
+    });
+  }
+
+  @Action(SetSettingsFeedsUpdatedAt)
+  setFeedsUpdatedAt(ctx: StateContext<SettingsStateModel>, action: SetSettingsFeedsUpdatedAt) {
+    ctx.patchState({
+      feeds: ctx.getState().feeds.map(item => {
+        if (action.payload.feeds.find(feed => feed.url === item.url)) {
+          item.updatedAt = action.payload.updatedAt;
         }
 
         return item;
