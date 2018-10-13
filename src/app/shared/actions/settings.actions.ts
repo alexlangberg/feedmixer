@@ -5,22 +5,12 @@ export class UpdateSettingsFromFile {
   constructor(public payload: SettingsStateModel) {}
 }
 
-export class SetAllFeedsEnabled {
-  static readonly type = '[SETTINGS] Enable all feeds';
-  constructor() {}
+export class SetAllFeedsStatus {
+  static readonly type = '[SETTINGS] Set all feeds status';
+  constructor(public payload: boolean) {}
 }
 
-export class SetAllFeedsDisabled {
-  static readonly type = '[SETTINGS] Disable all feeds';
-  constructor() {}
-}
-
-export class SetFeedEnabled {
-  static readonly type = '[SETTINGS] Enable feed';
-  constructor(public payload: string) {}
-}
-
-export class SetFeedDisabled {
-  static readonly type = '[SETTINGS] Disable feed';
-  constructor(public payload: string) {}
+export class SetFeedStatus {
+  static readonly type = '[SETTINGS] Set feed status';
+  constructor(public payload: { url: string, active: boolean }) {}
 }

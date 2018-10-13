@@ -1,7 +1,7 @@
 import { Action, Selector, State, StateContext } from '@ngxs/store';
 import {
-  SetAllFeedsDisabled,
-  SetAllFeedsEnabled, SetFeedDisabled, SetFeedEnabled,
+  SetAllFeedsStatus,
+  SetFeedStatus,
   UpdateSettingsFromFile
 } from '../actions/settings.actions';
 import { SettingsFeed } from '../models/settings-feed.model';
@@ -30,12 +30,15 @@ export class SettingsState {
 
   @Selector()
   static getFeeds(state: SettingsStateModel) {
-    return state.feeds;
+    return SettingsState
+      .getSettings(state)
+      .feeds;
   }
 
   @Selector()
   static getActiveFeeds(state: SettingsStateModel) {
-    return state.feeds
+    return SettingsState
+      .getFeeds(state)
       .filter(feed => feed.active);
   }
 
@@ -51,46 +54,23 @@ export class SettingsState {
     ctx.patchState(action.payload);
   }
 
-  @Action(SetAllFeedsEnabled)
-  setAllFeedsEnabled(ctx: StateContext<SettingsStateModel>) {
+  @Action(SetAllFeedsStatus)
+  setAllFeedsStatus(ctx: StateContext<SettingsStateModel>, action: SetAllFeedsStatus) {
     ctx.patchState({
       feeds: ctx.getState().feeds.map(feed => {
-        feed.active = true;
+        feed.active = action.payload;
+
         return feed;
       })
     });
   }
 
-  @Action(SetAllFeedsDisabled)
-  setAllFeedsDisabled(ctx: StateContext<SettingsStateModel>) {
-    ctx.patchState({
-      feeds: ctx.getState().feeds.map(feed => {
-        feed.active = false;
-        return feed;
-      })
-    });
-  }
-
-  @Action(SetFeedEnabled)
-  setFeedEnabled(ctx: StateContext<SettingsStateModel>, action: SetFeedEnabled) {
+  @Action(SetFeedStatus)
+  setFeedStatus(ctx: StateContext<SettingsStateModel>, action: SetFeedStatus) {
     ctx.patchState({
       feeds: ctx.getState().feeds.map(item => {
-        if (item.url === action.payload) {
-          item.active = true;
-        }
-
-        return item;
-      })
-    });
-  }
-
-  @Action(SetFeedDisabled)
-  setFeedDisabled(ctx: StateContext<SettingsStateModel>, action: SetFeedDisabled) {
-    console.log(action);
-    ctx.patchState({
-      feeds: ctx.getState().feeds.map(item => {
-        if (item.url === action.payload) {
-          item.active = false;
+        if (item.url === action.payload.url) {
+          item.active = action.payload.active;
         }
 
         return item;

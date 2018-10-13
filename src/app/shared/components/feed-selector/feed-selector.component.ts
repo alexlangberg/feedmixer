@@ -1,15 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { SettingsFeed } from '../../models/settings-feed.model';
 import { Observable } from 'rxjs';
 import { MatSlideToggleChange } from '@angular/material';
 import { Select, Store } from '@ngxs/store';
 import { SettingsState } from '../../state/settings.state';
-import {
-  SetAllFeedsDisabled,
-  SetAllFeedsEnabled,
-  SetFeedDisabled,
-  SetFeedEnabled
-} from '../../actions/settings.actions';
+import { SetAllFeedsStatus, SetFeedStatus } from '../../actions/settings.actions';
 
 @Component({
   selector: 'app-feeds-selector',
@@ -24,17 +19,12 @@ export class FeedSelectorComponent {
 
   onOptionChangedSlider($event: MatSlideToggleChange) {
     if ($event.source.id === 'all') {
-      if ($event.checked) {
-        this.store.dispatch(new SetAllFeedsEnabled());
-      } else {
-        this.store.dispatch(new SetAllFeedsDisabled());
-      }
+      this.store.dispatch(new SetAllFeedsStatus($event.checked));
     } else {
-      if ($event.checked) {
-        this.store.dispatch(new SetFeedEnabled($event.source.id));
-      } else {
-        this.store.dispatch(new SetFeedDisabled($event.source.id));
-      }
+      this.store.dispatch(new SetFeedStatus({
+        url: $event.source.id,
+        active: $event.checked
+      }));
     }
   }
 }
