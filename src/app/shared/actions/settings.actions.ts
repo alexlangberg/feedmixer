@@ -1,6 +1,6 @@
-import { SettingsFile } from '../models/settings-file.model';
+import { SettingsStateModel } from '../state/settings.state';
 
-export class SetSettings {
-  static readonly type = '[SETTINGS] Set';
-  constructor(public payload: SettingsFile) {}
+export class UpdateSettingsFromFile {
+  static readonly type = '[SETTINGS] Update from file';
+  constructor(public payload: SettingsStateModel) {}
 }

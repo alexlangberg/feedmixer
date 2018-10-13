@@ -3,7 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import { SettingsFile } from './shared/models/settings-file.model';
 import { FeedsService } from './shared/services/feeds/feeds.service';
 import { Store } from '@ngxs/store';
-import { SetSettings } from './shared/actions/settings.actions';
+import { UpdateSettingsFromFile } from './shared/actions/settings.actions';
+import { SettingsStateModel } from './shared/state/settings.state';
 
 @Component({
   selector: 'app-root',
@@ -30,7 +31,7 @@ export class AppComponent implements OnInit {
             return a.name.localeCompare(b.name, undefined, {sensitivity: 'base'});
           });
 
-        this.store.dispatch(new SetSettings(result));
+        this.store.dispatch(new UpdateSettingsFromFile(<SettingsStateModel>result));
       });
   }
 }

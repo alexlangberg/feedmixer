@@ -1,15 +1,19 @@
-import { SettingsFile } from '../models/settings-file.model';
 import { Action, Selector, State, StateContext } from '@ngxs/store';
-import { SetSettings } from '../actions/settings.actions';
+import { UpdateSettingsFromFile } from '../actions/settings.actions';
+import { SettingsFeed } from '../models/settings-feed.model';
 
 export interface SettingsStateModel {
-  settings: SettingsFile;
+  autoRefreshIntervalMinutes: number;
+  cacheFeedsSeconds: number;
+  feeds: SettingsFeed[];
 }
 
 @State<SettingsStateModel>({
   name: 'settings',
   defaults: {
-    settings: new SettingsFile(5, 60, [])
+    autoRefreshIntervalMinutes: 5,
+    cacheFeedsSeconds: 60,
+    feeds: []
   }
 })
 
@@ -17,11 +21,11 @@ export class SettingsState {
 
   @Selector()
   static getSettings(state: SettingsStateModel) {
-    return state.settings;
+    return state;
   }
 
-  @Action(SetSettings)
-  setSettings(ctx: StateContext<SettingsStateModel>, action: SetSettings) {
-    ctx.setState({settings: action.payload});
+  @Action(UpdateSettingsFromFile)
+  updateSettings(ctx: StateContext<SettingsStateModel>, action: UpdateSettingsFromFile) {
+    ctx.patchState(action.payload);
   }
 }
