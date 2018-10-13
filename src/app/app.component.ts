@@ -11,8 +11,6 @@ import { SetSettings } from './shared/actions/settings.actions';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  settings: SettingsFile;
-
   constructor(
     private http: HttpClient,
     private feedService: FeedsService,
@@ -32,11 +30,9 @@ export class AppComponent implements OnInit {
             return a.name.localeCompare(b.name, undefined, {sensitivity: 'base'});
           });
 
-        this.settings = result;
-
         this.store.dispatch(new SetSettings(result));
 
-        this.feedService.setup(this.settings);
+        this.feedService.setup(result);
       });
   }
 }
