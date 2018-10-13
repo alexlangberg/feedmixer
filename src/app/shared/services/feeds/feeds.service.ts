@@ -14,33 +14,26 @@ import { Select } from '@ngxs/store';
   providedIn: 'root'
 })
 export class FeedsService implements OnDestroy {
-  @Select(SettingsState) settings$: Observable<SettingsFile>;
+  @Select(SettingsState.getSettings) settings$: Observable<SettingsFile>;
+  private settings: SettingsFile;
 
   feedsSettingsChanged$ = new Subject<SettingsFeed[]>();
   feedChanged$ = new Subject<Jsonfeed>();
   feedMixChanged$ = new Subject<JsonfeedItem[]>();
   private autoRefresher$: Subscription;
   private feeds: Jsonfeed[] = [];
-  private settings: SettingsFile;
 
   constructor(private apiService: ApiService) {
     this.settings$.subscribe(settings => {
-      console.log(settings);
-      // this.settings = settings;
-      // this.emitNewFeedSettings();
-      // this.refreshAllFeeds();
+      this.settings = settings;
+      this.emitNewFeedSettings();
+      this.refreshAllFeeds();
     });
   }
 
   static sortByDate(a: JsonfeedItem, b: JsonfeedItem) {
     return new Date(b.date_published || 0).getTime()
       - new Date(a.date_published || 0).getTime();
-  }
-
-  setup(settings: SettingsFile) {
-    this.settings = settings;
-    this.emitNewFeedSettings();
-    this.refreshAllFeeds();
   }
 
   private emitNewFeedSettings() {

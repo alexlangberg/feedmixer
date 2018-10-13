@@ -22,9 +22,9 @@ export class TokenizerService implements OnDestroy {
       this.emitNewTokens();
     });
 
-    this.feedsSettingsChanged$ = feedService.feedsSettingsChanged$.subscribe(() => {
-      this.emitNewTokens();
-    });
+    // this.feedsSettingsChanged$ = feedService.feedsSettingsChanged$.subscribe(() => {
+    //   this.emitNewTokens();
+    // });
   }
 
   /**

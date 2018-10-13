@@ -7,7 +7,10 @@ export interface SettingsStateModel {
 }
 
 @State<SettingsStateModel>({
-  name: 'settings'
+  name: 'settings',
+  defaults: {
+    settings: new SettingsFile(5, 60, [])
+  }
 })
 
 export class SettingsState {

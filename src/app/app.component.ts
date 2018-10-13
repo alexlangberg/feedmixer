@@ -31,8 +31,6 @@ export class AppComponent implements OnInit {
           });
 
         this.store.dispatch(new SetSettings(result));
-
-        this.feedService.setup(result);
       });
   }
 }
