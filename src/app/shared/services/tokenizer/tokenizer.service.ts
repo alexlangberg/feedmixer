@@ -30,9 +30,10 @@ export class TokenizerService {
   }
 
   static getTags(text: string, language?: string): string[] {
-    const sanitized = TokenizerService.removeSpecials(text.toLowerCase());
+    const sanitized = TokenizerService.removeSpecials(text);
 
     const words = sanitized
+      .toLowerCase()
       .split(' ')
       .filter(word => word !== '');
 

@@ -12,7 +12,7 @@ import { TokenizerService } from '../tokenizer/tokenizer.service';
 export class ApiService {
   constructor(private http: HttpClient) {}
 
-  getFeedFromUrl(rss_url: string): Observable<Jsonfeed> {
+  getFeedFromUrl(rss_url: string, language: string): Observable<Jsonfeed> {
     const request = <Observable<Jsonfeed>>this.http.get(
       'http://localhost:4201/convert?url=' + rss_url
     );
@@ -32,7 +32,7 @@ export class ApiService {
           : '';
 
         post._feedmixer = {
-          tags: TokenizerService.getTagsFromFeedItem(post, item._feedmixer.language || 'en')
+          tags: TokenizerService.getTagsFromFeedItem(post, language)
         };
 
         return post;

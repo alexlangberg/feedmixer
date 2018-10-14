@@ -6,6 +6,7 @@ import { Select, Store } from '@ngxs/store';
 import { SearchState } from '../../state/search.state';
 import { FeedsState } from '../../state/feeds.state';
 import { SetCurrentSearch } from '../../state/search.actions';
+import { KeyValue } from '@angular/common';
 
 @Component({
   selector: 'app-search',
@@ -44,22 +45,26 @@ export class SearchComponent implements OnInit {
         .pipe(
           startWith(''),
           map(value => {
-            return this._filter(tags, value);
+            return this.filter(tags, value);
           })
         );
     });
   }
 
-  private _filter(tags: Map<string, number>, value: string): Map<string, number> {
+  private filter(tags: Map<string, number>, value: string): Map<string, number> {
     const filteredTags = new Map;
 
     tags.forEach((count, word) => {
-      if (word.includes(value.trim().toLowerCase())) {
+      if (word.length > 3 && word.includes(value.trim().toLowerCase())) {
         filteredTags.set(word, count);
       }
     });
 
     return filteredTags;
+  }
+
+  tagComparator(a: KeyValue<string, number>, b: KeyValue<string, number>) {
+    return b.value - a.value;
   }
 
   doReset() {

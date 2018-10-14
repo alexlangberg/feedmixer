@@ -57,7 +57,7 @@ export class FeedsService implements OnDestroy {
       })).subscribe(() => {
         from(feedsToUpdate)
           .pipe(
-            mergeMap(feed => this.apiService.getFeedFromUrl(feed.url))
+            mergeMap(feed => this.apiService.getFeedFromUrl(feed.url, feed.language))
           ).subscribe(feed => {
             this.store.dispatch(new UpdateFeed({
               url: feed._feedmixer.url,

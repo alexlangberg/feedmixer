@@ -18,7 +18,7 @@
     <mat-hint>Suggestions sorted by occurences</mat-hint>
     <mat-autocomplete #auto="matAutocomplete">
       <mat-option
-        *ngFor="let option of filteredTags | async | keyvalue"
+        *ngFor="let option of filteredTags | async | keyvalue:tagComparator"
         [value]="option.key">
         {{ option.key }} ({{ option.value }})
       </mat-option>
