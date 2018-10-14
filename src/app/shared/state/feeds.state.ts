@@ -1,6 +1,6 @@
 import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
 import { Jsonfeed } from '../models/jsonfeed.model';
-import { SetFeed, SetSelectedFeedItem, UpdateFeed, UpdateTags } from '../actions/feeds.actions';
+import { SetFeed, SetSelectedFeedItem, UpdateFeed, UpdateTags } from './feeds.actions';
 import { JsonfeedItem } from '../models/jsonfeed-item.model';
 import { SettingsState, SettingsStateModel } from './settings.state';
 

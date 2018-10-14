@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { forkJoin, Observable } from 'rxjs';
 import { Jsonfeed } from '../../models/jsonfeed.model';
-import { map } from 'rxjs/operators';
+import { concatAll, map } from 'rxjs/operators';
 import { RedditPost } from '../../models/reddit-post.model';
 import { TokenizerService } from '../tokenizer/tokenizer.service';
 
@@ -43,12 +43,20 @@ export class ApiService {
   }
 
   getRedditPostsFromUrl(url: string) {
-    const request = this.http.get<{ data: { children: [{ data: RedditPost }]}}>(
-      'https://www.reddit.com/api/info.json?url=' + url
-    );
+    const otherUrl = url.includes('https')
+      ? url.replace('https', 'http')
+      : url.replace('http', 'https');
 
-    return request.pipe(map(response => {
-      const result = response.data.children.map((post: any) => {
+    // TODO: this should probably just concat results and return them
+    const requests = forkJoin([url, otherUrl].map(getUrl => {
+        return this.http.get<{ data: { children: [{ data: RedditPost }]}}>(
+          'https://www.reddit.com/api/info.json?url=' + getUrl
+        );
+      }
+    )).pipe(concatAll());
+
+    return requests.pipe(map(response => {
+      return response.data.children.map((post: any) => {
         return new RedditPost(
           post.data.title,
           post.data.subreddit,
@@ -57,8 +65,6 @@ export class ApiService {
           post.data.num_comments
         );
       }).sort((a, b) => b.num_comments - a.num_comments);
-
-      return result;
     }));
   }
 }

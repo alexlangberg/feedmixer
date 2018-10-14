@@ -7,8 +7,8 @@ import { SettingsFeed } from '../../models/settings-feed.model';
 import * as moment from 'moment';
 import { SettingsState } from '../../state/settings.state';
 import { Select, Store } from '@ngxs/store';
-import { SetSelectedFeedItem, UpdateFeed, UpdateTags } from '../../actions/feeds.actions';
-import { SetSettingsFeedsUpdatedAt } from '../../actions/settings.actions';
+import { SetSelectedFeedItem, UpdateFeed, UpdateTags } from '../../state/feeds.actions';
+import { SetSettingsFeedsUpdatedAt } from '../../state/settings.actions';
 import { JsonfeedItem } from '../../models/jsonfeed-item.model';
 
 @Injectable({

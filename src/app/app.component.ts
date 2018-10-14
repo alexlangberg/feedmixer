@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { SettingsFile } from './shared/models/settings-file.model';
 import { FeedsService } from './shared/services/feeds/feeds.service';
 import { Store } from '@ngxs/store';
-import { UpdateSettingsFromFile } from './shared/actions/settings.actions';
+import { UpdateSettingsFromFile } from './shared/state/settings.actions';
 import { SettingsStateModel } from './shared/state/settings.state';
 
 @Component({

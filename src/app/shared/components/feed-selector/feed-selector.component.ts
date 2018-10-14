@@ -7,7 +7,7 @@ import { SettingsState } from '../../state/settings.state';
 import {
   SetAllSettingsFeedsStatus,
   SetSettingsFeedStatus
-} from '../../actions/settings.actions';
+} from '../../state/settings.actions';
 
 @Component({
   selector: 'app-feeds-selector',

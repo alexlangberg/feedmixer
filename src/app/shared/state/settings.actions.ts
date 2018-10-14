@@ -1,4 +1,4 @@
-import { SettingsStateModel } from '../state/settings.state';
+import { SettingsStateModel } from './settings.state';
 import { SettingsFeed } from '../models/settings-feed.model';
 
 export class UpdateSettingsFromFile {

@@ -14,18 +14,20 @@ import { Observable } from 'rxjs';
 export class RedditUrlLookupComponent {
   @Select(FeedsState.getSelectedFeedItem) item$: Observable<JsonfeedItem>;
   item: JsonfeedItem;
-  posts: RedditPost[];
+  posts: RedditPost[] = [];
   isLoading: boolean;
 
   constructor(private apiService: ApiService) {
     this.item$.subscribe(item => {
       this.item = item;
+      this.posts = [];
 
       if (item.url) {
         this.isLoading = true;
 
         this.apiService.getRedditPostsFromUrl(item.url).subscribe(posts => {
-          this.posts = posts;
+          console.log(posts);
+          this.posts = this.posts.concat(posts);
 
           this.isLoading = false;
         });

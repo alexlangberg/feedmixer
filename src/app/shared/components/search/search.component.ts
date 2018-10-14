@@ -5,7 +5,7 @@ import { debounceTime, distinctUntilChanged, map, startWith } from 'rxjs/operato
 import { Select, Store } from '@ngxs/store';
 import { SearchState } from '../../state/search.state';
 import { FeedsState } from '../../state/feeds.state';
-import { SetCurrentSearch } from '../../actions/search.actions';
+import { SetCurrentSearch } from '../../state/search.actions';
 
 @Component({
   selector: 'app-search',

@@ -4,7 +4,7 @@ import {
   SetSettingsFeedStatus,
   SetSettingsFeedsUpdatedAt,
   UpdateSettingsFromFile
-} from '../actions/settings.actions';
+} from './settings.actions';
 import { SettingsFeed } from '../models/settings-feed.model';
 
 export interface SettingsStateModel {

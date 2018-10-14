@@ -4,7 +4,7 @@ import { TokenizerService } from '../../services/tokenizer/tokenizer.service';
 import { Select, Store } from '@ngxs/store';
 import { FeedsState } from '../../state/feeds.state';
 import { Observable } from 'rxjs';
-import { SetCurrentSearch } from '../../actions/search.actions';
+import { SetCurrentSearch } from '../../state/search.actions';
 
 @Component({
   selector: 'app-feed-item-terms-search',

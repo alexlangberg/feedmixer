@@ -1,5 +1,5 @@
 import { Action, Selector, State, StateContext } from '@ngxs/store';
-import { SetCurrentSearch } from '../actions/search.actions';
+import { SetCurrentSearch } from './search.actions';
 export interface SearchStateModel {
   current: string;
 }
