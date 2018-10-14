@@ -4,7 +4,10 @@ import { Observable } from 'rxjs';
 import { MatSlideToggleChange } from '@angular/material';
 import { Select, Store } from '@ngxs/store';
 import { SettingsState } from '../../state/settings.state';
-import { SetAllSettingsFeedsStatus, SetSettingsFeedStatus } from '../../actions/settings.actions';
+import {
+  SetAllSettingsFeedsStatus,
+  SetSettingsFeedStatus
+} from '../../actions/settings.actions';
 
 @Component({
   selector: 'app-feeds-selector',

@@ -1,12 +1,17 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { ReplaySubject, Subject, Subscription } from 'rxjs';
+import { Observable, ReplaySubject, Subscription } from 'rxjs';
 import { MediaChange, ObservableMedia } from '@angular/flex-layout';
 import { MatSidenav } from '@angular/material';
+import { Select } from '@ngxs/store';
+import { FeedsState } from '../../state/feeds.state';
+import { JsonfeedItem } from '../../models/jsonfeed-item.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UIService implements OnDestroy {
+  @Select(FeedsState.getSelectedFeedItem) item$: Observable<JsonfeedItem>;
+
   screenSize: string;
   small: boolean;
   medium: boolean;
@@ -18,7 +23,6 @@ export class UIService implements OnDestroy {
   isSidenavEndOpen: boolean;
   sidenavMode: string;
   sidenavEndMode: string;
-  showItemInfo$ = new Subject<string>();
   private readonly mediaWatcher$: Subscription;
   private sidenavOpening$: Subscription;
   private sidenavClosing$: Subscription;
@@ -64,6 +68,12 @@ export class UIService implements OnDestroy {
         this.sidenavEndMode = 'side';
       }
     });
+
+    this.item$.subscribe(() => {
+      if (this.sidenavEnd) {
+        this.sidenavEnd.open();
+      }
+    });
   }
 
   ngOnDestroy() {
@@ -73,10 +83,6 @@ export class UIService implements OnDestroy {
 
     if (this.screenSizeChanged$) {
       this.screenSizeChanged$.unsubscribe();
-    }
-
-    if (this.showItemInfo$) {
-      this.showItemInfo$.unsubscribe();
     }
 
     if (this.sidenavOpening$) {
@@ -126,10 +132,5 @@ export class UIService implements OnDestroy {
 
   doToggleSidenavEnd() {
     this.sidenavEnd.toggle();
-  }
-
-  onShowItemInfo(url: string) {
-    this.showItemInfo$.next(url);
-    this.sidenavEnd.open();
   }
 }

@@ -1,17 +1,19 @@
 import { Action, Selector, State, StateContext } from '@ngxs/store';
 import { Jsonfeed } from '../models/jsonfeed.model';
-import { SetFeed, UpdateFeed } from '../actions/feeds.actions';
+import { SetFeed, SetSelectedFeedItem, UpdateFeed } from '../actions/feeds.actions';
 import { JsonfeedItem } from '../models/jsonfeed-item.model';
 import { SettingsState, SettingsStateModel } from './settings.state';
 
 export interface FeedsStateModel {
   feeds: Map<string, Jsonfeed>;
+  selectedFeedItem: JsonfeedItem | undefined;
 }
 
 @State<FeedsStateModel>({
   name: 'feeds',
   defaults: {
-    feeds: new Map
+    feeds: new Map,
+    selectedFeedItem: undefined
   }
 })
 
@@ -36,6 +38,11 @@ export class FeedsState {
       }
     });
 
+    allItems = allItems.sort((a, b) => {
+      return new Date(b.date_published || 0).getTime()
+        - new Date(a.date_published || 0).getTime();
+    });
+
     return allItems;
   }
 
@@ -44,10 +51,22 @@ export class FeedsState {
     return FeedsState.getFeeds(state);
   }
 
+  @Selector()
+  static getSelectedFeedItem(state: FeedsStateModel) {
+    return state.selectedFeedItem;
+  }
+
   @Action(SetFeed)
   setFeed(ctx: StateContext<FeedsStateModel>, action: SetFeed) {
     ctx.patchState({
       feeds: ctx.getState().feeds.set(action.payload.url, action.payload.feed)
+    });
+  }
+
+  @Action(SetSelectedFeedItem)
+  setSelectedFeedItem(ctx: StateContext<FeedsStateModel>, action: SetSelectedFeedItem) {
+    ctx.patchState({
+      selectedFeedItem: action.payload.feedItem
     });
   }
 

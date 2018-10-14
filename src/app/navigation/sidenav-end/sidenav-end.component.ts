@@ -1,38 +1,17 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { UIService } from '../../shared/services/ui/ui.service';
-import { Subscription } from 'rxjs';
-import { FeedsService } from '../../shared/services/feeds/feeds.service';
+import { Observable } from 'rxjs';
 import { JsonfeedItem } from '../../shared/models/jsonfeed-item.model';
+import { Select } from '@ngxs/store';
+import { FeedsState } from '../../shared/state/feeds.state';
 
 @Component({
   selector: 'app-sidenav-end',
   templateUrl: './sidenav-end.component.html',
   styleUrls: ['./sidenav-end.component.css']
 })
-export class SidenavEndComponent implements OnInit, OnDestroy {
-  private showItemInfo$: Subscription;
-  item: JsonfeedItem | undefined;
+export class SidenavEndComponent {
+  @Select(FeedsState.getSelectedFeedItem) item$: Observable<JsonfeedItem>;
 
-  constructor(
-    private uiService: UIService,
-    private feedService: FeedsService
-  ) { }
-
-  ngOnInit() {
-    // this.showItemInfo$ = this.uiService.showItemInfo$.subscribe(url => {
-    //   this.item = this.feedService.getFeedItem(url);
-    // });
-  }
-
-  ngOnDestroy() {
-    if (this.showItemInfo$) {
-      this.showItemInfo$.unsubscribe();
-    }
-  }
-
-  doCloseSidenavEnd() {
-    if (!this.uiService.large) {
-      this.uiService.doToggleSidenavEnd();
-    }
-  }
+  constructor(public uiService: UIService) { }
 }

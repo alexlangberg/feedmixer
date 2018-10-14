@@ -1,6 +1,6 @@
-<div *ngIf="item">
+<div *ngIf="(item$ | async)">
   <div style="padding: 16px 24px">
-    <app-feed-item-info [item]="item"></app-feed-item-info>
+    <app-feed-item-info [item]="item$ | async"></app-feed-item-info>
   </div>
 
   <mat-divider></mat-divider>
@@ -12,8 +12,8 @@
       </mat-panel-title>
     </mat-expansion-panel-header>
     <app-feed-item-terms-search
-      [item]="item"
-      (search$)="doCloseSidenavEnd()"></app-feed-item-terms-search>
+      [item]="item$ | async"
+      (search$)="uiService.doToggleSidenavEnd()"></app-feed-item-terms-search>
   </mat-expansion-panel>
 
   <mat-divider></mat-divider>
@@ -24,11 +24,11 @@
         <mat-icon>insert_emoticon</mat-icon>Reddit
       </mat-panel-title>
     </mat-expansion-panel-header>
-    <app-reddit-url-lookup [item]="item"></app-reddit-url-lookup>
+    <app-reddit-url-lookup [item]="item$ | async"></app-reddit-url-lookup>
   </mat-expansion-panel>
   <mat-divider></mat-divider>
 </div>
 
-<div *ngIf="!item" style="padding: 24px">
+<div *ngIf="!(item$ | async)" style="padding: 24px">
   Click the info icon on an item in the list to see more info here.
 </div>

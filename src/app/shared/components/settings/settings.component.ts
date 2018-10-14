@@ -8,12 +8,12 @@ import { FeedsService } from '../../services/feeds/feeds.service';
 })
 export class SettingsComponent implements OnInit {
 
-  constructor(private feedsSelectorService: FeedsService) { }
+  constructor(private feedsService: FeedsService) { }
 
   ngOnInit() {
   }
 
   onAutoRefreshToggle($event: boolean) {
-    this.feedsSelectorService.toggleAutoRefresher($event);
+    this.feedsService.toggleAutoRefresher($event);
   }
 }

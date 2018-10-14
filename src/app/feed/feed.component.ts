@@ -16,14 +16,14 @@ import { FeedsState } from '../shared/state/feeds.state';
 export class FeedComponent implements OnInit, OnDestroy, AfterViewInit {
   @Select(FeedsState.getFeedsItems) feeds$: Observable<JsonfeedItem[]>;
   @ViewChild(MatPaginator) paginator: MatPaginator;
-  dataSource: MatTableDataSource<JsonfeedItem> = new MatTableDataSource<JsonfeedItem>();
-  columnsChanged$ = new ReplaySubject<string[]>(1);
   private searchChanged$: Subscription;
   private screenSizeChanged$: Subscription;
+  dataSource: MatTableDataSource<JsonfeedItem> = new MatTableDataSource<JsonfeedItem>();
+  columnsChanged$ = new ReplaySubject<string[]>(1);
 
   constructor(
     public uiService: UIService,
-    private feedService: FeedsService,
+    public feedService: FeedsService,
     private searchService: SearchService
   ) {}
 
