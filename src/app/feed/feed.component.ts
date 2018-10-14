@@ -17,7 +17,6 @@ export class FeedComponent implements OnInit, OnDestroy, AfterViewInit {
   @Select(FeedsState.getActiveFeedsItems) feeds$: Observable<JsonfeedItem[]>;
   @Select(SearchState.getCurrentSearch) search$: Observable<string>;
   @ViewChild(MatPaginator) paginator: MatPaginator;
-  private searchChanged$: Subscription;
   private screenSizeChanged$: Subscription;
   dataSource: MatTableDataSource<JsonfeedItem> = new MatTableDataSource<JsonfeedItem>();
   columnsChanged$ = new ReplaySubject<string[]>(1);
@@ -47,10 +46,6 @@ export class FeedComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnDestroy() {
-    if (this.searchChanged$) {
-      this.searchChanged$.unsubscribe();
-    }
-
     if (this.screenSizeChanged$) {
       this.screenSizeChanged$.unsubscribe();
     }
@@ -62,5 +57,10 @@ export class FeedComponent implements OnInit, OnDestroy, AfterViewInit {
 
   doFilter(filterValue: string) {
     this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
+
+  setSelectedItem(item: JsonfeedItem) {
+    this.feedService.setSelectedFeedItem(item);
+    this.uiService.sidenavEnd.open();
   }
 }
