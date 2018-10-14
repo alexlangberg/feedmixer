@@ -2,11 +2,11 @@ import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular
 import { FeedsService } from '../shared/services/feeds/feeds.service';
 import { JsonfeedItem } from '../shared/models/jsonfeed-item.model';
 import { MatPaginator, MatTableDataSource } from '@angular/material';
-import { SearchService } from '../shared/services/search/search.service';
 import { Observable, ReplaySubject, Subscription } from 'rxjs';
 import { UIService } from '../shared/services/ui/ui.service';
 import { Select } from '@ngxs/store';
 import { FeedsState } from '../shared/state/feeds.state';
+import { SearchState } from '../shared/state/search.state';
 
 @Component({
   selector: 'app-feed',
@@ -14,7 +14,8 @@ import { FeedsState } from '../shared/state/feeds.state';
   styleUrls: ['./feed.component.css']
 })
 export class FeedComponent implements OnInit, OnDestroy, AfterViewInit {
-  @Select(FeedsState.getFeedsItems) feeds$: Observable<JsonfeedItem[]>;
+  @Select(FeedsState.getActiveFeedsItems) feeds$: Observable<JsonfeedItem[]>;
+  @Select(SearchState.getCurrentSearch) search$: Observable<string>;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   private searchChanged$: Subscription;
   private screenSizeChanged$: Subscription;
@@ -23,8 +24,7 @@ export class FeedComponent implements OnInit, OnDestroy, AfterViewInit {
 
   constructor(
     public uiService: UIService,
-    public feedService: FeedsService,
-    private searchService: SearchService
+    public feedService: FeedsService
   ) {}
 
   ngOnInit() {
@@ -32,10 +32,9 @@ export class FeedComponent implements OnInit, OnDestroy, AfterViewInit {
       this.dataSource.data = items;
     });
 
-    this.searchChanged$ = this.searchService.searchChanged$
-      .subscribe(text => {
-        this.doFilter(text);
-      });
+    this.search$.subscribe(text => {
+      this.doFilter(text);
+    });
 
     this.screenSizeChanged$ = this.uiService.screenSizeChanged$
       .subscribe(screenSize => {

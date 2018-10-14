@@ -1,66 +1,65 @@
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { Observable, Subscription } from 'rxjs';
-import { Token } from '../../models/token.model';
+import { Component, OnInit } from '@angular/core';
+import { Observable } from 'rxjs';
 import { FormControl } from '@angular/forms';
-import { debounceTime, map, startWith } from 'rxjs/operators';
-import { SearchService } from '../../services/search/search.service';
+import { debounceTime, distinctUntilChanged, map, startWith } from 'rxjs/operators';
+import { Select, Store } from '@ngxs/store';
+import { SearchState } from '../../state/search.state';
+import { FeedsState } from '../../state/feeds.state';
+import { SetCurrentSearch } from '../../actions/search.actions';
 
 @Component({
   selector: 'app-search',
   templateUrl: './search.component.html',
   styleUrls: ['./search.component.css']
 })
-export class SearchComponent implements OnInit, OnDestroy {
-  @ViewChild('searchInput') searchInput: ElementRef;
-  private searchChanged$: Subscription;
-  private tokensChanged$: Subscription;
+export class SearchComponent implements OnInit {
+  @Select(SearchState.getCurrentSearch) current$: Observable<string>;
+  @Select(FeedsState.getTags) tags$: Observable<Map<string, number>>;
   searchControl = new FormControl();
-  tokens: Token[] = [];
-  filteredTokens: Observable<Token[]>;
+  filteredTags: Observable<Map<string, number>>;
+  private current: string;
 
-  constructor(private search: SearchService) { }
+  constructor(private store: Store) {}
 
   ngOnInit() {
-    this.searchChanged$ = this.search.searchChanged$.subscribe(text => {
+    this.current$.subscribe(text => {
+      this.current = text;
       this.searchControl.setValue(text);
     });
 
-    this.tokensChanged$ = this.search.autocompleteTokensChanged$
-      .subscribe(tokens => {
-        this.tokens = tokens;
-        this.filteredTokens = this.searchControl.valueChanges
-          .pipe(
-            startWith(''),
-            map(value => {
-              return this._filter(value);
-            })
-          );
-      });
-
     this.searchControl.valueChanges
       .pipe(
+        distinctUntilChanged(),
         debounceTime(500),
         startWith('')
       )
-      .subscribe(text => this.search.doSearch(text));
-  }
+      .subscribe(text => {
+        if (text !== this.current) {
+          this.store.dispatch(new SetCurrentSearch(text));
+        }
+      });
 
-  ngOnDestroy() {
-    if (this.tokensChanged$) {
-      this.tokensChanged$.unsubscribe();
-    }
-
-    if (this.searchChanged$) {
-      this.searchChanged$.unsubscribe();
-    }
-  }
-
-  private _filter(value: string): Token[] {
-    const filterValue = value.toLowerCase();
-
-    return this.tokens.filter(token => {
-      return token.word.toLowerCase().includes(filterValue);
+    this.tags$.subscribe(tags => {
+      this.filteredTags = this.searchControl.valueChanges
+        .pipe(
+          startWith(''),
+          map(value => {
+            return this._filter(tags, value);
+          })
+        );
     });
+  }
+
+  private _filter(tags: Map<string, number>, value: string): Map<string, number> {
+    const filteredTags = new Map;
+
+    tags.forEach((count, word) => {
+      if (word.includes(value.trim().toLowerCase())) {
+        filteredTags.set(word, count);
+      }
+    });
+
+    return filteredTags;
   }
 
   doReset() {

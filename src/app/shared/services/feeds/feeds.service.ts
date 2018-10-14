@@ -7,7 +7,7 @@ import { SettingsFeed } from '../../models/settings-feed.model';
 import * as moment from 'moment';
 import { SettingsState } from '../../state/settings.state';
 import { Select, Store } from '@ngxs/store';
-import { SetSelectedFeedItem, UpdateFeed } from '../../actions/feeds.actions';
+import { SetSelectedFeedItem, UpdateFeed, UpdateTags } from '../../actions/feeds.actions';
 import { SetSettingsFeedsUpdatedAt } from '../../actions/settings.actions';
 import { JsonfeedItem } from '../../models/jsonfeed-item.model';
 
@@ -35,6 +35,8 @@ export class FeedsService implements OnDestroy {
     }
   }
 
+  // TODO fix sidebar not opening if selecting the same.
+  // This probably belongs in ui service.
   setSelectedFeedItem(feedItem: JsonfeedItem) {
     this.store.dispatch(new SetSelectedFeedItem({ feedItem }));
   }
@@ -56,14 +58,17 @@ export class FeedsService implements OnDestroy {
         from(feedsToUpdate)
           .pipe(
             mergeMap(feed => this.apiService.getFeedFromUrl(feed.url))
-          )
-          .subscribe(feed => {
+          ).subscribe(feed => {
             this.store.dispatch(new UpdateFeed({
               url: feed._feedmixer.url,
               feed: feed
-            }));
+            })).subscribe(() => {
+              this.store.dispatch(new UpdateTags());
+            });
           });
       });
+    } else {
+      this.store.dispatch(new UpdateTags());
     }
   }
 

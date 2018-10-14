@@ -1,23 +1,27 @@
-import { Action, Selector, State, StateContext } from '@ngxs/store';
+import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
 import { Jsonfeed } from '../models/jsonfeed.model';
-import { SetFeed, SetSelectedFeedItem, UpdateFeed } from '../actions/feeds.actions';
+import { SetFeed, SetSelectedFeedItem, UpdateFeed, UpdateTags } from '../actions/feeds.actions';
 import { JsonfeedItem } from '../models/jsonfeed-item.model';
 import { SettingsState, SettingsStateModel } from './settings.state';
 
 export interface FeedsStateModel {
   feeds: Map<string, Jsonfeed>;
   selectedFeedItem: JsonfeedItem | undefined;
+  tags: Map<string, number>;
 }
 
 @State<FeedsStateModel>({
   name: 'feeds',
   defaults: {
     feeds: new Map,
-    selectedFeedItem: undefined
+    selectedFeedItem: undefined,
+    tags: new Map
   }
 })
 
 export class FeedsState {
+
+  constructor(private store: Store) {}
 
   @Selector()
   static getFeeds(state: FeedsStateModel) {
@@ -25,35 +29,54 @@ export class FeedsState {
   }
 
   @Selector([SettingsState])
-  static getFeedsItems(state: FeedsStateModel, settingsState: SettingsStateModel) {
+  static getActiveFeedsItems(state: FeedsStateModel, settingsState: SettingsStateModel) {
+    const feeds = FeedsState.getActiveFeeds(state, settingsState);
+
+    if (feeds.length) {
+      return feeds
+        .map(feed => feed.items)
+        .reduce((total, item) => total.concat(item))
+        .sort((a, b) => {
+          return new Date(b.date_published || 0).getTime()
+            - new Date(a.date_published || 0).getTime();
+        });
+    } else {
+      return [];
+    }
+  }
+
+  @Selector([SettingsState])
+  static getActiveFeeds(state: FeedsStateModel, settingsState: SettingsStateModel) {
     const activatedFeeds: string[] = settingsState.feeds
       .filter(item => item.active)
       .map(item => item.url);
 
-    let allItems: JsonfeedItem[] = [];
+    let activeFeeds: Jsonfeed[] = [];
 
     state.feeds.forEach(feed => {
       if (activatedFeeds.includes(feed._feedmixer.url)) {
-        allItems = allItems.concat(feed.items);
+        activeFeeds = activeFeeds.concat(feed);
       }
     });
 
-    allItems = allItems.sort((a, b) => {
-      return new Date(b.date_published || 0).getTime()
-        - new Date(a.date_published || 0).getTime();
-    });
-
-    return allItems;
-  }
-
-  @Selector()
-  static getActiveFeeds(state: FeedsStateModel) {
-    return FeedsState.getFeeds(state);
+    return activeFeeds;
   }
 
   @Selector()
   static getSelectedFeedItem(state: FeedsStateModel) {
     return state.selectedFeedItem;
+  }
+
+  @Selector()
+  static getTags(state: FeedsStateModel): Map<string, number> {
+    return state.tags;
+  }
+
+  @Selector()
+  static getRepeatTags(state: FeedsStateModel) {
+    const tags = FeedsState.getTags(state);
+
+    return new Map([...tags.entries()].filter(tag => tag[1] > 1));
   }
 
   @Action(SetFeed)
@@ -96,5 +119,29 @@ export class FeedsState {
         feed: action.payload.feed})
       );
     }
+  }
+
+  @Action(UpdateTags)
+  updateTags(ctx: StateContext<FeedsStateModel>) {
+    const activeFeeds = this.store.selectSnapshot(FeedsState.getActiveFeeds);
+    let result = new Map;
+
+    activeFeeds.forEach(feed => {
+      feed.items.forEach(item => {
+        item._feedmixer.tags.forEach(tag => {
+          result.has(tag)
+            ? result.set(tag, (result.get(tag) || 0) + 1)
+            : result.set(tag, 1);
+        });
+      });
+    });
+
+    result = new Map([...result.entries()].sort((a, b) => {
+      return b[1] - a[1];
+    }));
+
+    ctx.patchState({
+      tags: result
+    });
   }
 }

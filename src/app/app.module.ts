@@ -10,7 +10,6 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { SidenavComponent } from './navigation/sidenav/sidenav.component';
 import { SearchComponent } from './shared/components/search/search.component';
 import { FeedSelectorComponent } from './shared/components/feed-selector/feed-selector.component';
-import { TopTermsComponent } from './shared/components/top-terms/top-terms.component';
 import { NavigationComponent } from './navigation/navigation.component';
 import { LayoutModule } from '@angular/cdk/layout';
 import { SidenavEndComponent } from './navigation/sidenav-end/sidenav-end.component';
@@ -39,6 +38,7 @@ import {
 } from '@angular/material';
 import { SettingsState } from './shared/state/settings.state';
 import { FeedsState } from './shared/state/feeds.state';
+import { SearchState } from './shared/state/search.state';
 
 @NgModule({
   declarations: [
@@ -47,7 +47,6 @@ import { FeedsState } from './shared/state/feeds.state';
     SidenavComponent,
     SearchComponent,
     FeedSelectorComponent,
-    TopTermsComponent,
     NavigationComponent,
     SidenavEndComponent,
     SettingsComponent,
@@ -78,7 +77,8 @@ import { FeedsState } from './shared/state/feeds.state';
     LayoutModule,
     NgxsModule.forRoot([
       SettingsState,
-      FeedsState
+      FeedsState,
+      SearchState
     ]),
     NgxsReduxDevtoolsPluginModule.forRoot(),
     NgxsLoggerPluginModule.forRoot()

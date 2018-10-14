@@ -1,6 +1,6 @@
 <div *ngIf="(item$ | async)">
   <div style="padding: 16px 24px">
-    <app-feed-item-info [item]="item$ | async"></app-feed-item-info>
+    <app-feed-item-info></app-feed-item-info>
   </div>
 
   <mat-divider></mat-divider>
@@ -12,7 +12,6 @@
       </mat-panel-title>
     </mat-expansion-panel-header>
     <app-feed-item-terms-search
-      [item]="item$ | async"
       (search$)="uiService.doToggleSidenavEnd()"></app-feed-item-terms-search>
   </mat-expansion-panel>
 
@@ -24,7 +23,7 @@
         <mat-icon>insert_emoticon</mat-icon>Reddit
       </mat-panel-title>
     </mat-expansion-panel-header>
-    <app-reddit-url-lookup [item]="item$ | async"></app-reddit-url-lookup>
+    <app-reddit-url-lookup></app-reddit-url-lookup>
   </mat-expansion-panel>
   <mat-divider></mat-divider>
 </div>

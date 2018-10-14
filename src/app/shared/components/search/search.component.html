@@ -17,8 +17,10 @@
     </button>
     <mat-hint>Suggestions sorted by occurences</mat-hint>
     <mat-autocomplete #auto="matAutocomplete">
-      <mat-option *ngFor="let option of filteredTokens | async" [value]="option.word">
-        {{ option.word }} ({{ option.count }})
+      <mat-option
+        *ngFor="let option of filteredTags | async | keyvalue"
+        [value]="option.key">
+        {{ option.key }} ({{ option.value }})
       </mat-option>
     </mat-autocomplete>
   </mat-form-field>

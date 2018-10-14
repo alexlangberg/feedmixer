@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { Jsonfeed } from '../../models/jsonfeed.model';
 import { map } from 'rxjs/operators';
 import { RedditPost } from '../../models/reddit-post.model';
+import { TokenizerService } from '../tokenizer/tokenizer.service';
 
 @Injectable({
   providedIn: 'root'
@@ -20,9 +21,6 @@ export class ApiService {
       item._feedmixer = { url: rss_url };
 
       item.items = item.items.map(post => {
-        // post._feedmixer.tags = TokenizerService
-        //   .getTagsFromFeedItem(post, item._feedmixer.language || 'en');
-
         if (!post.hasOwnProperty('id') && post.guid) { post.id = post.guid; }
 
         post.title = post.title
@@ -32,6 +30,10 @@ export class ApiService {
         post.summary = post.summary
           ? post.summary.replace(/<(.|\n)*?>/g, '')
           : '';
+
+        post._feedmixer = {
+          tags: TokenizerService.getTagsFromFeedItem(post, item._feedmixer.language || 'en')
+        };
 
         return post;
       });

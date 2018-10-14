@@ -1,8 +1,8 @@
 <mat-chip-list>
   <mat-chip
-    *ngFor="let token of tokens"
+    *ngFor="let chip of chips"
     style="cursor: pointer;"
-    (click)="doSearch(token.word)">
-    {{ token.word }} ({{ token.count }})
+    (click)="doSearch(chip.word)">
+    {{ chip.word }} ({{ chip.count }})
   </mat-chip>
 </mat-chip-list>

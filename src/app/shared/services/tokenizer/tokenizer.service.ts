@@ -1,39 +1,13 @@
-import { Injectable, OnDestroy } from '@angular/core';
+import { Injectable } from '@angular/core';
 import * as stopword from 'stopword';
-import { FeedsService } from '../feeds/feeds.service';
-import { Observable, Subject, Subscription } from 'rxjs';
-import { Jsonfeed } from '../../models/jsonfeed.model';
-import { Token } from '../../models/token.model';
 import { JsonfeedItem } from '../../models/jsonfeed-item.model';
-import { Select, Store } from '@ngxs/store';
-import { SettingsState } from '../../state/settings.state';
-import { SettingsFeed } from '../../models/settings-feed.model';
 
 @Injectable({
   providedIn: 'root'
 })
-export class TokenizerService implements OnDestroy {
-  @Select(SettingsState.getActiveFeedsUrls) activeFeedsUrls$: Observable<SettingsFeed[]>;
+export class TokenizerService {
 
-  private feedsTokenMaps: Map<string, Map<string, number>> = new Map;
-  private readonly feedChanged$: Subscription;
-  private readonly feedsSettingsChanged$: Subscription;
-  tokensChanged$ = new Subject<Token[]>();
-
-  // TODO should be done differently to not have this dependency
-  constructor(
-    private feedService: FeedsService,
-    private store: Store
-  ) {
-    // this.feedChanged$ = feedService.feedChanged$.subscribe(feed => {
-    //   this.mapFeed(feed);
-    //   this.emitNewTokens();
-    // });
-
-    this.activeFeedsUrls$.subscribe(() => {
-      this.emitNewTokens();
-    });
-  }
+  constructor() {}
 
   /**
    * Remove special characters
@@ -58,7 +32,9 @@ export class TokenizerService implements OnDestroy {
   static getTags(text: string, language?: string): string[] {
     const sanitized = TokenizerService.removeSpecials(text.toLowerCase());
 
-    const words = sanitized.split(' ');
+    const words = sanitized
+      .split(' ')
+      .filter(word => word !== '');
 
     const stopWords = stopword[language || 'en'];
 
@@ -66,84 +42,13 @@ export class TokenizerService implements OnDestroy {
   }
 
   static getTagsFromFeedItem(item: JsonfeedItem, language: string): string[] {
-    return TokenizerService
+    const tags = TokenizerService
       .getTags(item.title || '', language)
       .concat(
         TokenizerService
           .getTags(item.summary || '', language)
       );
-  }
 
-  getRepeatTokens() {
-    return this.getAllTokens().filter(token => token.count > 1);
-  }
-
-  getAllTokens() {
-    // const activeFeeds = this.feedService.getActiveFeeds();
-    const activeFeeds = this.store.select(state => state.settings.feeds.filter((feed: SettingsFeed) => feed.active));
-    const totalMap = new Map;
-
-    activeFeeds.forEach(feed => {
-      const map = this.feedsTokenMaps.get(feed.url);
-
-      if (map) {
-        map.forEach((count: number, token: string) => {
-          totalMap.has(token)
-            ? totalMap.set(token, (totalMap.get(token) || 0) + count)
-            : totalMap.set(token, count);
-        });
-      }
-    });
-
-    const tokens = [];
-
-    for (const item of totalMap.entries()) {
-      tokens.push(new Token(item[0], item[1]));
-    }
-
-    tokens.sort((a, b) => b.count - a.count);
-
-    return tokens;
-  }
-
-  emitNewTokens() {
-    this.tokensChanged$.next(this.getAllTokens().slice(0, 1000));
-  }
-
-  ngOnDestroy() {
-    if (this.feedChanged$) {
-      this.feedChanged$.unsubscribe();
-    }
-
-    if (this.feedsSettingsChanged$) {
-      this.feedsSettingsChanged$.unsubscribe();
-    }
-
-    if (this.tokensChanged$) {
-      this.tokensChanged$.unsubscribe();
-    }
-  }
-
-  mapFeed(feed: Jsonfeed) {
-    const language = feed._feedmixer.language || 'en';
-
-    const tokensList = feed.items.map(item => {
-        const tokens = TokenizerService.getTagsFromFeedItem(item, language);
-
-        return [...new Set(tokens)]; // return only unique
-      })
-      .reduce((total, item) => total.concat(item))
-      .filter((item: string) => item !== '' && item.length > 3)
-      .reduce((map: Map<string, number>, word: string) => {
-
-        // create a map with each word as keys
-        map.has(word)
-          ? map.set(word, (map.get(word) || 0) + 1)
-          : map.set(word, 1);
-
-        return map;
-      }, new Map);
-
-    this.feedsTokenMaps.set(feed._feedmixer.url, tokensList);
+    return [...new Set(tags)]; // remove duplicates
   }
 }

@@ -15,3 +15,8 @@ export class SetSelectedFeedItem {
   static readonly type = '[FEEDS] Set selected feed item';
   constructor(public payload: { feedItem: JsonfeedItem}) {}
 }
+
+export class UpdateTags {
+  static readonly type = '[FEEDS] Update tags';
+  constructor() {}
+}

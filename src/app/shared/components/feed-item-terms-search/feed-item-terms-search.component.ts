@@ -1,54 +1,42 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { JsonfeedItem } from '../../models/jsonfeed-item.model';
 import { TokenizerService } from '../../services/tokenizer/tokenizer.service';
-import { Token } from '../../models/token.model';
-import { SearchService } from '../../services/search/search.service';
+import { Select, Store } from '@ngxs/store';
+import { FeedsState } from '../../state/feeds.state';
+import { Observable } from 'rxjs';
+import { SetCurrentSearch } from '../../actions/search.actions';
 
 @Component({
   selector: 'app-feed-item-terms-search',
   templateUrl: './feed-item-terms-search.component.html',
   styleUrls: ['./feed-item-terms-search.component.css']
 })
-export class FeedItemTermsSearchComponent implements OnInit, OnChanges {
-  @Input() item: JsonfeedItem;
+export class FeedItemTermsSearchComponent {
   @Output() search$ = new EventEmitter();
-  tokens: Token[];
+  @Select(FeedsState.getRepeatTags) tags$: Observable<Map<string, number>>;
+  @Select(FeedsState.getSelectedFeedItem) item$: Observable<JsonfeedItem>;
+  private tags: Map<string, number> = new Map;
+  chips: { word: string, count: number }[];
 
   constructor(
     private tokenizerService: TokenizerService,
-    private search: SearchService
-  ) {}
+    private store: Store
+  ) {
+    this.tags$.subscribe(tags => {
+      this.tags = tags;
+    });
 
-  ngOnInit() {
-  }
-
-  ngOnChanges() {
-    if (this.item) {
-      this.tokens = this.tokenizerService
-        .getRepeatTokens()
-        .filter(token => {
-          // TODO get real tokens from real title
-          if (this.item.title) {
-            if (this.item.title) {
-              if (this.item.title.toLowerCase().includes((token.word))) {
-                return true;
-              }
-            }
-
-            if (this.item.summary) {
-              if (this.item.summary.toLowerCase().includes((token.word))) {
-                return true;
-              }
-            }
-
-            return false;
-          }
-        });
-    }
+    this.item$.subscribe(item => {
+      this.chips = item._feedmixer.tags.filter(tag => {
+        return this.tags.has(tag) && tag.length > 3;
+      }).map(tag => {
+        return { word: tag, count: this.tags.get(tag) || 0 };
+      }).sort((a, b) => b.count - a.count);
+    });
   }
 
   doSearch(text: string) {
-    this.search.doSearch(text);
+    this.store.dispatch(new SetCurrentSearch(text));
     this.search$.emit(text);
   }
 }

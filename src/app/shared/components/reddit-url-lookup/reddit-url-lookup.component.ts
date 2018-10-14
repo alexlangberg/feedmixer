@@ -1,32 +1,35 @@
-import { Component, Input, OnChanges, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { ApiService } from '../../services/api/api.service';
 import { JsonfeedItem } from '../../models/jsonfeed-item.model';
 import { RedditPost } from '../../models/reddit-post.model';
+import { Select } from '@ngxs/store';
+import { FeedsState } from '../../state/feeds.state';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-reddit-url-lookup',
   templateUrl: './reddit-url-lookup.component.html',
   styleUrls: ['./reddit-url-lookup.component.css']
 })
-export class RedditUrlLookupComponent implements OnInit, OnChanges {
-  @Input() item: JsonfeedItem;
+export class RedditUrlLookupComponent {
+  @Select(FeedsState.getSelectedFeedItem) item$: Observable<JsonfeedItem>;
+  item: JsonfeedItem;
   posts: RedditPost[];
   isLoading: boolean;
 
-  constructor(private apiService: ApiService) { }
+  constructor(private apiService: ApiService) {
+    this.item$.subscribe(item => {
+      this.item = item;
 
-  ngOnInit() {
-  }
+      if (item.url) {
+        this.isLoading = true;
 
-  ngOnChanges() {
-    if (this.item && this.item.url) {
-      this.isLoading = true;
+        this.apiService.getRedditPostsFromUrl(item.url).subscribe(posts => {
+          this.posts = posts;
 
-      this.apiService.getRedditPostsFromUrl(this.item.url).subscribe(posts => {
-        this.posts = posts;
-
-        this.isLoading = false;
-      });
-    }
+          this.isLoading = false;
+        });
+      }
+    });
   }
 }
