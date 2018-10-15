@@ -31,7 +31,10 @@ export class AppComponent implements OnInit {
             return a.name.localeCompare(b.name, undefined, {sensitivity: 'base'});
           });
 
-        this.store.dispatch(new UpdateSettingsFromFile(<SettingsStateModel>result));
+        this.store.dispatch(new UpdateSettingsFromFile(<SettingsStateModel>result))
+          .subscribe(() => {
+            this.feedService.refreshAllFeeds();
+          });
       });
   }
 }

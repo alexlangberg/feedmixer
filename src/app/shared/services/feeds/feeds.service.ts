@@ -5,10 +5,10 @@ import { ApiService } from '../api/api.service';
 import { mergeMap } from 'rxjs/operators';
 import { SettingsFeed } from '../../models/settings-feed.model';
 import * as moment from 'moment';
-import { SettingsState } from '../../state/settings.state';
+import { SettingsState, SettingsStateModel } from '../../state/settings.state';
 import { Select, Store } from '@ngxs/store';
 import { SetSelectedFeedItem, UpdateFeed, UpdateTags } from '../../state/feeds.actions';
-import { SetSettingsFeedsUpdatedAt } from '../../state/settings.actions';
+import { SetSettingsFeedsFetchedAt } from '../../state/settings.actions';
 import { JsonfeedItem } from '../../models/jsonfeed-item.model';
 
 @Injectable({
@@ -16,16 +16,21 @@ import { JsonfeedItem } from '../../models/jsonfeed-item.model';
 })
 export class FeedsService implements OnDestroy {
   @Select(SettingsState.getSettings) settings$: Observable<SettingsFile>;
-  private settings: SettingsFile;
+  private settings: SettingsStateModel;
   private autoRefresher$: Subscription;
 
   constructor(
     private apiService: ApiService,
     private store: Store
   ) {
-      this.settings$.subscribe(settings => {
-        this.settings = settings;
-        this.fetchEnabledFeeds(settings.feeds);
+    this.settings$.subscribe((settings: SettingsStateModel) => {
+      if (this.settings) {
+        if (settings.isAutoRefreshEnabled !== this.settings.isAutoRefreshEnabled) {
+          this.toggleAutoRefresher(settings.isAutoRefreshEnabled);
+        }
+      }
+
+      this.settings = settings;
     });
   }
 
@@ -35,8 +40,7 @@ export class FeedsService implements OnDestroy {
     }
   }
 
-  // TODO fix sidebar not opening if selecting the same.
-  // This probably belongs in ui service.
+  // TODO: this probably belongs in ui service.
   setSelectedFeedItem(feedItem: JsonfeedItem) {
     this.store.dispatch(new SetSelectedFeedItem({ feedItem }));
   }
@@ -47,13 +51,13 @@ export class FeedsService implements OnDestroy {
 
   fetchEnabledFeeds(feeds: SettingsFeed[]) {
     const feedsToUpdate = feeds
-      .filter(feed => feed.active)
-      .filter(feed => this.isTimeToClearFeedCache(feed));
+      .filter(feed => feed.active);
+      // .filter(feed => this.isTimeToClearFeedCache(feed));
 
     if (feedsToUpdate.length) {
-      this.store.dispatch(new SetSettingsFeedsUpdatedAt({
+      this.store.dispatch(new SetSettingsFeedsFetchedAt({
         feeds: feedsToUpdate,
-        updatedAt: new Date()
+        fetchedAt: new Date()
       })).subscribe(() => {
         from(feedsToUpdate)
           .pipe(
@@ -73,8 +77,8 @@ export class FeedsService implements OnDestroy {
   }
 
   private isTimeToClearFeedCache(feed: SettingsFeed): boolean {
-    if (feed.updatedAt) {
-      const timeDiff = moment().diff(moment(feed.updatedAt), 'seconds');
+    if (feed.fetchedAt) {
+      const timeDiff = moment().diff(moment(feed.fetchedAt), 'seconds');
 
       return timeDiff > this.settings.cacheFeedsSeconds;
     } else {
@@ -88,9 +92,13 @@ export class FeedsService implements OnDestroy {
         this.autoRefresher$.unsubscribe();
       }
     } else {
+      if (this.autoRefresher$) {
+        this.autoRefresher$.unsubscribe();
+      }
+
       this.autoRefresher$ = timer(
         0,
-        this.settings.autoRefreshIntervalMinutes * 60000
+        this.settings.autoRefreshIntervalSeconds * 1000
       ).subscribe(() => {
         this.refreshAllFeeds();
       });

@@ -16,7 +16,12 @@ export class SetSettingsFeedStatus {
   constructor(public payload: { url: string, active: boolean }) {}
 }
 
-export class SetSettingsFeedsUpdatedAt {
+export class SetSettingsFeedsFetchedAt {
   static readonly type = '[SETTINGS] Set settings feeds updated at timestamp';
-  constructor(public payload: { feeds: SettingsFeed[], updatedAt: Date }) {}
+  constructor(public payload: { feeds: SettingsFeed[], fetchedAt: Date }) {}
+}
+
+export class SetSettingsAutoRefresh {
+  static readonly type = '[SETTINGS] Set auto refresh status';
+  constructor(public payload: boolean) {}
 }

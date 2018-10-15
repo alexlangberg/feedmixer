@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { FeedsService } from '../../services/feeds/feeds.service';
+import { Store } from '@ngxs/store';
+import { SetSettingsAutoRefresh } from '../../state/settings.actions';
 
 @Component({
   selector: 'app-settings',
@@ -8,12 +9,13 @@ import { FeedsService } from '../../services/feeds/feeds.service';
 })
 export class SettingsComponent implements OnInit {
 
-  constructor(private feedsService: FeedsService) { }
+  constructor(private store: Store) { }
 
   ngOnInit() {
   }
 
   onAutoRefreshToggle($event: boolean) {
-    this.feedsService.toggleAutoRefresher($event);
+    console.log($event);
+    this.store.dispatch(new SetSettingsAutoRefresh($event));
   }
 }

@@ -2,13 +2,14 @@ import { Action, Selector, State, StateContext } from '@ngxs/store';
 import {
   SetAllSettingsFeedsStatus,
   SetSettingsFeedStatus,
-  SetSettingsFeedsUpdatedAt,
-  UpdateSettingsFromFile
+  SetSettingsFeedsFetchedAt,
+  UpdateSettingsFromFile, SetSettingsAutoRefresh
 } from './settings.actions';
 import { SettingsFeed } from '../models/settings-feed.model';
 
 export interface SettingsStateModel {
-  autoRefreshIntervalMinutes: number;
+  isAutoRefreshEnabled: boolean;
+  autoRefreshIntervalSeconds: number;
   cacheFeedsSeconds: number;
   feeds: SettingsFeed[];
 }
@@ -16,7 +17,8 @@ export interface SettingsStateModel {
 @State<SettingsStateModel>({
   name: 'settings',
   defaults: {
-    autoRefreshIntervalMinutes: 5,
+    isAutoRefreshEnabled: false,
+    autoRefreshIntervalSeconds: 5,
     cacheFeedsSeconds: 60,
     feeds: []
   }
@@ -79,16 +81,23 @@ export class SettingsState {
     });
   }
 
-  @Action(SetSettingsFeedsUpdatedAt)
-  setFeedsUpdatedAt(ctx: StateContext<SettingsStateModel>, action: SetSettingsFeedsUpdatedAt) {
+  @Action(SetSettingsFeedsFetchedAt)
+  setFeedsFetchedAt(ctx: StateContext<SettingsStateModel>, action: SetSettingsFeedsFetchedAt) {
     ctx.patchState({
       feeds: ctx.getState().feeds.map(item => {
         if (action.payload.feeds.find(feed => feed.url === item.url)) {
-          item.updatedAt = action.payload.updatedAt;
+          item.fetchedAt = action.payload.fetchedAt;
         }
 
         return item;
       })
+    });
+  }
+
+  @Action(SetSettingsAutoRefresh)
+  setAutoRefresh(ctx: StateContext<SettingsStateModel>, action: SetSettingsAutoRefresh) {
+    ctx.patchState({
+      isAutoRefreshEnabled: action.payload
     });
   }
 }

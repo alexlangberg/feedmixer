@@ -1,5 +1,5 @@
 {
-  "autoRefreshIntervalMinutes": 5,
+  "autoRefreshIntervalSeconds": 5,
   "cacheFeedsSeconds": 60,
   "feeds": [
     {
