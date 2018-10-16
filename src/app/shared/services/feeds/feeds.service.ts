@@ -97,7 +97,7 @@ export class FeedsService implements OnDestroy {
       }
 
       this.autoRefresher$ = timer(
-        0,
+        this.settings.autoRefreshIntervalSeconds * 1000,
         this.settings.autoRefreshIntervalSeconds * 1000
       ).subscribe(() => {
         this.refreshAllFeeds();

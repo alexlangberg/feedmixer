@@ -10,19 +10,19 @@ import { JsonfeedItem } from '../../models/jsonfeed-item.model';
   providedIn: 'root'
 })
 export class UIService implements OnDestroy {
-  @Select(FeedsState.getSelectedFeedItem) item$: Observable<JsonfeedItem>;
-
   screenSize: string;
   small: boolean;
   medium: boolean;
   large: boolean;
-  screenSizeChanged$ = new ReplaySubject<string>(1);
   sidenav: MatSidenav;
   sidenavEnd: MatSidenav;
   isSidenavOpen: boolean;
   isSidenavEndOpen: boolean;
   sidenavMode: string;
   sidenavEndMode: string;
+
+  @Select(FeedsState.getSelectedFeedItem) item$: Observable<JsonfeedItem>;
+  screenSizeChanged$ = new ReplaySubject<string>(1);
   private readonly mediaWatcher$: Subscription;
   private sidenavOpening$: Subscription;
   private sidenavClosing$: Subscription;

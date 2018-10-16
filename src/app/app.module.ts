@@ -39,6 +39,7 @@ import {
 import { SettingsState } from './shared/state/settings.state';
 import { FeedsState } from './shared/state/feeds.state';
 import { SearchState } from './shared/state/search.state';
+import { UiState } from './shared/state/ui.state';
 
 @NgModule({
   declarations: [
@@ -78,7 +79,8 @@ import { SearchState } from './shared/state/search.state';
     NgxsModule.forRoot([
       SettingsState,
       FeedsState,
-      SearchState
+      SearchState,
+      UiState
     ]),
     NgxsReduxDevtoolsPluginModule.forRoot(),
     NgxsLoggerPluginModule.forRoot()

@@ -31,7 +31,7 @@ export class FeedComponent implements OnInit, OnDestroy, AfterViewInit {
       this.dataSource.data = items;
     });
 
-    this.search$.subscribe(text => {
+    this.search$.subscribe((text: string) => {
       this.doFilter(text);
     });
 
@@ -56,7 +56,9 @@ export class FeedComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   doFilter(filterValue: string) {
-    this.dataSource.filter = filterValue.trim().toLowerCase();
+    if (filterValue) {
+      this.dataSource.filter = filterValue.trim().toLowerCase();
+    }
   }
 
   setSelectedItem(item: JsonfeedItem) {
