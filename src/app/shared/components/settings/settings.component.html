@@ -1,6 +1,9 @@
-<mat-slide-toggle
-  labelPosition="after"
-  (change)="onAutoRefreshToggle($event.checked)"
-  title="Automatically refresh feed every 5 minutes">
-  Autorefresh
-</mat-slide-toggle>
+<div fxLayout="column" fxLayoutGap="8px">
+  <mat-slide-toggle
+    labelPosition="before"
+    (change)="onAutoRefreshToggle($event.checked)"
+    fxFlex
+    title="Automatically refresh feed every 5 minutes">
+    Autorefresh
+  </mat-slide-toggle>
+</div>
