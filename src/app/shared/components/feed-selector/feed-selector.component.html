@@ -3,6 +3,7 @@
     [checked]="(activeFeedsUrls$ | async).length === (feeds$ | async).length"
     (change)="onOptionChangedSlider($event)"
     id="all"
+    labelPosition="before"
     fxFlex>
     All
   </mat-slide-toggle>
@@ -12,6 +13,7 @@
     [checked]="(activeFeedsUrls$ | async).includes(feed.url)"
     (change)="onOptionChangedSlider($event)"
     [id]="feed.url"
+    labelPosition="before"
     fxFlex>
     {{ feed.name }}
   </mat-slide-toggle>
