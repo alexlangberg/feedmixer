@@ -3,7 +3,7 @@
     #sidenav
     class="sidenav sidenav-start mat-elevation-z16"
     fixedInViewport="true"
-    [attr.role]="uiService.small ? 'dialog' : 'navigation'"
+    [attr.role]="['xs', 'sm'].includes((media$ | async)?.mqAlias) ? 'dialog' : 'navigation'"
     [mode]="uiService.sidenavMode"
     [opened]="uiService.isSidenavOpen">
     <mat-toolbar
@@ -27,9 +27,9 @@
   <mat-sidenav
     #sidenavEnd
     class="sidenav sidenav-end mat-elevation-z16"
-    [ngClass]="{'smallScreen': uiService.small}"
+    ngClass.lt-md="smallScreen"
     fixedinviewport="true"
-    [attr.role]="uiService.small ? 'dialog' : 'navigation'"
+    [attr.role]="['xs', 'sm'].includes((media$ | async)?.mqAlias) ? 'dialog' : 'navigation'"
     [mode]="uiService.sidenavEndMode"
     [opened]="uiService.isSidenavEndOpen"
     position="end">

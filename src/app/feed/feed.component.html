@@ -1,4 +1,4 @@
-<table mat-table [dataSource]="dataSource" [ngClass]="{'smallScreen': uiService.small }">
+<table mat-table [dataSource]="dataSource" ngClass.lt-md="smallScreen">
 
   <ng-container matColumnDef="date_published">
     <!--<th mat-header-cell *matHeaderCellDef>Date</th>-->
@@ -18,7 +18,7 @@
          class="headline">{{ element.title }}</a>
       <div
         class="meta mat-caption"
-        *ngIf="uiService.small"
+        fxHide.gt-sm="true"
         style="margin-top: 8px">
         {{ element.date_published | date : 'short' }}
       </div>

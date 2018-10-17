@@ -1,27 +1,46 @@
-import { Action, Selector, State, StateContext } from '@ngxs/store';
+import { Selector, State } from '@ngxs/store';
+import { MatSidenav } from '@angular/material';
+import { Subscription } from 'rxjs';
 
 export interface UiStateModel {
-  current: string;
+  sidenav: MatSidenav | undefined;
+  sidenavEnd: MatSidenav | undefined;
+  isSidenavOpen: boolean;
+  isSidenavEndOpen: boolean;
+  sidenavMode: string;
+  sidenavEndMode: string;
 }
 
 @State<UiStateModel>({
-  name: 'search',
+  name: 'ui',
   defaults: {
-    current: ''
+    sidenav: undefined,
+    sidenavEnd: undefined,
+    isSidenavOpen: false,
+    isSidenavEndOpen: false,
+    sidenavMode: 'over',
+    sidenavEndMode: 'over'
   }
 })
 
 export class UiState {
+  private sidenavOpening$: Subscription;
+  private sidenavClosing$: Subscription;
+  private sidenavEndOpening$: Subscription;
+  private sidenavEndClosing$: Subscription;
 
-  @Selector()
-  static getCurrentSearch(state: UiStateModel) {
-    return state.current;
+  constructor() {
   }
 
-  //@Action(SetCurrentSearch)
-  //setCurrentSearch(ctx: StateContext<UiStateModel>, action: UiStateModel) {
-  //  ctx.patchState({
-  //    current: action.payload
-  //  });
-  //}
+  @Selector()
+  static get(state: UiStateModel) {
+    return state;
+  }
+
+  // @Action(SetCurrentSearch)
+  // setCurrentSearch(ctx: StateContext<UiStateModel>, action: UiStateModel) {
+  //   ctx.patchState({
+  //     current: action.payload
+  //   });
+  // }
 }

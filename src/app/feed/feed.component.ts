@@ -7,6 +7,7 @@ import { UIService } from '../shared/services/ui/ui.service';
 import { Select } from '@ngxs/store';
 import { FeedsState } from '../shared/state/feeds.state';
 import { SearchState } from '../shared/state/search.state';
+import { ObservableMedia } from '@angular/flex-layout';
 
 @Component({
   selector: 'app-feed',
@@ -17,11 +18,12 @@ export class FeedComponent implements OnInit, OnDestroy, AfterViewInit {
   @Select(FeedsState.getActiveFeedsItems) feeds$: Observable<JsonfeedItem[]>;
   @Select(SearchState.getCurrentSearch) search$: Observable<string>;
   @ViewChild(MatPaginator) paginator: MatPaginator;
-  private screenSizeChanged$: Subscription;
   dataSource: MatTableDataSource<JsonfeedItem> = new MatTableDataSource<JsonfeedItem>();
   columnsChanged$ = new ReplaySubject<string[]>(1);
+  mediaWatcher$: Subscription;
 
   constructor(
+    private media$: ObservableMedia,
     public uiService: UIService,
     public feedService: FeedsService
   ) {}
@@ -35,19 +37,21 @@ export class FeedComponent implements OnInit, OnDestroy, AfterViewInit {
       this.doFilter(text);
     });
 
-    this.screenSizeChanged$ = this.uiService.screenSizeChanged$
-      .subscribe(screenSize => {
-        if (screenSize === 'small') {
-          this.columnsChanged$.next(['title', 'options']);
-        } else {
-          this.columnsChanged$.next(['date_published', 'title', 'options']);
+    this.mediaWatcher$ = this.media$
+      .subscribe(change => {
+        if (change) {
+          if (['xs', 'sm'].includes(change.mqAlias)) {
+            this.columnsChanged$.next(['title', 'options']);
+          } else {
+            this.columnsChanged$.next(['date_published', 'title', 'options']);
+          }
         }
       });
   }
 
   ngOnDestroy() {
-    if (this.screenSizeChanged$) {
-      this.screenSizeChanged$.unsubscribe();
+    if (this.mediaWatcher$) {
+      this.mediaWatcher$.unsubscribe();
     }
   }
 
@@ -63,6 +67,8 @@ export class FeedComponent implements OnInit, OnDestroy, AfterViewInit {
 
   setSelectedItem(item: JsonfeedItem) {
     this.feedService.setSelectedFeedItem(item);
+
+    // TODO: only if screen is not large
     this.uiService.sidenavEnd.open();
   }
 }

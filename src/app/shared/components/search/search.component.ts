@@ -28,6 +28,7 @@ export class SearchComponent implements OnInit {
       this.searchControl.setValue(text);
     });
 
+    // TODO: there's a bug where resetting will not fire a new search
     this.searchControl.valueChanges
       .pipe(
         distinctUntilChanged(),

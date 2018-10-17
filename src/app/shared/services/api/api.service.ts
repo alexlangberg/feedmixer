@@ -12,6 +12,12 @@ import { TokenizerService } from '../tokenizer/tokenizer.service';
 export class ApiService {
   constructor(private http: HttpClient) {}
 
+  private static sanitizeText(text: string) {
+    return text
+      .replace(/<(.|\n)*?>/g, '') // remove xml/html
+      .replace(/\n\s*\n/g, '\n'); // remove double newlines
+  }
+
   getFeedFromUrl(rss_url: string, language: string): Observable<Jsonfeed> {
     const request = <Observable<Jsonfeed>>this.http.get(
       'http://localhost:4201/convert?url=' + rss_url
@@ -24,11 +30,11 @@ export class ApiService {
         if (!post.hasOwnProperty('id') && post.guid) { post.id = post.guid; }
 
         post.title = post.title
-          ? post.title.replace(/<(.|\n)*?>/g, '')
+          ? ApiService.sanitizeText(post.title)
           : '';
 
         post.summary = post.summary
-          ? post.summary.replace(/<(.|\n)*?>/g, '')
+          ? ApiService.sanitizeText(post.summary)
           : '';
 
         post._feedmixer = {
