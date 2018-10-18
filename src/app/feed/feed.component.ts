@@ -3,7 +3,6 @@ import { FeedsService } from '../shared/services/feeds/feeds.service';
 import { JsonfeedItem } from '../shared/models/jsonfeed-item.model';
 import { MatPaginator, MatTableDataSource } from '@angular/material';
 import { Observable } from 'rxjs';
-import { UIService } from '../shared/services/ui/ui.service';
 import { Select, Store } from '@ngxs/store';
 import { FeedsState } from '../shared/state/feeds.state';
 import { SearchState } from '../shared/state/search.state';
@@ -25,7 +24,6 @@ export class FeedComponent implements OnInit, AfterViewInit {
 
   constructor(
     private media$: ObservableMedia,
-    public uiService: UIService,
     public feedService: FeedsService,
     private store: Store
   ) {}

@@ -1,6 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FeedsService } from '../shared/services/feeds/feeds.service';
-import { UIService } from '../shared/services/ui/ui.service';
 import { MatSidenav } from '@angular/material';
 import { ObservableMedia } from '@angular/flex-layout';
 import { Select, Store } from '@ngxs/store';
@@ -20,7 +19,6 @@ export class NavigationComponent implements OnInit {
 
   constructor(
     public media$: ObservableMedia,
-    public uiService: UIService,
     public feedsService: FeedsService,
     private store: Store
   ) {}
