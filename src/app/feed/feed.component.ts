@@ -43,7 +43,7 @@ export class FeedComponent implements OnInit, AfterViewInit {
   }
 
   doFilter(filterValue: string) {
-    if (filterValue) {
+    if (filterValue || filterValue === '') {
       this.dataSource.filter = filterValue.trim().toLowerCase();
     }
   }
