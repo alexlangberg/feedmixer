@@ -5,6 +5,7 @@ import { Jsonfeed } from '../../models/jsonfeed.model';
 import { concatAll, map } from 'rxjs/operators';
 import { RedditPost } from '../../models/reddit-post.model';
 import { TokenizerService } from '../tokenizer/tokenizer.service';
+import * as he from 'he';
 
 @Injectable({
   providedIn: 'root'
@@ -13,9 +14,12 @@ export class ApiService {
   constructor(private http: HttpClient) {}
 
   private static sanitizeText(text: string) {
-    return text
-      .replace(/<(.|\n)*?>/g, '') // remove xml/html
-      .replace(/\n\s*\n/g, '\n'); // remove double newlines
+    const result = text
+      .replace(/<(.|\n)*?>/g, ''); // remove xml/html
+
+    return he.decode(result) // decode HTML chars if necessary
+      .replace(/\n\s*\n/g, '\n') // remove double newlines
+      .replace(/\xA0/g, ' '); // replace nbsp with space
   }
 
   getFeedFromUrl(rss_url: string, language: string): Observable<Jsonfeed> {

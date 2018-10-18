@@ -26,7 +26,6 @@ export class RedditUrlLookupComponent {
         this.isLoading = true;
 
         this.apiService.getRedditPostsFromUrl(item.url).subscribe(posts => {
-          console.log(posts);
           this.posts = this.posts.concat(posts);
 
           this.isLoading = false;
