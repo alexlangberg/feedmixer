@@ -1,31 +1,33 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { FeedsService } from '../shared/services/feeds/feeds.service';
 import { JsonfeedItem } from '../shared/models/jsonfeed-item.model';
 import { MatPaginator, MatTableDataSource } from '@angular/material';
-import { Observable, ReplaySubject, Subscription } from 'rxjs';
+import { Observable } from 'rxjs';
 import { UIService } from '../shared/services/ui/ui.service';
-import { Select } from '@ngxs/store';
+import { Select, Store } from '@ngxs/store';
 import { FeedsState } from '../shared/state/feeds.state';
 import { SearchState } from '../shared/state/search.state';
 import { ObservableMedia } from '@angular/flex-layout';
+import { SetIsSidenavOpenStatus } from '../shared/state/ui.actions';
+import { UiState, UiStateModel } from '../shared/state/ui.state';
 
 @Component({
   selector: 'app-feed',
   templateUrl: './feed.component.html',
   styleUrls: ['./feed.component.css']
 })
-export class FeedComponent implements OnInit, OnDestroy, AfterViewInit {
+export class FeedComponent implements OnInit, AfterViewInit {
   @Select(FeedsState.getActiveFeedsItems) feeds$: Observable<JsonfeedItem[]>;
   @Select(SearchState.getCurrentSearch) search$: Observable<string>;
+  @Select(UiState.get) ui$: Observable<UiStateModel>;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   dataSource: MatTableDataSource<JsonfeedItem> = new MatTableDataSource<JsonfeedItem>();
-  columnsChanged$ = new ReplaySubject<string[]>(1);
-  mediaWatcher$: Subscription;
 
   constructor(
     private media$: ObservableMedia,
     public uiService: UIService,
-    public feedService: FeedsService
+    public feedService: FeedsService,
+    private store: Store
   ) {}
 
   ngOnInit() {
@@ -36,23 +38,6 @@ export class FeedComponent implements OnInit, OnDestroy, AfterViewInit {
     this.search$.subscribe((text: string) => {
       this.doFilter(text);
     });
-
-    this.mediaWatcher$ = this.media$
-      .subscribe(change => {
-        if (change) {
-          if (['xs', 'sm'].includes(change.mqAlias)) {
-            this.columnsChanged$.next(['title', 'options']);
-          } else {
-            this.columnsChanged$.next(['date_published', 'title', 'options']);
-          }
-        }
-      });
-  }
-
-  ngOnDestroy() {
-    if (this.mediaWatcher$) {
-      this.mediaWatcher$.unsubscribe();
-    }
   }
 
   ngAfterViewInit() {
@@ -68,7 +53,9 @@ export class FeedComponent implements OnInit, OnDestroy, AfterViewInit {
   setSelectedItem(item: JsonfeedItem) {
     this.feedService.setSelectedFeedItem(item);
 
-    // TODO: only if screen is not large
-    this.uiService.sidenavEnd.open();
+    this.store.dispatch(new SetIsSidenavOpenStatus({
+      sidenav: 'end',
+      isOpen: true
+    }));
   }
 }

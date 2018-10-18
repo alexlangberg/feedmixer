@@ -4,8 +4,8 @@
     class="sidenav sidenav-start mat-elevation-z16"
     fixedInViewport="true"
     [attr.role]="['xs', 'sm'].includes((media$ | async)?.mqAlias) ? 'dialog' : 'navigation'"
-    [mode]="uiService.sidenavMode"
-    [opened]="uiService.isSidenavOpen">
+    [mode]="['xs', 'sm'].includes((media$ | async)?.mqAlias) ? 'over' : 'side'"
+    [opened]="(ui$ | async).isSidenavOpen">
     <mat-toolbar
       fxLayout="row"
       color="primary"
@@ -17,7 +17,7 @@
         aria-label="Toggle sidenav"
         mat-button
         mat-icon-button
-        (click)="uiService.doToggleSidenav()">
+        (click)="toggleSidenav('start', false)">
         <mat-icon aria-label="Side nav toggle icon">chevron_left</mat-icon>
       </button>
     </mat-toolbar>
@@ -30,8 +30,8 @@
     ngClass.lt-md="smallScreen"
     fixedinviewport="true"
     [attr.role]="['xs', 'sm'].includes((media$ | async)?.mqAlias) ? 'dialog' : 'navigation'"
-    [mode]="uiService.sidenavEndMode"
-    [opened]="uiService.isSidenavEndOpen"
+    [mode]="['xs', 'sm', 'md'].includes((media$ | async)?.mqAlias) ? 'over' : 'side'"
+    [opened]="(ui$ | async).isSidenavEndOpen"
     position="end">
     <mat-toolbar
       fxLayout="row"
@@ -44,7 +44,7 @@
         aria-label="Toggle end sidenav"
         mat-button
         mat-icon-button
-        (click)="uiService.doToggleSidenavEnd()">
+        (click)="toggleSidenav('end', false)">
         <mat-icon aria-label="Side nav end toggle icon">chevron_right</mat-icon>
       </button>
     </mat-toolbar>
@@ -56,24 +56,18 @@
       color="primary"
       class="mat-elevation-z4">
       <button
-        *ngIf="!uiService.isSidenavOpen"
+        *ngIf="!(ui$ | async).isSidenavOpen"
         type="button"
         aria-label="Toggle sidenav"
         mat-button
         mat-icon-button
-        (click)="uiService.doToggleSidenav()">
+        (click)="toggleSidenav('start', true)">
         <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
       </button>
       <span>Feedmixer</span>
       <div
         fxFlex
         fxLayoutAlign="flex-end center">
-        <!--<mat-slide-toggle-->
-          <!--labelPosition="before"-->
-          <!--(change)="onAutoRefreshToggle($event.checked)"-->
-          <!--title="Automatically refresh feed every 5 minutes">-->
-          <!--Autorefresh-->
-        <!--</mat-slide-toggle>-->
         <button
           mat-button
           mat-icon-button
@@ -83,7 +77,7 @@
         <button
           mat-button
           mat-icon-button
-          (click)="uiService.doToggleSidenavEnd()">
+          (click)="toggleSidenav('end', true)">
           <mat-icon>info_outline</mat-icon>
         </button>
       </div>

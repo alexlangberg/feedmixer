@@ -3,6 +3,10 @@ import { FeedsService } from '../shared/services/feeds/feeds.service';
 import { UIService } from '../shared/services/ui/ui.service';
 import { MatSidenav } from '@angular/material';
 import { ObservableMedia } from '@angular/flex-layout';
+import { Select, Store } from '@ngxs/store';
+import { SetIsSidenavOpenStatus, SetSidenavs } from '../shared/state/ui.actions';
+import { Observable } from 'rxjs';
+import { UiState, UiStateModel } from '../shared/state/ui.state';
 
 @Component({
   selector: 'app-navigation',
@@ -10,17 +14,28 @@ import { ObservableMedia } from '@angular/flex-layout';
   styleUrls: ['./navigation.component.css']
 })
 export class NavigationComponent implements OnInit {
+  @Select(UiState.get) ui$: Observable<UiStateModel>;
   @ViewChild('sidenav') sidenav: MatSidenav;
   @ViewChild('sidenavEnd') sidenavEnd: MatSidenav;
 
   constructor(
     public media$: ObservableMedia,
     public uiService: UIService,
-    public feedsService: FeedsService
+    public feedsService: FeedsService,
+    private store: Store
   ) {}
 
   ngOnInit() {
-    this.uiService.setSidenav(this.sidenav);
-    this.uiService.setSidenavEnd(this.sidenavEnd);
+    this.store.dispatch(new SetSidenavs({
+      sidenav: this.sidenav,
+      sidenavEnd: this.sidenavEnd
+    }));
+  }
+
+  toggleSidenav(sidenav: 'start' | 'end', isOpen: boolean) {
+    this.store.dispatch(new SetIsSidenavOpenStatus({
+      sidenav: sidenav,
+      isOpen: isOpen
+    }));
   }
 }

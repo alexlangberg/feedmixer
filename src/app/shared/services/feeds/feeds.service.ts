@@ -40,7 +40,6 @@ export class FeedsService implements OnDestroy {
     }
   }
 
-  // TODO: this probably belongs in ui service.
   setSelectedFeedItem(feedItem: JsonfeedItem) {
     this.store.dispatch(new SetSelectedFeedItem({ feedItem }));
   }

@@ -45,7 +45,7 @@
   </ng-container>
 
   <!--<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>-->
-  <tr mat-row *matRowDef="let row; columns: columnsChanged$ | async;"></tr>
+  <tr mat-row *matRowDef="let row; columns: (ui$ | async).feedTableColumns;"></tr>
 </table>
 <mat-paginator #paginator
                [pageSize]="25"
