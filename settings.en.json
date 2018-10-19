@@ -1,5 +1,7 @@
 {
-  "autoRefreshIntervalSeconds": 5,
+  "debug": false,
+  "isAutoRefreshEnabled": false,
+  "autoRefreshIntervalSeconds": 300,
   "cacheFeedsSeconds": 60,
   "feeds": [
     {

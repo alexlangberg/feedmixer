@@ -8,6 +8,7 @@ import {
 import { SettingsFeed } from '../models/settings-feed.model';
 
 export interface SettingsStateModel {
+  debug: boolean;
   isAutoRefreshEnabled: boolean;
   autoRefreshIntervalSeconds: number;
   cacheFeedsSeconds: number;
@@ -17,6 +18,7 @@ export interface SettingsStateModel {
 @State<SettingsStateModel>({
   name: 'settings',
   defaults: {
+    debug: false,
     isAutoRefreshEnabled: false,
     autoRefreshIntervalSeconds: 5,
     cacheFeedsSeconds: 60,

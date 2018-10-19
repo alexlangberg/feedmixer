@@ -5,7 +5,7 @@
 
   <mat-divider></mat-divider>
 
-  <mat-expansion-panel class="mat-elevation-z0" expanded="true">
+  <mat-expansion-panel class="mat-elevation-z0" [expanded]="(settings$ | async).debug">
     <mat-expansion-panel-header>
       <mat-panel-title>
         <mat-icon>search</mat-icon>Other items by related term
@@ -17,7 +17,7 @@
 
   <mat-divider></mat-divider>
 
-  <mat-expansion-panel class="mat-elevation-z0" expanded="true">
+  <mat-expansion-panel class="mat-elevation-z0" [expanded]="(settings$ | async).debug">
     <mat-expansion-panel-header>
       <mat-panel-title>
         <mat-icon>insert_emoticon</mat-icon>Reddit

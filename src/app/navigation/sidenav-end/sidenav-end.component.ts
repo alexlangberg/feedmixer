@@ -5,6 +5,7 @@ import { Select, Store } from '@ngxs/store';
 import { FeedsState } from '../../shared/state/feeds.state';
 import { SetIsSidenavOpenStatus } from '../../shared/state/ui.actions';
 import { UiState, UiStateModel } from '../../shared/state/ui.state';
+import { SettingsState, SettingsStateModel } from '../../shared/state/settings.state';
 
 @Component({
   selector: 'app-sidenav-end',
@@ -12,6 +13,7 @@ import { UiState, UiStateModel } from '../../shared/state/ui.state';
   styleUrls: ['./sidenav-end.component.css']
 })
 export class SidenavEndComponent implements OnInit {
+  @Select(SettingsState.getSettings) settings$: Observable<SettingsStateModel>;
   @Select(FeedsState.getSelectedFeedItem) item$: Observable<JsonfeedItem>;
   @Select(UiState.get) ui$: Observable<UiStateModel>;
   private uiSize: string;
