@@ -12,6 +12,16 @@ app-sidenav mat-slide-toggle .mat-slide-toggle-content {
   width: 100%;
 }
 
-mat-chip .mat-badge {
-  margin-left: 16px;
+.app-inline-badge {
+  color: white;
+  background-color: #3f51b5;
+  display: inline-block;
+  border-radius: 50%;
+  width: 22px;
+  height: 22px;
+  line-height: 22px;
+  text-align: center;
+  font-weight: 600;
+  font-size: 12px;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
 }
