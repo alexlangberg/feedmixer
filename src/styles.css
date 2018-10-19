@@ -12,7 +12,7 @@ app-sidenav mat-slide-toggle .mat-slide-toggle-content {
   width: 100%;
 }
 
-mat-toolbar .mat-progress-spinner circle, .mat-spinner circle {
+.app-spinner-white circle {
   stroke: white;
 }
 
