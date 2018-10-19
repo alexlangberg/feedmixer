@@ -6,8 +6,8 @@ import { Select, Store } from '@ngxs/store';
 import { SetIsSidenavOpenStatus, SetSidenavs } from '../shared/state/ui.actions';
 import { Observable } from 'rxjs';
 import { UiState, UiStateModel } from '../shared/state/ui.state';
-import { SettingsState } from '../shared/state/settings.state';
-import { SettingsFeed } from '../shared/models/settings-feed.model';
+import { SettingsState, SettingsStateModel } from '../shared/state/settings.state';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-navigation',
@@ -15,11 +15,11 @@ import { SettingsFeed } from '../shared/models/settings-feed.model';
   styleUrls: ['./navigation.component.css']
 })
 export class NavigationComponent implements OnInit {
-  @Select(SettingsState.getSettingsFeeds) feeds$: Observable<SettingsFeed[]>;
+  @Select(SettingsState.getSettings) settings$: Observable<SettingsStateModel>;
   @Select(UiState.get) ui$: Observable<UiStateModel>;
   @ViewChild('sidenav') sidenav: MatSidenav;
   @ViewChild('sidenavEnd') sidenavEnd: MatSidenav;
-  private feeds: SettingsFeed[];
+  fetching$: Observable<boolean>;
 
   constructor(
     public media$: ObservableMedia,
@@ -33,9 +33,12 @@ export class NavigationComponent implements OnInit {
       sidenavEnd: this.sidenavEnd
     }));
 
-    this.feeds$.subscribe(feeds => {
-      this.feeds = feeds;
-    });
+    this.fetching$ = this.settings$
+      .pipe(
+        map(settings => {
+          return settings.feeds.filter(feed => feed.fetching).length > 0;
+        })
+      );
   }
 
   toggleSidenav(sidenav: 'start' | 'end', isOpen: boolean) {
@@ -43,9 +46,5 @@ export class NavigationComponent implements OnInit {
       sidenav: sidenav,
       isOpen: isOpen
     }));
-  }
-
-  isFetching() {
-    return this.feeds.filter(feed => feed.fetching).length > 0;
   }
 }

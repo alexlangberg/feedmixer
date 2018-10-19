@@ -19,16 +19,8 @@
       <span class="app-inline-badge" style="margin-right: 16px;">
         {{ getFeedCount(feed.url) }}
       </span>
-      <span>{{ feed.name }}</span>
 
-      <span *ngIf="feed.fetching">
-        <mat-icon
-          class="app-rotate"
-          [inline]="true"
-          style="vertical-align: middle">
-          refresh
-        </mat-icon>
-      </span>
+      <span style="vertical-align: middle; margin-right: 8px">{{ feed.name }}</span>
 
       <mat-icon
         *ngIf="feed.error"
@@ -38,5 +30,10 @@
         style="vertical-align: middle">
         error
       </mat-icon>
+
+      <span
+        style="display: inline-block; vertical-align: middle; width: 14px">
+        <mat-spinner [diameter]="14" *ngIf="feed.fetching"></mat-spinner>
+      </span>
   </mat-slide-toggle>
 </div>

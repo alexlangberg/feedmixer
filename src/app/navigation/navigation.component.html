@@ -68,12 +68,18 @@
       <div
         fxFlex
         fxLayoutAlign="flex-end center">
+        <mat-spinner
+          *ngIf="fetching$ | async"
+          [diameter]="24"
+          color="accent"></mat-spinner>
+
         <button
           mat-button
           mat-icon-button
           (click)="feedsService.refreshAllFeeds()">
-          <mat-icon [ngClass]="{ 'app-rotate': isFetching() }">refresh</mat-icon>
+          <mat-icon>refresh</mat-icon>
         </button>
+
         <button
           mat-button
           mat-icon-button

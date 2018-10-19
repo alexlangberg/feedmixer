@@ -41,5 +41,8 @@
 </div>
 
 <div *ngIf="isLoading">
-  Loading submissions...
+  <span style="display: inline-block; vertical-align: middle; width: 14px; margin-right: 8px">
+    <mat-spinner [diameter]="14"></mat-spinner>
+  </span>
+  <span>Loading submissions...</span>
 </div>

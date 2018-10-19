@@ -3,7 +3,12 @@ import {
   SetAllSettingsFeedsStatus,
   SetSettingsFeedStatus,
   SetSettingsFeedsFetchedAt,
-  UpdateSettingsFromFile, SetSettingsAutoRefresh, SetSettingsFeedError, SetSettingsFeedFetching
+  UpdateSettingsFromFile,
+  SetSettingsAutoRefresh,
+  SetSettingsFeedError,
+  SetSettingsFeedFetching,
+  // UpdateFeedsCurrentlyFetchingCount,
+  // SetFeedsToFetchCount
 } from './settings.actions';
 import { SettingsFeed } from '../models/settings-feed.model';
 
@@ -11,6 +16,9 @@ export interface SettingsStateModel {
   isAutoRefreshEnabled: boolean;
   autoRefreshIntervalSeconds: number;
   cacheFeedsSeconds: number;
+  feedsToFetchCount: number;
+  feedsCurrentlyFetchingCount: number;
+  feedsCurrentlyFetchingPercentage: number;
   feeds: SettingsFeed[];
 }
 
@@ -20,11 +28,16 @@ export interface SettingsStateModel {
     isAutoRefreshEnabled: false,
     autoRefreshIntervalSeconds: 5,
     cacheFeedsSeconds: 60,
+    feedsToFetchCount: 0,
+    feedsCurrentlyFetchingCount: 0,
+    feedsCurrentlyFetchingPercentage: 0,
     feeds: []
   }
 })
 
 export class SettingsState {
+
+  constructor() {}
 
   @Selector()
   static getSettings(state: SettingsStateModel) {
@@ -127,4 +140,25 @@ export class SettingsState {
       isAutoRefreshEnabled: action.payload
     });
   }
+
+  // @Action(SetFeedsToFetchCount)
+  // setFeedsToFetchCount(ctx: StateContext<SettingsStateModel>, action: SetFeedsToFetchCount) {
+  //   ctx.patchState({
+  //     feedsToFetchCount: action.payload
+  //   });
+  // }
+
+  // @Action(UpdateFeedsCurrentlyFetchingCount)
+  // updateFeedsCurrentlyFetchingCount(ctx: StateContext<SettingsStateModel>) {
+  //   const state = ctx.getState();
+  //   const currentlyFetching = state.feeds.filter(feed => feed.fetching).length;
+  //   const currentlyFetchingPercentage = Math.round(
+  //     (1 - currentlyFetching / state.feedsToFetchCount) * 100
+  //   );
+  //
+  //   ctx.patchState({
+  //     feedsCurrentlyFetchingCount: currentlyFetching,
+  //     feedsCurrentlyFetchingPercentage: currentlyFetchingPercentage
+  //   });
+  // }
 }
