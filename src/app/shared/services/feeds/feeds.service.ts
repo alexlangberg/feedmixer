@@ -2,7 +2,7 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { forkJoin, Observable, of, Subscription, timer } from 'rxjs';
 import { SettingsFile } from '../../models/settings-file.model';
 import { ApiService } from '../api/api.service';
-import { catchError } from 'rxjs/operators';
+import { catchError, tap } from 'rxjs/operators';
 import { SettingsFeed } from '../../models/settings-feed.model';
 import * as moment from 'moment';
 import { SettingsState, SettingsStateModel } from '../../state/settings.state';
@@ -77,6 +77,12 @@ export class FeedsService implements OnDestroy {
       return this.apiService
         .getFeedFromUrl(feed.url, feed.language)
         .pipe(
+          tap(item => {
+            this.store.dispatch(new SetSettingsFeedFetching({
+              url: item._feedmixer.url,
+              fetching: false
+            }));
+          }),
           catchError(error => {
 
             // also sets feed.fetching = false
@@ -94,11 +100,6 @@ export class FeedsService implements OnDestroy {
       .subscribe(results => {
         results.forEach(feed => {
           if (feed) {
-            this.store.dispatch(new SetSettingsFeedFetching({
-              url: feed._feedmixer.url,
-              fetching: false
-            }));
-
             this.store.dispatch(new UpdateFeed({
               url: feed._feedmixer.url,
               feed: feed
