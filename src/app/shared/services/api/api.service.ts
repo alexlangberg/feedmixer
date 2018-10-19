@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { forkJoin, Observable } from 'rxjs';
 import { Jsonfeed } from '../../models/jsonfeed.model';
-import { concatAll, map } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { RedditPost } from '../../models/reddit-post.model';
 import { TokenizerService } from '../tokenizer/tokenizer.service';
 import * as he from 'he';
@@ -64,22 +64,25 @@ export class ApiService {
       );
     });
 
-    // TODO: this should probably just concat results and return them
-    const fork = forkJoin(requests)
+    return forkJoin(requests)
       .pipe(
-        concatAll()
+        map(responses => {
+          return responses
+            .map(this.getPostsFromRedditListing)
+            .reduce((result, item) => result.concat(item));
+        })
       );
+  }
 
-    return fork.pipe(map(response => {
-      return response.data.children.map((post: any) => {
-        return new RedditPost(
-          post.data.title,
-          post.data.subreddit,
-          post.data.permalink,
-          new Date(post.data.created_utc * 1000),
-          post.data.num_comments
-        );
-      }).sort((a, b) => b.num_comments - a.num_comments);
-    }));
+  private getPostsFromRedditListing(listing: RedditListing) {
+    return listing.data.children.map((post: any) => {
+      return new RedditPost(
+        post.data.title,
+        post.data.subreddit,
+        post.data.permalink,
+        new Date(post.data.created_utc * 1000),
+        post.data.num_comments
+      );
+    }).sort((a, b) => b.num_comments - a.num_comments);
   }
 }
