@@ -22,7 +22,7 @@ import { NgxsReduxDevtoolsPluginModule } from '@ngxs/devtools-plugin';
 import { NgxsLoggerPluginModule } from '@ngxs/logger-plugin';
 
 import {
-  MatAutocompleteModule,
+  MatAutocompleteModule, MatBadgeModule,
   MatButtonModule,
   MatChipsModule,
   MatDividerModule,
@@ -72,6 +72,7 @@ import { UiState } from './shared/state/ui.state';
     MatAutocompleteModule,
     MatChipsModule,
     MatDividerModule,
+    MatBadgeModule,
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,

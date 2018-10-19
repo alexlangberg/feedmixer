@@ -11,3 +11,7 @@ body {
 app-sidenav mat-slide-toggle .mat-slide-toggle-content {
   width: 100%;
 }
+
+mat-chip .mat-badge {
+  margin-left: 16px;
+}

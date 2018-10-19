@@ -3,6 +3,8 @@
     *ngFor="let chip of chips"
     style="cursor: pointer;"
     (click)="doSearch(chip.word)">
-    {{ chip.word }} ({{ chip.count }})
+    <span>{{ chip.word }}</span>
+    <!--<span class="app-inline-badge">{{ chip.count }}</span>-->
+    <span [matBadge]="chip.count"></span>
   </mat-chip>
 </mat-chip-list>
