@@ -69,9 +69,10 @@
         fxFlex
         fxLayoutAlign="flex-end center">
         <mat-spinner
+          style="margin-right: 12px"
+          [strokeWidth]="2"
           *ngIf="fetching$ | async"
-          [diameter]="24"
-          color="accent"></mat-spinner>
+          [diameter]="18"></mat-spinner>
 
         <button
           mat-button
