@@ -6,9 +6,7 @@ import {
   UpdateSettingsFromFile,
   SetSettingsAutoRefresh,
   SetSettingsFeedError,
-  SetSettingsFeedFetching,
-  // UpdateFeedsCurrentlyFetchingCount,
-  // SetFeedsToFetchCount
+  SetSettingsFeedFetching
 } from './settings.actions';
 import { SettingsFeed } from '../models/settings-feed.model';
 
@@ -140,25 +138,4 @@ export class SettingsState {
       isAutoRefreshEnabled: action.payload
     });
   }
-
-  // @Action(SetFeedsToFetchCount)
-  // setFeedsToFetchCount(ctx: StateContext<SettingsStateModel>, action: SetFeedsToFetchCount) {
-  //   ctx.patchState({
-  //     feedsToFetchCount: action.payload
-  //   });
-  // }
-
-  // @Action(UpdateFeedsCurrentlyFetchingCount)
-  // updateFeedsCurrentlyFetchingCount(ctx: StateContext<SettingsStateModel>) {
-  //   const state = ctx.getState();
-  //   const currentlyFetching = state.feeds.filter(feed => feed.fetching).length;
-  //   const currentlyFetchingPercentage = Math.round(
-  //     (1 - currentlyFetching / state.feedsToFetchCount) * 100
-  //   );
-  //
-  //   ctx.patchState({
-  //     feedsCurrentlyFetchingCount: currentlyFetching,
-  //     feedsCurrentlyFetchingPercentage: currentlyFetchingPercentage
-  //   });
-  // }
 }
