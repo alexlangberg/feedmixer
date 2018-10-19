@@ -20,10 +20,14 @@
       <mat-option
         *ngFor="let option of filteredTags | async | keyvalue:tagComparator"
         [value]="option.key">
-        <span class="app-inline-badge" style="margin-right: 12px">
-          {{ option.value }}
-        </span>
-        <span>{{ option.key }}</span>
+        <div fxLayout="row">
+          <span fxFlex>{{ option.key }}</span>
+          <span fxLayoutAlign="flex-end center">
+            <span class="app-inline-badge">
+              {{ option.value }}
+            </span>
+          </span>
+        </div>
       </mat-option>
     </mat-autocomplete>
   </mat-form-field>

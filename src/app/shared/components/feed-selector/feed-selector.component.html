@@ -5,8 +5,19 @@
     id="all"
     labelPosition="before"
     fxFlex>
-    <span class="app-inline-badge" style="margin-right: 16px;">{{ getFeedCount('all') }}</span>
-    <span>All</span>
+    <div fxLayout="row" fxLayoutGap="8px">
+      <span
+        fxFlex="100%"
+        style="vertical-align: middle;">All</span>
+
+      <span
+        fxFlex
+        fxLayoutAlign="flex-end center">
+        <span class="app-inline-badge">
+            {{ '11' + getFeedCount('all') }}
+        </span>
+      </span>
+    </div>
   </mat-slide-toggle>
   <mat-divider></mat-divider>
   <mat-slide-toggle
@@ -16,24 +27,39 @@
     [id]="feed.url"
     labelPosition="before"
     fxFlex>
-      <span class="app-inline-badge" style="margin-right: 16px;">
-        {{ getFeedCount(feed.url) }}
-      </span>
-
-      <span style="vertical-align: middle; margin-right: 8px">{{ feed.name }}</span>
-
-      <mat-icon
-        *ngIf="feed.error"
-        [title]="feed.error"
-        color="warn"
-        [inline]="true"
-        style="vertical-align: middle">
-        error
-      </mat-icon>
+    <div fxLayout="row" fxLayoutGap="8px">
+      <span
+        fxFlex="100%"
+        style="vertical-align: middle;">{{ feed.name }}</span>
 
       <span
+        fxFlex
+        fxLayoutAlign="flex-end center">
+        <mat-icon
+          fxFlex
+          *ngIf="feed.error"
+          [title]="feed.error"
+          color="warn"
+          [inline]="true"
+          style="vertical-align: middle">
+          error
+        </mat-icon>
+      </span>
+
+      <span
+        fxFlex
+        fxLayoutAlign="flex-end center"
         style="display: inline-block; vertical-align: middle; width: 14px">
         <mat-spinner [diameter]="14" *ngIf="feed.fetching"></mat-spinner>
       </span>
+
+      <span
+        fxFlex
+        fxLayoutAlign="flex-end center">
+        <span class="app-inline-badge">
+            {{ getFeedCount(feed.url) }}
+        </span>
+      </span>
+    </div>
   </mat-slide-toggle>
 </div>
