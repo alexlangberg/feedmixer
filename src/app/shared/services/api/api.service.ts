@@ -6,6 +6,7 @@ import { concatAll, map } from 'rxjs/operators';
 import { RedditPost } from '../../models/reddit-post.model';
 import { TokenizerService } from '../tokenizer/tokenizer.service';
 import * as he from 'he';
+import { RedditListing } from '../../models/reddit-listing.model';
 
 @Injectable({
   providedIn: 'root'
@@ -57,15 +58,19 @@ export class ApiService {
       ? url.replace('https', 'http')
       : url.replace('http', 'https');
 
-    // TODO: this should probably just concat results and return them
-    const requests = forkJoin([url, otherUrl].map(getUrl => {
-        return this.http.get<{ data: { children: [{ data: RedditPost }]}}>(
-          'https://www.reddit.com/api/info.json?url=' + getUrl
-        );
-      }
-    )).pipe(concatAll());
+    const requests = [url, otherUrl].map(getUrl => {
+      return this.http.get<RedditListing>(
+        'https://www.reddit.com/api/info.json?url=' + getUrl
+      );
+    });
 
-    return requests.pipe(map(response => {
+    // TODO: this should probably just concat results and return them
+    const fork = forkJoin(requests)
+      .pipe(
+        concatAll()
+      );
+
+    return fork.pipe(map(response => {
       return response.data.children.map((post: any) => {
         return new RedditPost(
           post.data.title,
