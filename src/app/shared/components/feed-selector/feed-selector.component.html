@@ -5,7 +5,8 @@
     id="all"
     labelPosition="before"
     fxFlex>
-    All
+    <span class="app-inline-badge" style="margin-right: 16px;">{{ getFeedCount('all') }}</span>
+    <span>All</span>
   </mat-slide-toggle>
   <mat-divider></mat-divider>
   <mat-slide-toggle
@@ -15,6 +16,7 @@
     [id]="feed.url"
     labelPosition="before"
     fxFlex>
-    {{ feed.name }}
+    <span class="app-inline-badge" style="margin-right: 16px;">{{ getFeedCount(feed.url) }}</span>
+    <span>{{ feed.name }}</span>
   </mat-slide-toggle>
 </div>

@@ -68,6 +68,17 @@ export class FeedsState {
   }
 
   @Selector()
+  static getFeedsItemCounts(state: FeedsStateModel) {
+    const counts: { url: string, count: number}[] = [];
+
+    state.feeds.forEach((feed: Jsonfeed) => {
+      counts.push({ url: feed._feedmixer.url, count: feed.items.length});
+    });
+
+    return counts;
+  }
+
+  @Selector()
   static getTags(state: FeedsStateModel): Map<string, number> {
     return state.tags;
   }
@@ -111,13 +122,13 @@ export class FeedsState {
 
       this.setFeed(ctx, new SetFeed({
         url: action.payload.url,
-        feed: existing})
-      );
+        feed: existing
+      }));
     } else {
       this.setFeed(ctx, new SetFeed({
         url: action.payload.url,
-        feed: action.payload.feed})
-      );
+        feed: action.payload.feed
+      }));
     }
   }
 
