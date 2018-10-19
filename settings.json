@@ -3,19 +3,54 @@
   "autoRefreshIntervalSeconds": 300,
   "feeds": [
     {
-      "name": "BBC",
-      "url": "http://feeds.bbci.co.uk/news/world/rss.xml",
-      "language": "en"
+      "name": "BT",
+      "url": "https://www.bt.dk/nyheder/seneste/rss",
+      "language": "da"
     },
     {
-      "name": "CNN",
-      "url": "http://rss.cnn.com/rss/edition_world.rss",
-      "language": "en"
+      "name": "Børsen",
+      "url": "https://borsen.dk/rss/",
+      "language": "da"
     },
     {
-      "name": "Al-Jazeera",
-      "url": "https://www.aljazeera.com/xml/rss/all.xml",
-      "language": "en"
+      "name": "Arbejderen",
+      "url": "https://arbejderen.dk/feeds/seneste-nyt.xml",
+      "language": "da"
+    },
+    {
+      "name": "DR",
+      "url": "https://www.dr.dk/nyheder/service/feeds/allenyheder",
+      "language": "da"
+    },
+    {
+      "name": "Ekstra Bladet",
+      "url": "https://ekstrabladet.dk/rssfeed/all/",
+      "language": "da"
+    },
+    {
+      "name": "Information",
+      "url": "https://www.information.dk/feed",
+      "language": "da"
+    },
+    {
+      "name": "Jyllands-Posten",
+      "url": "https://jyllands-posten.dk/?service=rssfeed",
+      "language": "da"
+    },
+    {
+      "name": "Kristeligt Dagblad",
+      "url": "https://www.kristeligt-dagblad.dk/rss/nyheder",
+      "language": "da"
+    },
+    {
+      "name": "Politiken",
+      "url": "http://politiken.dk/rss/senestenyt.rss",
+      "language": "da"
+    },
+    {
+      "name": "TV2",
+      "url": "http://feeds.tv2.dk/nyheder/rss",
+      "language": "da"
     }
   ]
 }

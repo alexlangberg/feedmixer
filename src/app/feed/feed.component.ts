@@ -45,6 +45,7 @@ export class FeedComponent implements OnInit, AfterViewInit {
   doFilter(filterValue: string) {
     if (filterValue || filterValue === '') {
       this.dataSource.filter = filterValue.trim().toLowerCase();
+      this.paginator.firstPage();
     }
   }
 
