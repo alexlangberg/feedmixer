@@ -6,6 +6,8 @@ import { Select, Store } from '@ngxs/store';
 import { SetIsSidenavOpenStatus, SetSidenavs } from '../shared/state/ui.actions';
 import { Observable } from 'rxjs';
 import { UiState, UiStateModel } from '../shared/state/ui.state';
+import { SettingsState } from '../shared/state/settings.state';
+import { SettingsFeed } from '../shared/models/settings-feed.model';
 
 @Component({
   selector: 'app-navigation',
@@ -13,9 +15,11 @@ import { UiState, UiStateModel } from '../shared/state/ui.state';
   styleUrls: ['./navigation.component.css']
 })
 export class NavigationComponent implements OnInit {
+  @Select(SettingsState.getSettingsFeeds) feeds$: Observable<SettingsFeed[]>;
   @Select(UiState.get) ui$: Observable<UiStateModel>;
   @ViewChild('sidenav') sidenav: MatSidenav;
   @ViewChild('sidenavEnd') sidenavEnd: MatSidenav;
+  private feeds: SettingsFeed[];
 
   constructor(
     public media$: ObservableMedia,
@@ -28,6 +32,10 @@ export class NavigationComponent implements OnInit {
       sidenav: this.sidenav,
       sidenavEnd: this.sidenavEnd
     }));
+
+    this.feeds$.subscribe(feeds => {
+      this.feeds = feeds;
+    });
   }
 
   toggleSidenav(sidenav: 'start' | 'end', isOpen: boolean) {
@@ -35,5 +43,9 @@ export class NavigationComponent implements OnInit {
       sidenav: sidenav,
       isOpen: isOpen
     }));
+  }
+
+  isFetching() {
+    return this.feeds.filter(feed => feed.fetching).length > 0;
   }
 }

@@ -26,3 +26,9 @@ app-sidenav mat-slide-toggle .mat-slide-toggle-content {
   font-size: 12px;
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
+
+@keyframes spin { 100% { transform:rotate(360deg); } }
+.app-rotate {
+  animation: spin 1s ease-in-out infinite;
+}
+

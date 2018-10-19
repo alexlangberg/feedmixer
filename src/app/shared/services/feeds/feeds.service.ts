@@ -8,7 +8,7 @@ import * as moment from 'moment';
 import { SettingsState, SettingsStateModel } from '../../state/settings.state';
 import { Select, Store } from '@ngxs/store';
 import { SetSelectedFeedItem, UpdateFeed, UpdateTags } from '../../state/feeds.actions';
-import { SetSettingsFeedError, SetSettingsFeedsFetchedAt } from '../../state/settings.actions';
+import { SetSettingsFeedError, SetSettingsFeedFetching, SetSettingsFeedsFetchedAt } from '../../state/settings.actions';
 import { JsonfeedItem } from '../../models/jsonfeed-item.model';
 
 @Injectable({
@@ -66,11 +66,20 @@ export class FeedsService implements OnDestroy {
   }
 
   private fetchFeeds(feeds: SettingsFeed[]) {
+    feeds.forEach(feed => {
+      this.store.dispatch(new SetSettingsFeedFetching({
+        url: feed.url,
+        fetching: true
+      }));
+    });
+
     const requests = feeds.map(feed => {
       return this.apiService
         .getFeedFromUrl(feed.url, feed.language)
         .pipe(
           catchError(error => {
+
+            // also sets feed.fetching = false
             this.store.dispatch(new SetSettingsFeedError({
               url: error.url.replace(ApiService.RSS2JSON_API_URL, ''),
               message: error.message
@@ -85,6 +94,11 @@ export class FeedsService implements OnDestroy {
       .subscribe(results => {
         results.forEach(feed => {
           if (feed) {
+            this.store.dispatch(new SetSettingsFeedFetching({
+              url: feed._feedmixer.url,
+              fetching: false
+            }));
+
             this.store.dispatch(new UpdateFeed({
               url: feed._feedmixer.url,
               feed: feed

@@ -72,7 +72,7 @@
           mat-button
           mat-icon-button
           (click)="feedsService.refreshAllFeeds()">
-          <mat-icon>refresh</mat-icon>
+          <mat-icon [ngClass]="{ 'app-rotate': isFetching() }">refresh</mat-icon>
         </button>
         <button
           mat-button

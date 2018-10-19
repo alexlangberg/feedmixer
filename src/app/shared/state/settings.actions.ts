@@ -30,3 +30,8 @@ export class SetSettingsFeedError {
   static readonly type = '[SETTINGS] Set settings feed error';
   constructor(public payload: { url: string, message: string | undefined }) {}
 }
+
+export class SetSettingsFeedFetching {
+  static readonly type = '[SETTINGS] Set settings feed fetching';
+  constructor(public payload: { url: string, fetching: boolean }) {}
+}

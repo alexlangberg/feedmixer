@@ -3,7 +3,7 @@ import {
   SetAllSettingsFeedsStatus,
   SetSettingsFeedStatus,
   SetSettingsFeedsFetchedAt,
-  UpdateSettingsFromFile, SetSettingsAutoRefresh, SetSettingsFeedError
+  UpdateSettingsFromFile, SetSettingsAutoRefresh, SetSettingsFeedError, SetSettingsFeedFetching
 } from './settings.actions';
 import { SettingsFeed } from '../models/settings-feed.model';
 
@@ -89,6 +89,20 @@ export class SettingsState {
       feeds: ctx.getState().feeds.map(item => {
         if (item.url === action.payload.url) {
           item.error = action.payload.message;
+          item.fetching = false;
+        }
+
+        return item;
+      })
+    });
+  }
+
+  @Action(SetSettingsFeedFetching)
+  setSettingsFeedFetching(ctx: StateContext<SettingsStateModel>, action: SetSettingsFeedFetching) {
+    ctx.patchState({
+      feeds: ctx.getState().feeds.map(item => {
+        if (item.url === action.payload.url) {
+          item.fetching = action.payload.fetching;
         }
 
         return item;
