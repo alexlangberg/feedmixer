@@ -25,3 +25,8 @@ export class SetSettingsAutoRefresh {
   static readonly type = '[SETTINGS] Set auto refresh status';
   constructor(public payload: boolean) {}
 }
+
+export class SetSettingsFeedError {
+  static readonly type = '[SETTINGS] Set settings feed error';
+  constructor(public payload: { url: string, message: string | undefined }) {}
+}

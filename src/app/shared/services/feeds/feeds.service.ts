@@ -1,14 +1,14 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { from, Observable, Subscription, timer } from 'rxjs';
+import { forkJoin, Observable, of, Subscription, timer } from 'rxjs';
 import { SettingsFile } from '../../models/settings-file.model';
 import { ApiService } from '../api/api.service';
-import { mergeMap } from 'rxjs/operators';
+import { catchError } from 'rxjs/operators';
 import { SettingsFeed } from '../../models/settings-feed.model';
 import * as moment from 'moment';
 import { SettingsState, SettingsStateModel } from '../../state/settings.state';
 import { Select, Store } from '@ngxs/store';
 import { SetSelectedFeedItem, UpdateFeed, UpdateTags } from '../../state/feeds.actions';
-import { SetSettingsFeedsFetchedAt } from '../../state/settings.actions';
+import { SetSettingsFeedError, SetSettingsFeedsFetchedAt } from '../../state/settings.actions';
 import { JsonfeedItem } from '../../models/jsonfeed-item.model';
 
 @Injectable({
@@ -58,21 +58,42 @@ export class FeedsService implements OnDestroy {
         feeds: feedsToUpdate,
         fetchedAt: new Date()
       })).subscribe(() => {
-        from(feedsToUpdate)
-          .pipe(
-            mergeMap(feed => this.apiService.getFeedFromUrl(feed.url, feed.language))
-          ).subscribe(feed => {
+        this.fetchFeeds(feedsToUpdate);
+      });
+    } else {
+      this.store.dispatch(new UpdateTags());
+    }
+  }
+
+  private fetchFeeds(feeds: SettingsFeed[]) {
+    const requests = feeds.map(feed => {
+      return this.apiService
+        .getFeedFromUrl(feed.url, feed.language)
+        .pipe(
+          catchError(error => {
+            this.store.dispatch(new SetSettingsFeedError({
+              url: error.url.replace(ApiService.RSS2JSON_API_URL, ''),
+              message: error.message
+            }));
+
+            return of(undefined);
+          })
+        );
+    });
+
+    forkJoin(requests)
+      .subscribe(results => {
+        results.forEach(feed => {
+          if (feed) {
             this.store.dispatch(new UpdateFeed({
               url: feed._feedmixer.url,
               feed: feed
             })).subscribe(() => {
               this.store.dispatch(new UpdateTags());
             });
-          });
+          }
+        });
       });
-    } else {
-      this.store.dispatch(new UpdateTags());
-    }
   }
 
   private isTimeToClearFeedCache(feed: SettingsFeed): boolean {

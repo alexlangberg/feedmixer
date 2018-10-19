@@ -12,6 +12,9 @@ import { RedditListing } from '../../models/reddit-listing.model';
   providedIn: 'root'
 })
 export class ApiService {
+  public static readonly RSS2JSON_API_URL = 'http://localhost:4201/convert?url=';
+  public static readonly REDDIT_API_URL = 'https://www.reddit.com/api/info.json?url=';
+
   constructor(private http: HttpClient) {}
 
   private static sanitizeText(text: string) {
@@ -25,7 +28,7 @@ export class ApiService {
 
   getFeedFromUrl(rss_url: string, language: string): Observable<Jsonfeed> {
     const request = <Observable<Jsonfeed>>this.http.get(
-      'http://localhost:4201/convert?url=' + rss_url
+      ApiService.RSS2JSON_API_URL + rss_url
     );
 
     return request.pipe(map(item => {
@@ -60,7 +63,7 @@ export class ApiService {
 
     const requests = [url, otherUrl].map(getUrl => {
       return this.http.get<RedditListing>(
-        'https://www.reddit.com/api/info.json?url=' + getUrl
+        ApiService.REDDIT_API_URL + getUrl
       );
     });
 

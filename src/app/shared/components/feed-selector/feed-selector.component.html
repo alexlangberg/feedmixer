@@ -16,7 +16,19 @@
     [id]="feed.url"
     labelPosition="before"
     fxFlex>
-    <span class="app-inline-badge" style="margin-right: 16px;">{{ getFeedCount(feed.url) }}</span>
-    <span>{{ feed.name }}</span>
+      <span class="app-inline-badge" style="margin-right: 16px;">
+        {{ getFeedCount(feed.url) }}
+      </span>
+
+      {{ feed.name }}
+
+      <mat-icon
+        *ngIf="feed.error"
+        [title]="feed.error"
+        color="warn"
+        [inline]="true"
+        style="vertical-align: middle">
+        error
+      </mat-icon>
   </mat-slide-toggle>
 </div>

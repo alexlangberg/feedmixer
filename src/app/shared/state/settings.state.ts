@@ -3,7 +3,7 @@ import {
   SetAllSettingsFeedsStatus,
   SetSettingsFeedStatus,
   SetSettingsFeedsFetchedAt,
-  UpdateSettingsFromFile, SetSettingsAutoRefresh
+  UpdateSettingsFromFile, SetSettingsAutoRefresh, SetSettingsFeedError
 } from './settings.actions';
 import { SettingsFeed } from '../models/settings-feed.model';
 
@@ -76,6 +76,19 @@ export class SettingsState {
       feeds: ctx.getState().feeds.map(item => {
         if (item.url === action.payload.url) {
           item.active = action.payload.active;
+        }
+
+        return item;
+      })
+    });
+  }
+
+  @Action(SetSettingsFeedError)
+  setSettingsFeedError(ctx: StateContext<SettingsStateModel>, action: SetSettingsFeedError) {
+    ctx.patchState({
+      feeds: ctx.getState().feeds.map(item => {
+        if (item.url === action.payload.url) {
+          item.error = action.payload.message;
         }
 
         return item;
