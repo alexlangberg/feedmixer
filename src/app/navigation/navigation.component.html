@@ -69,7 +69,7 @@
         fxFlex
         fxLayoutAlign="flex-end center">
         <mat-spinner
-          style="margin-right: 12px"
+          style="margin-right: 8px"
           [strokeWidth]="2"
           *ngIf="fetching$ | async"
           [diameter]="18"></mat-spinner>
@@ -77,8 +77,17 @@
         <button
           mat-button
           mat-icon-button
+          *ngIf="!(fetching$ | async)"
           (click)="feedsService.refreshAllFeeds()">
           <mat-icon>refresh</mat-icon>
+        </button>
+
+        <button
+          mat-button
+          mat-icon-button
+          *ngIf="fetching$ | async"
+          (click)="feedsService.cancelFetching()">
+          <mat-icon>clear</mat-icon>
         </button>
 
         <button

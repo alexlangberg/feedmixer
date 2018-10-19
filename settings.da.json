@@ -1,7 +1,6 @@
 {
   "isAutoRefreshEnabled": false,
   "autoRefreshIntervalSeconds": 300,
-  "cacheFeedsSeconds": 60,
   "feeds": [
     {
       "name": "BT",

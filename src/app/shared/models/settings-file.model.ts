@@ -4,7 +4,6 @@ export class SettingsFile {
   constructor(
     public isAutoRefreshEnabled: boolean,
     public autoRefreshIntervalSeconds: number,
-    public cacheFeedsSeconds: number,
     public feeds: SettingsFeed[]
   ) {}
 }

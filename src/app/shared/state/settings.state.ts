@@ -6,14 +6,13 @@ import {
   UpdateSettingsFromFile,
   SetSettingsAutoRefresh,
   SetSettingsFeedError,
-  SetSettingsFeedFetching
+  SetSettingsFeedFetching, SetSettingsFeedsFetching
 } from './settings.actions';
 import { SettingsFeed } from '../models/settings-feed.model';
 
 export interface SettingsStateModel {
   isAutoRefreshEnabled: boolean;
   autoRefreshIntervalSeconds: number;
-  cacheFeedsSeconds: number;
   feedsToFetchCount: number;
   feedsCurrentlyFetchingCount: number;
   feedsCurrentlyFetchingPercentage: number;
@@ -25,7 +24,6 @@ export interface SettingsStateModel {
   defaults: {
     isAutoRefreshEnabled: false,
     autoRefreshIntervalSeconds: 5,
-    cacheFeedsSeconds: 60,
     feedsToFetchCount: 0,
     feedsCurrentlyFetchingCount: 0,
     feedsCurrentlyFetchingPercentage: 0,
@@ -114,6 +112,16 @@ export class SettingsState {
           item.fetching = action.payload.fetching;
         }
 
+        return item;
+      })
+    });
+  }
+
+  @Action(SetSettingsFeedsFetching)
+  setSettingsFeedsFetching(ctx: StateContext<SettingsStateModel>, action: SetSettingsFeedsFetching) {
+    ctx.patchState({
+      feeds: ctx.getState().feeds.map(item => {
+        item.fetching = action.payload.fetching;
         return item;
       })
     });

@@ -1,17 +1,16 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { forkJoin, Observable, of, Subscription, timer } from 'rxjs';
+import { forkJoin, Observable, of, Subject, Subscription, timer } from 'rxjs';
 import { SettingsFile } from '../../models/settings-file.model';
 import { ApiService } from '../api/api.service';
-import { catchError, tap } from 'rxjs/operators';
+import { catchError, takeUntil, tap } from 'rxjs/operators';
 import { SettingsFeed } from '../../models/settings-feed.model';
-import * as moment from 'moment';
 import { SettingsState, SettingsStateModel } from '../../state/settings.state';
 import { Select, Store } from '@ngxs/store';
 import { SetSelectedFeedItem, UpdateFeed, UpdateTags } from '../../state/feeds.actions';
 import {
   SetSettingsFeedError,
   SetSettingsFeedFetching,
-  SetSettingsFeedsFetchedAt
+  SetSettingsFeedsFetchedAt, SetSettingsFeedsFetching
 } from '../../state/settings.actions';
 import { JsonfeedItem } from '../../models/jsonfeed-item.model';
 
@@ -22,6 +21,7 @@ export class FeedsService implements OnDestroy {
   @Select(SettingsState.getSettings) settings$: Observable<SettingsFile>;
   private settings: SettingsStateModel;
   private autoRefresher$: Subscription;
+  private allFetchUnsubscribe$ = new Subject();
 
   constructor(
     private apiService: ApiService,
@@ -42,6 +42,10 @@ export class FeedsService implements OnDestroy {
     if (this.autoRefresher$) {
       this.autoRefresher$.unsubscribe();
     }
+
+    if (this.allFetchUnsubscribe$) {
+      this.allFetchUnsubscribe$.unsubscribe();
+    }
   }
 
   setSelectedFeedItem(feedItem: JsonfeedItem) {
@@ -55,7 +59,6 @@ export class FeedsService implements OnDestroy {
   fetchEnabledFeeds(feeds: SettingsFeed[]) {
     const feedsToUpdate = feeds
       .filter(feed => feed.active);
-      // .filter(feed => this.isTimeToClearFeedCache(feed));
 
     if (feedsToUpdate.length) {
       this.store.dispatch(new SetSettingsFeedsFetchedAt({
@@ -70,12 +73,9 @@ export class FeedsService implements OnDestroy {
   }
 
   private fetchFeeds(feeds: SettingsFeed[]) {
-    feeds.forEach(feed => {
-      this.store.dispatch(new SetSettingsFeedFetching({
-        url: feed.url,
-        fetching: true
-      }));
-    });
+    this.store.dispatch(new SetSettingsFeedsFetching({
+      fetching: true
+    }));
 
     const requests = feeds.map(feed => {
       return this.apiService
@@ -101,6 +101,7 @@ export class FeedsService implements OnDestroy {
     });
 
     forkJoin(requests)
+      .pipe(takeUntil(this.allFetchUnsubscribe$))
       .subscribe(results => {
         results.forEach(feed => {
           if (feed) {
@@ -115,14 +116,11 @@ export class FeedsService implements OnDestroy {
       });
   }
 
-  private isTimeToClearFeedCache(feed: SettingsFeed): boolean {
-    if (feed.fetchedAt) {
-      const timeDiff = moment().diff(moment(feed.fetchedAt), 'seconds');
-
-      return timeDiff > this.settings.cacheFeedsSeconds;
-    } else {
-      return true;
-    }
+  cancelFetching() {
+    this.allFetchUnsubscribe$.next();
+    this.store.dispatch(new SetSettingsFeedsFetching({
+      fetching: false
+    }));
   }
 
   toggleAutoRefresher(state: boolean) {
