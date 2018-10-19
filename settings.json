@@ -1,5 +1,4 @@
 {
-  "debug": true,
   "isAutoRefreshEnabled": false,
   "autoRefreshIntervalSeconds": 300,
   "cacheFeedsSeconds": 60,
