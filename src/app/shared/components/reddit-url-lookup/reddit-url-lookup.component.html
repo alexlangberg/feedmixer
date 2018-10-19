@@ -22,7 +22,12 @@
           [href]="'https://www.reddit.com/r/' + post.subreddit"
           target="_blank">{{ post.subreddit }}</a>
         <br>
-        <span class="no-wrap">{{ post.num_comments }} comments</span>
+        <span class="no-wrap">
+          <a
+            [href]="'https://www.reddit.com/' + post.permalink"
+            target="_blank">
+            {{ post.num_comments }} comments</a>
+        </span>
         |
         <span class="no-wrap">{{ post.created_at_utc | date : 'short' }}</span>
       </div>

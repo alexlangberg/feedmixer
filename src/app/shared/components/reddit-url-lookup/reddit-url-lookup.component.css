@@ -12,11 +12,11 @@ a:visited {
   color: rgba(0,0,0,0.4);
 }
 
-.meta > a {
+.meta a {
   color: rgba(0,0,0,0.4);
 }
 
-.meta > a:hover {
+.meta a:hover {
   text-decoration: underline;
 }
 
