@@ -121,7 +121,12 @@ export class SettingsState {
   setSettingsFeedsFetching(ctx: StateContext<SettingsStateModel>, action: SetSettingsFeedsFetching) {
     ctx.patchState({
       feeds: ctx.getState().feeds.map(item => {
-        item.fetching = action.payload.fetching;
+        const doUpdate = action.payload.feeds.find(feed => feed.url === item.url);
+
+        if (doUpdate) {
+          item.fetching = action.payload.fetching;
+        }
+
         return item;
       })
     });

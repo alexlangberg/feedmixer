@@ -75,6 +75,7 @@ export class FeedsService implements OnDestroy {
 
   private fetchFeeds(feeds: SettingsFeed[]) {
     this.store.dispatch(new SetSettingsFeedsFetching({
+      feeds: feeds,
       fetching: true
     }));
 
@@ -122,6 +123,7 @@ export class FeedsService implements OnDestroy {
   cancelFetching() {
     this.allFetchUnsubscribe$.next();
     this.store.dispatch(new SetSettingsFeedsFetching({
+      feeds: this.settings.feeds,
       fetching: false
     }));
   }

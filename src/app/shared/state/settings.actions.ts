@@ -37,17 +37,6 @@ export class SetSettingsFeedFetching {
 }
 
 export class SetSettingsFeedsFetching {
-  static readonly type = '[SETTINGS] Set all settings feeds fetching';
-  constructor(public payload: { fetching: boolean }) {}
+  static readonly type = '[SETTINGS] Set settings feeds fetching';
+  constructor(public payload: { feeds: SettingsFeed[], fetching: boolean }) {}
 }
-
-// export class SetFeedsToFetchCount {
-//   static readonly type = '[SETTINGS] Set number of feeds to fetch';
-//   constructor(public payload: number) {}
-// }
-//
-// export class UpdateFeedsCurrentlyFetchingCount {
-//   static readonly type = '[SETTINGS] Update number of currently fetching count';
-//   constructor() {}
-// }
-
