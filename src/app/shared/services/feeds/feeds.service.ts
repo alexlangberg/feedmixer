@@ -2,17 +2,18 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { forkJoin, Observable, of, Subject, Subscription, timer } from 'rxjs';
 import { SettingsFile } from '../../models/settings-file.model';
 import { ApiService } from '../api/api.service';
-import { catchError, takeUntil, tap } from 'rxjs/operators';
+import { catchError, map, takeUntil, tap } from 'rxjs/operators';
 import { SettingsFeed } from '../../models/settings-feed.model';
 import { SettingsState, SettingsStateModel } from '../../state/settings.state';
 import { Select, Store } from '@ngxs/store';
-import { SetSelectedFeedItem, UpdateFeed, UpdateTags } from '../../state/feeds.actions';
+import { SetSelectedFeedItem, UpdateFeeds, UpdateTags } from '../../state/feeds.actions';
 import {
   SetSettingsFeedError,
   SetSettingsFeedFetching,
   SetSettingsFeedsFetchedAt, SetSettingsFeedsFetching
 } from '../../state/settings.actions';
 import { JsonfeedItem } from '../../models/jsonfeed-item.model';
+import { Jsonfeed } from '../../models/jsonfeed.model';
 
 @Injectable({
   providedIn: 'root'
@@ -101,18 +102,20 @@ export class FeedsService implements OnDestroy {
     });
 
     forkJoin(requests)
-      .pipe(takeUntil(this.allFetchUnsubscribe$))
-      .subscribe(results => {
-        results.forEach(feed => {
-          if (feed) {
-            this.store.dispatch(new UpdateFeed({
-              url: feed._feedmixer.url,
-              feed: feed
-            })).subscribe(() => {
+      .pipe(
+        takeUntil(this.allFetchUnsubscribe$),
+        map(results => {
+          return results.filter(result => result !== undefined);
+        })
+      )
+      .subscribe((results: Jsonfeed[]) => {
+        if (results && results.length) {
+          this.store
+            .dispatch(new UpdateFeeds({ feeds: results.slice() }))
+            .subscribe(() => {
               this.store.dispatch(new UpdateTags());
             });
-          }
-        });
+        }
       });
   }
 

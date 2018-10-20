@@ -1,6 +1,6 @@
 import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
 import { Jsonfeed } from '../models/jsonfeed.model';
-import { SetFeed, SetSelectedFeedItem, UpdateFeed, UpdateTags } from './feeds.actions';
+import { SetFeed, SetSelectedFeedItem, UpdateFeed, UpdateFeeds, UpdateTags } from './feeds.actions';
 import { JsonfeedItem } from '../models/jsonfeed-item.model';
 import { SettingsState, SettingsStateModel } from './settings.state';
 
@@ -129,6 +129,39 @@ export class FeedsState {
         url: action.payload.url,
         feed: action.payload.feed
       }));
+    }
+  }
+
+  @Action(UpdateFeeds)
+  updateFeeds(ctx: StateContext<FeedsStateModel>, action: UpdateFeeds) {
+    const state = ctx.getState();
+    const oldFeeds = state.feeds;
+
+    if (action.payload.feeds) {
+      action.payload.feeds.forEach((feed: Jsonfeed) => {
+        const url = feed._feedmixer.url;
+        const existing = oldFeeds.get(url);
+
+        if (existing) {
+          feed.items.forEach(newItem => {
+            const oldItem = existing.items.find(
+              item => item.guid === newItem.guid
+            );
+
+            if (! oldItem) {
+              existing.items.push(newItem);
+            }
+          });
+
+          oldFeeds.set(url, existing);
+        } else {
+          oldFeeds.set(url, feed);
+        }
+      });
+
+      ctx.patchState({
+        feeds: oldFeeds
+      });
     }
   }
 

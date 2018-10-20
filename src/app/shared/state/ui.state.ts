@@ -30,21 +30,14 @@ export class UiState implements OnDestroy {
   private sidenavEndOpening$: Subscription;
   private sidenavEndClosing$: Subscription;
   private mediaSub$: Subscription;
+  private size: string | undefined = undefined;
+  private isSidenavListersSetup = false;
+  private isSidenavEndListersSetup = false;
 
   constructor(
     private store: Store,
     private media$: ObservableMedia
   ) {
-    this.mediaSub$ = this.media$
-      .subscribe(change => {
-        if (change) {
-          this.store.dispatch(new SetScreenSize({
-            size: change.mqAlias
-          }));
-
-          this.adjustSidenavs(change.mqAlias);
-        }
-      });
   }
 
   @Selector()
@@ -74,50 +67,84 @@ export class UiState implements OnDestroy {
     }
   }
 
+  @Action(SetSidenavs)
+  setSidenavs(ctx: StateContext<UiStateModel>, action: SetSidenavs) {
+    this.sidenav = action.payload.sidenav;
+    this.sidenavEnd = action.payload.sidenavEnd;
+
+    this.mediaSub$ = this.media$
+      .subscribe(change => {
+        const size = change.mqAlias;
+
+        if (!this.size || this.size !== size) {
+          this.store.dispatch(new SetScreenSize({
+            size: size
+          }));
+
+          this.adjustSidenavs(size);
+
+          this.size = size;
+        }
+      });
+  }
+
   private adjustSidenavs(size: string) {
     this.store.dispatch(new SetIsSidenavOpenStatus({
       sidenav: 'start',
       isOpen: ['md', 'lg', 'xl'].includes(size)
-    }));
+    })).subscribe(() => {
+      if (!this.isSidenavListersSetup) {
+        this.isSidenavListersSetup = true;
+        this.setUpSidenavListeners();
+      }
+    });
 
     this.store.dispatch(new SetIsSidenavOpenStatus({
       sidenav: 'end',
       isOpen: ['lg', 'xl'].includes(size)
-    }));
+    })).subscribe(() => {
+      if (!this.isSidenavEndListersSetup) {
+        this.isSidenavEndListersSetup = true;
+        this.setUpSidenavEndListeners();
+      }
+    });
   }
 
-  @Action(SetSidenavs)
-  setSidenav(ctx: StateContext<UiStateModel>, action: SetSidenavs) {
-    this.sidenav = action.payload.sidenav;
-    this.sidenavEnd = action.payload.sidenavEnd;
+  private setUpSidenavListeners() {
+    setTimeout(() => {
+      this.sidenavOpening$ = this.sidenav.openedStart.subscribe(() => {
+        this.store.dispatch(new SetIsSidenavOpenStatus({
+          sidenav: 'start',
+          isOpen: true
+        }));
+      });
 
-    this.sidenavOpening$ = this.sidenav.openedStart.subscribe(() => {
-      this.store.dispatch(new SetIsSidenavOpenStatus({
-        sidenav: 'start',
-        isOpen: true
-      }));
-    });
+      this.sidenavClosing$ = this.sidenav.closedStart.subscribe(() => {
+        this.store.dispatch(new SetIsSidenavOpenStatus({
+          sidenav: 'start',
+          isOpen: false
+        }));
+      });
 
-    this.sidenavClosing$ = this.sidenav.closedStart.subscribe(() => {
-      this.store.dispatch(new SetIsSidenavOpenStatus({
-        sidenav: 'start',
-        isOpen: false
-      }));
-    });
+    }, 1);
+  }
 
-    this.sidenavEndOpening$ = this.sidenavEnd.openedStart.subscribe(() => {
-      this.store.dispatch(new SetIsSidenavOpenStatus({
-        sidenav: 'end',
-        isOpen: true
-      }));
-    });
+  private setUpSidenavEndListeners() {
+    setTimeout(() => {
+      this.sidenavEndOpening$ = this.sidenavEnd.openedStart.subscribe(() => {
+        this.store.dispatch(new SetIsSidenavOpenStatus({
+          sidenav: 'end',
+          isOpen: true
+        }));
+      });
 
-    this.sidenavEndClosing$ = this.sidenavEnd.closedStart.subscribe(() => {
-      this.store.dispatch(new SetIsSidenavOpenStatus({
-        sidenav: 'end',
-        isOpen: false
-      }));
-    });
+      this.sidenavEndClosing$ = this.sidenavEnd.closedStart.subscribe(() => {
+        this.store.dispatch(new SetIsSidenavOpenStatus({
+          sidenav: 'end',
+          isOpen: false
+        }));
+      });
+    }, 1);
   }
 
   @Action(SetIsSidenavOpenStatus)

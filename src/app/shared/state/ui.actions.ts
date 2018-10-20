@@ -1,7 +1,7 @@
 import { MatSidenav } from '@angular/material';
 
 export class SetSidenavs {
-  static readonly type = '[UI] Set sidenav';
+  static readonly type = '[UI] Set sidenavs';
   constructor(public payload: { sidenav: MatSidenav, sidenavEnd: MatSidenav}) {}
 }
 

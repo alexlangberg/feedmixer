@@ -11,6 +11,11 @@ export class UpdateFeed {
   constructor(public payload: { url: string, feed: Jsonfeed}) {}
 }
 
+export class UpdateFeeds {
+  static readonly type = '[FEEDS] Update feeds';
+  constructor(public payload: { feeds: Jsonfeed[]}) {}
+}
+
 export class SetSelectedFeedItem {
   static readonly type = '[FEEDS] Set selected feed item';
   constructor(public payload: { feedItem: JsonfeedItem}) {}

@@ -78,14 +78,14 @@ import { UiState } from './shared/state/ui.state';
     FormsModule,
     ReactiveFormsModule,
     LayoutModule,
+    NgxsReduxDevtoolsPluginModule.forRoot(),
+    NgxsLoggerPluginModule.forRoot(),
     NgxsModule.forRoot([
       SettingsState,
       FeedsState,
       SearchState,
       UiState
-    ]),
-    NgxsReduxDevtoolsPluginModule.forRoot(),
-    NgxsLoggerPluginModule.forRoot()
+    ])
   ],
   providers: [],
   bootstrap: [AppComponent]
