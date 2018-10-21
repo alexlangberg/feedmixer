@@ -40,6 +40,7 @@ import { SettingsState } from './shared/state/settings.state';
 import { FeedsState } from './shared/state/feeds.state';
 import { SearchState } from './shared/state/search.state';
 import { UiState } from './shared/state/ui.state';
+import { SearchChipsComponent } from './shared/components/search-chips/search-chips.component';
 
 @NgModule({
   declarations: [
@@ -53,7 +54,8 @@ import { UiState } from './shared/state/ui.state';
     SettingsComponent,
     FeedItemInfoComponent,
     RedditUrlLookupComponent,
-    FeedItemTermsSearchComponent
+    FeedItemTermsSearchComponent,
+    SearchChipsComponent
   ],
   imports: [
     BrowserModule,

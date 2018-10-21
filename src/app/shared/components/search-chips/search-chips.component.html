@@ -1,0 +1,34 @@
+<form>
+  <mat-form-field>
+    <input #searchInput
+           type="text"
+           placeholder="Search feed"
+           aria-label="Number"
+           matInput
+           [formControl]="searchControl"
+           [matAutocomplete]="auto">
+    <button type="button"
+            mat-button
+            matSuffix
+            mat-icon-button
+            aria-label="Clear"
+            (click)="doReset()">
+      <mat-icon>close</mat-icon>
+    </button>
+    <mat-hint>Suggestions sorted by occurences</mat-hint>
+    <mat-autocomplete #auto="matAutocomplete">
+      <mat-option
+        *ngFor="let option of filteredTags | async | keyvalue:tagComparator"
+        [value]="option.key">
+        <div fxLayout="row">
+          <span fxFlex>{{ option.key }}</span>
+          <span fxLayoutAlign="flex-end center">
+            <span class="app-inline-badge">
+              {{ option.value }}
+            </span>
+          </span>
+        </div>
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+</form>
