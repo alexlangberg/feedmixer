@@ -1,22 +1,26 @@
-<form>
-  <mat-form-field>
-    <input #searchInput
-           type="text"
-           placeholder="Search feed"
-           aria-label="Number"
-           matInput
-           [formControl]="searchControl"
-           [matAutocomplete]="auto">
-    <button type="button"
-            mat-button
-            matSuffix
-            mat-icon-button
-            aria-label="Clear"
-            (click)="doReset()">
-      <mat-icon>close</mat-icon>
-    </button>
+<form #form fxLayout="column">
+  <mat-form-field fxFlex>
+    <mat-chip-list #chipList>
+      <mat-chip
+        *ngFor="let word of words"
+        [selectable]="true"
+        [removable]="true"
+        (removed)="remove(word)">
+        {{word}}
+        <mat-icon matChipRemove>cancel</mat-icon>
+      </mat-chip>
+      <input
+        placeholder="New search term..."
+        #wordInput
+        [formControl]="searchControl"
+        [matAutocomplete]="auto"
+        [matChipInputFor]="chipList"
+        [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+        [matChipInputAddOnBlur]="true"
+        (matChipInputTokenEnd)="add($event)">
+    </mat-chip-list>
     <mat-hint>Suggestions sorted by occurences</mat-hint>
-    <mat-autocomplete #auto="matAutocomplete">
+    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
       <mat-option
         *ngFor="let option of filteredTags | async | keyvalue:tagComparator"
         [value]="option.key">
@@ -31,4 +35,29 @@
       </mat-option>
     </mat-autocomplete>
   </mat-form-field>
+
+  <mat-radio-group
+    style="margin-top: 16px"
+    fxLayout="column"
+    fxLayoutGap="8px"
+    [formControl]="searchModeControl">
+    <mat-radio-button value="or" [checked]="true">Match any word</mat-radio-button>
+    <mat-radio-button value="and">Match all words</mat-radio-button>
+  </mat-radio-group>
+
+  <mat-form-field fxFlex style="margin-top: 16px">
+    <input
+      #name
+      matInput
+      [formControl]="nameControl"
+      placeholder="Name the search to save..."
+      required>
+  </mat-form-field>
+
+  <div fxLayout="row" fxLayoutAlign="end">
+    <!--TODO: disable on invalid form-->
+    <button
+      mat-raised-button
+      color="primary">Save</button>
+  </div>
 </form>

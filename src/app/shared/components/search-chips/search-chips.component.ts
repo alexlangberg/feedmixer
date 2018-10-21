@@ -1,12 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import {COMMA, ENTER} from '@angular/cdk/keycodes';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Select, Store } from '@ngxs/store';
-import { SearchState } from '../../state/search.state';
 import { Observable } from 'rxjs';
 import { FeedsState } from '../../state/feeds.state';
 import { FormControl } from '@angular/forms';
-import { debounceTime, distinctUntilChanged, map, startWith } from 'rxjs/operators';
-import { SetCurrentSearch } from '../../state/search.actions';
+import { map, startWith } from 'rxjs/operators';
 import { KeyValue } from '@angular/common';
+import { MatAutocomplete, MatAutocompleteSelectedEvent, MatChipInputEvent } from '@angular/material';
 
 @Component({
   selector: 'app-search-chips',
@@ -14,32 +14,19 @@ import { KeyValue } from '@angular/common';
   styleUrls: ['./search-chips.component.css']
 })
 export class SearchChipsComponent implements OnInit {
-  @Select(SearchState.getCurrentSearch) current$: Observable<string>;
   @Select(FeedsState.getTags) tags$: Observable<Map<string, number>>;
+  @ViewChild('wordInput') wordInput: ElementRef<HTMLInputElement>;
+  @ViewChild('auto') matAutocomplete: MatAutocomplete;
+  nameControl = new FormControl();
   searchControl = new FormControl();
+  searchModeControl = new FormControl();
+  separatorKeysCodes: number[] = [ENTER, COMMA];
   filteredTags: Observable<Map<string, number>>;
-  private current: string;
+  words: string[] = [];
 
   constructor(private store: Store) {}
 
   ngOnInit() {
-    this.current$.subscribe(text => {
-      this.current = text;
-      this.searchControl.setValue(text);
-    });
-
-    this.searchControl.valueChanges
-      .pipe(
-        distinctUntilChanged(),
-        debounceTime(250),
-        startWith('')
-      )
-      .subscribe(text => {
-        if (text !== this.current) {
-          this.store.dispatch(new SetCurrentSearch(text));
-        }
-      });
-
     this.tags$.subscribe(tags => {
       this.filteredTags = this.searchControl.valueChanges
         .pipe(
@@ -67,7 +54,34 @@ export class SearchChipsComponent implements OnInit {
     return b.value - a.value;
   }
 
-  doReset() {
+  add(event: MatChipInputEvent): void {
+    if (!this.matAutocomplete.isOpen) {
+      const input = event.input;
+      const value = event.value;
+
+      if ((value || '').trim()) {
+        this.words.push(value.trim());
+      }
+
+      if (input) {
+        input.value = '';
+      }
+
+      this.searchControl.setValue('');
+    }
+  }
+
+  remove(word: string): void {
+    const index = this.words.indexOf(word);
+
+    if (index >= 0) {
+      this.words.splice(index, 1);
+    }
+  }
+
+  selected(event: MatAutocompleteSelectedEvent): void {
+    this.words.push(event.option.value);
+    this.wordInput.nativeElement.value = '';
     this.searchControl.setValue('');
   }
 }
