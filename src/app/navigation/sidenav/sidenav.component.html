@@ -1,11 +1,11 @@
 <div>
-  <mat-expansion-panel class="mat-elevation-z0" expanded="true">
+  <mat-expansion-panel class="mat-elevation-z0">
     <mat-expansion-panel-header>
       <mat-panel-title>
-        <mat-icon>zoom_in</mat-icon>Advanced search
+        <mat-icon>rss_feed</mat-icon>Feed
       </mat-panel-title>
     </mat-expansion-panel-header>
-    <app-search-chips></app-search-chips>
+    <app-feeds-selector></app-feeds-selector>
   </mat-expansion-panel>
 
   <mat-divider></mat-divider>
@@ -13,7 +13,7 @@
   <mat-expansion-panel class="mat-elevation-z0">
     <mat-expansion-panel-header>
       <mat-panel-title>
-        <mat-icon>search</mat-icon>Search
+        <mat-icon>search</mat-icon>Quicksearch
       </mat-panel-title>
     </mat-expansion-panel-header>
     <app-search></app-search>
@@ -24,10 +24,21 @@
   <mat-expansion-panel class="mat-elevation-z0">
     <mat-expansion-panel-header>
       <mat-panel-title>
-        <mat-icon>rss_feed</mat-icon>Feed
+        <mat-icon>zoom_in</mat-icon>Advanced search
       </mat-panel-title>
     </mat-expansion-panel-header>
-    <app-feeds-selector></app-feeds-selector>
+    <app-search></app-search>
+  </mat-expansion-panel>
+
+  <mat-divider></mat-divider>
+
+  <mat-expansion-panel class="mat-elevation-z0" expanded="true">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <mat-icon>edit</mat-icon>Edit advanced searches
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <app-search-advanced-edit></app-search-advanced-edit>
   </mat-expansion-panel>
 
   <mat-divider></mat-divider>

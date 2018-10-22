@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SearchChipsComponent } from './search-chips.component';
+import { SearchAdvancedEditComponent } from './search-advanced-edit.component';
 
-describe('SearchChipsComponent', () => {
-  let component: SearchChipsComponent;
-  let fixture: ComponentFixture<SearchChipsComponent>;
+describe('SearchAdvancedEditComponent', () => {
+  let component: SearchAdvancedEditComponent;
+  let fixture: ComponentFixture<SearchAdvancedEditComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ SearchChipsComponent ]
+      declarations: [ SearchAdvancedEditComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(SearchChipsComponent);
+    fixture = TestBed.createComponent(SearchAdvancedEditComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

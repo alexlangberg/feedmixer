@@ -28,19 +28,19 @@ import {
   MatDividerModule,
   MatExpansionModule,
   MatIconModule,
-  MatInputModule,
+  MatInputModule, MatListModule,
   MatPaginatorModule, MatProgressSpinnerModule, MatRadioModule,
   MatSelectModule,
   MatSidenavModule,
   MatSlideToggleModule,
   MatTableModule,
-  MatToolbarModule
+  MatToolbarModule, MatTooltipModule
 } from '@angular/material';
 import { SettingsState } from './shared/state/settings.state';
 import { FeedsState } from './shared/state/feeds.state';
 import { SearchState } from './shared/state/search.state';
 import { UiState } from './shared/state/ui.state';
-import { SearchChipsComponent } from './shared/components/search-chips/search-chips.component';
+import { SearchAdvancedEditComponent } from './shared/components/search-advanced-edit/search-advanced-edit.component';
 
 @NgModule({
   declarations: [
@@ -55,7 +55,7 @@ import { SearchChipsComponent } from './shared/components/search-chips/search-ch
     FeedItemInfoComponent,
     RedditUrlLookupComponent,
     FeedItemTermsSearchComponent,
-    SearchChipsComponent
+    SearchAdvancedEditComponent
   ],
   imports: [
     BrowserModule,
@@ -77,6 +77,8 @@ import { SearchChipsComponent } from './shared/components/search-chips/search-ch
     MatBadgeModule,
     MatProgressSpinnerModule,
     MatRadioModule,
+    MatListModule,
+    MatTooltipModule,
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,

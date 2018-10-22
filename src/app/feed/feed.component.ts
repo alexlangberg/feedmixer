@@ -17,7 +17,7 @@ import { UiState, UiStateModel } from '../shared/state/ui.state';
 })
 export class FeedComponent implements OnInit, AfterViewInit {
   @Select(FeedsState.getActiveFeedsItems) feeds$: Observable<JsonfeedItem[]>;
-  @Select(SearchState.getCurrentSearch) search$: Observable<string>;
+  @Select(SearchState.getCurrentSimpleSearch) search$: Observable<string>;
   @Select(UiState.get) ui$: Observable<UiStateModel>;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   dataSource: MatTableDataSource<JsonfeedItem> = new MatTableDataSource<JsonfeedItem>();

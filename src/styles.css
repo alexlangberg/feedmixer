@@ -36,3 +36,11 @@ app-sidenav mat-slide-toggle .mat-slide-toggle-content {
   animation: spin 1s ease-in-out infinite;
 }
 
+input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 1000px white inset;
+}
+
+
+app-search-advanced-edit .mat-list-item-content {
+  width: 100%;
+}

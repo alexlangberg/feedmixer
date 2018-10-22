@@ -1,27 +1,96 @@
 import { Action, Selector, State, StateContext } from '@ngxs/store';
-import { SetCurrentSearch } from './search.actions';
+import { SetAdvancedSearchItem, SetCurrentAdvancedSearchItem, SetCurrentSimpleSearch } from './search.actions';
+import { AdvancedSearchItem } from '../models/advanced-search-item.model';
 export interface SearchStateModel {
-  current: string;
+  mode: 'simple' | 'advanced';
+  simple: {
+    current: string
+  };
+  advanced: {
+    saved: AdvancedSearchItem[],
+    current: AdvancedSearchItem | undefined
+  };
 }
 
 @State<SearchStateModel>({
   name: 'search',
   defaults: {
-    current: ''
+    mode: 'simple',
+    simple: {
+      current: ''
+    },
+    advanced: {
+      current: undefined,
+      saved: [new AdvancedSearchItem('Test', ['kashoggi', 'saudi', 'trump'], 'or')]
+    }
   }
 })
 
 export class SearchState {
 
   @Selector()
-  static getCurrentSearch(state: SearchStateModel) {
-    return state.current;
+  static getCurrentSimpleSearch(state: SearchStateModel) {
+    return state.simple.current;
   }
 
-  @Action(SetCurrentSearch)
-  setCurrentSearch(ctx: StateContext<SearchStateModel>, action: SetCurrentSearch) {
+  @Selector()
+  static getCurrentAdvancedSearch(state: SearchStateModel) {
+    return state.advanced.current;
+  }
+
+  @Selector()
+  static getSavedAdvancedSearches(state: SearchStateModel) {
+    return state.advanced.saved.sort((a, b) => a.name.localeCompare(b.name));
+  }
+
+  @Action(SetCurrentSimpleSearch)
+  setCurrentSimpleSearch(ctx: StateContext<SearchStateModel>, action: SetCurrentSimpleSearch) {
     ctx.patchState({
-      current: action.payload
+      simple: {
+        current: action.payload
+      }
+    });
+  }
+
+  @Action(SetCurrentAdvancedSearchItem)
+  setCurrentAdvancedSearchItem(ctx: StateContext<SearchStateModel>, action: SetCurrentAdvancedSearchItem) {
+    const state = ctx.getState();
+    const selected = state.advanced.saved
+      .find(item => item.name === action.payload);
+
+    ctx.patchState({
+      advanced: {
+        ...state.advanced,
+        current: selected
+      }
+    });
+  }
+
+  @Action(SetAdvancedSearchItem)
+  SetAdvancedSearchItem(ctx: StateContext<SearchStateModel>, action: SetAdvancedSearchItem) {
+    const state = ctx.getState();
+    const name = action.payload.name;
+    let saved = state.advanced.saved;
+    const existing = saved.find(item => item.name === name);
+
+    if (existing) {
+      saved = saved.map(item => {
+        if (item.name === name) {
+          return action.payload;
+        } else {
+          return item;
+        }
+      });
+    } else {
+      saved.push(action.payload);
+    }
+
+    ctx.patchState({
+      ...state,
+      advanced: {
+        ...state.advanced,
+        saved: saved
+      }
     });
   }
 }

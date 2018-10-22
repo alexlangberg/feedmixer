@@ -1,0 +1,81 @@
+<div fxLayout="column">
+  <form [formGroup]="searchForm" (ngSubmit)="submit()" fxLayout="column">
+    <mat-form-field fxFlex>
+      <mat-chip-list #chipList>
+        <mat-chip
+          *ngFor="let word of chips"
+          [selectable]="true"
+          [removable]="true"
+          (removed)="remove(word)">
+          {{word}}
+          <mat-icon matChipRemove>cancel</mat-icon>
+        </mat-chip>
+        <input
+          placeholder="New search term..."
+          #wordInput
+          formControlName="search"
+          [matAutocomplete]="auto"
+          [matChipInputFor]="chipList"
+          [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+          [matChipInputAddOnBlur]="true"
+          (matChipInputTokenEnd)="add($event)">
+      </mat-chip-list>
+      <mat-hint>Suggestions sorted by occurences</mat-hint>
+      <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+        <mat-option
+          *ngFor="let option of filteredTags | async | keyvalue:tagComparator"
+          [value]="option.key">
+          <div fxLayout="row">
+            <span fxFlex>{{ option.key }}</span>
+            <span fxLayoutAlign="flex-end center">
+              <span class="app-inline-badge">
+                {{ option.value }}
+              </span>
+            </span>
+          </div>
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+
+    <mat-radio-group
+      style="margin-top: 16px"
+      fxLayout="column"
+      fxLayoutGap="8px"
+      formControlName="mode">
+      <mat-radio-button value="or">{{ OR_LABEL }}</mat-radio-button>
+      <mat-radio-button value="and">{{ AND_LABEL }}</mat-radio-button>
+    </mat-radio-group>
+
+    <mat-form-field fxFlex style="margin-top: 16px">
+      <input
+        #name
+        matInput
+        formControlName="name"
+        placeholder="Name the search to save...">
+    </mat-form-field>
+
+    <div fxLayout="row" fxLayoutAlign="end">
+      <button
+        [disabled]="!searchForm.valid || chips.length < 1"
+        mat-raised-button
+        color="primary">Save</button>
+    </div>
+  </form>
+
+<mat-divider fxFlex></mat-divider>
+  <button
+    mat-button
+    *ngFor="let saved of (saved$ | async)"
+    (click)="selectSearch(saved.name)"
+    matTooltip="{{ saved.mode === 'or' ? OR_LABEL : AND_LABEL }}: {{ saved.words.join(', ') }}"
+    matTooltipPosition="right">
+    <span style="width: 100%" fxLayout="row">
+      <span fxFlex fxLayoutAlign="flex-start center">{{ saved.name }}</span>
+      <span fxFlex fxLayoutAlign="flex-end center">
+        <span class="app-inline-badge">
+         8
+        </span>
+      </span>
+    </span>
+  </button>
+</div>

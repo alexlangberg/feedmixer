@@ -5,7 +5,7 @@ import { debounceTime, distinctUntilChanged, map, startWith } from 'rxjs/operato
 import { Select, Store } from '@ngxs/store';
 import { SearchState } from '../../state/search.state';
 import { FeedsState } from '../../state/feeds.state';
-import { SetCurrentSearch } from '../../state/search.actions';
+import { SetCurrentSimpleSearch } from '../../state/search.actions';
 import { KeyValue } from '@angular/common';
 
 @Component({
@@ -14,7 +14,7 @@ import { KeyValue } from '@angular/common';
   styleUrls: ['./search.component.css']
 })
 export class SearchComponent implements OnInit {
-  @Select(SearchState.getCurrentSearch) current$: Observable<string>;
+  @Select(SearchState.getCurrentSimpleSearch) current$: Observable<string>;
   @Select(FeedsState.getTags) tags$: Observable<Map<string, number>>;
   searchControl = new FormControl();
   filteredTags: Observable<Map<string, number>>;
@@ -36,7 +36,7 @@ export class SearchComponent implements OnInit {
       )
       .subscribe(text => {
         if (text !== this.current) {
-          this.store.dispatch(new SetCurrentSearch(text));
+          this.store.dispatch(new SetCurrentSimpleSearch(text));
         }
       });
 
