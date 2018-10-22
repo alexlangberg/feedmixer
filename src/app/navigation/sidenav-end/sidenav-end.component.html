@@ -28,6 +28,7 @@
   <mat-divider></mat-divider>
 </div>
 
-<div *ngIf="!(item$ | async)" style="padding: 24px">
-  Click the info icon on an item in the list to see more info here.
+<div *ngIf="!(item$ | async)" style="padding: 24px" fxLayout="row" fxLayoutGap="16px">
+  <mat-icon fxFlex>help</mat-icon>
+  <span fxFlex="100%">Click the info icon on an item in the list to see more info here.</span>
 </div>

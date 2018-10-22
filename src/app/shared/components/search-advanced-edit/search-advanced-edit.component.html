@@ -1,6 +1,6 @@
 <div fxLayout="column">
   <form [formGroup]="searchForm" (ngSubmit)="submit()" fxLayout="column">
-    <mat-form-field fxFlex>
+    <mat-form-field fxFlex color="accent">
       <mat-chip-list #chipList>
         <mat-chip
           *ngFor="let word of chips"
@@ -46,7 +46,7 @@
       <mat-radio-button value="and">{{ AND_LABEL }}</mat-radio-button>
     </mat-radio-group>
 
-    <mat-form-field fxFlex style="margin-top: 16px">
+    <mat-form-field fxFlex color="accent" style="margin-top: 16px">
       <input
         #name
         matInput
@@ -58,19 +58,20 @@
       <button
         [disabled]="!searchForm.valid || chips.length < 1"
         mat-raised-button
-        color="primary">Save</button>
+        color="accent">Save</button>
     </div>
   </form>
 
 <mat-divider fxFlex></mat-divider>
   <button
+    color="accent"
     mat-button
-    *ngFor="let saved of (saved$ | async)"
-    (click)="selectSearch(saved.name)"
-    matTooltip="{{ saved.mode === 'or' ? OR_LABEL : AND_LABEL }}: {{ saved.words.join(', ') }}"
+    *ngFor="let search of saved"
+    (click)="selectSearch(search.name)"
+    matTooltip="{{ search.mode === 'or' ? OR_LABEL : AND_LABEL }}: {{ search.words.join(', ') }}"
     matTooltipPosition="right">
     <span style="width: 100%" fxLayout="row">
-      <span fxFlex fxLayoutAlign="flex-start center">{{ saved.name }}</span>
+      <span fxFlex fxLayoutAlign="flex-start center">{{ search.name }}</span>
       <span fxFlex fxLayoutAlign="flex-end center">
         <span class="app-inline-badge">
          8

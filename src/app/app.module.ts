@@ -24,7 +24,7 @@ import { NgxsLoggerPluginModule } from '@ngxs/logger-plugin';
 import {
   MatAutocompleteModule, MatBadgeModule,
   MatButtonModule,
-  MatChipsModule,
+  MatChipsModule, MatDialogModule,
   MatDividerModule,
   MatExpansionModule,
   MatIconModule,
@@ -41,6 +41,9 @@ import { FeedsState } from './shared/state/feeds.state';
 import { SearchState } from './shared/state/search.state';
 import { UiState } from './shared/state/ui.state';
 import { SearchAdvancedEditComponent } from './shared/components/search-advanced-edit/search-advanced-edit.component';
+import {
+  SearchAdvancedEditConfirmOverwriteDialogComponent
+} from './shared/components/search-advanced-edit/search-advanced-edit-confirm-overwrite.dialog';
 
 @NgModule({
   declarations: [
@@ -55,7 +58,8 @@ import { SearchAdvancedEditComponent } from './shared/components/search-advanced
     FeedItemInfoComponent,
     RedditUrlLookupComponent,
     FeedItemTermsSearchComponent,
-    SearchAdvancedEditComponent
+    SearchAdvancedEditComponent,
+    SearchAdvancedEditConfirmOverwriteDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -79,6 +83,7 @@ import { SearchAdvancedEditComponent } from './shared/components/search-advanced
     MatRadioModule,
     MatListModule,
     MatTooltipModule,
+    MatDialogModule,
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
@@ -93,6 +98,7 @@ import { SearchAdvancedEditComponent } from './shared/components/search-advanced
     ])
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents: [SearchAdvancedEditConfirmOverwriteDialogComponent]
 })
 export class AppModule { }
