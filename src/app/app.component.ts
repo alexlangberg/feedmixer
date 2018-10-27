@@ -23,7 +23,7 @@ export class AppComponent implements OnInit {
   }
 
   fetchSettings() {
-    this.http.get('./../../../settings.json')
+    this.http.get('./../../assets/settings.json')
       .subscribe((result: SettingsFile) => {
         result.feeds = result.feeds
           .map(feed => ({...feed, active: true}))
