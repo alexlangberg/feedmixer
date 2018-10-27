@@ -1,4 +1,5 @@
 {
+  "feed2jsonApiBaseUrl": "http://localhost:4201",
   "isAutoRefreshEnabled": false,
   "autoRefreshIntervalSeconds": 300,
   "feeds": [

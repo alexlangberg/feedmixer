@@ -11,6 +11,7 @@ import {
 import { SettingsFeed } from '../models/settings-feed.model';
 
 export interface SettingsStateModel {
+  feed2jsonApiBaseUrl: string;
   isAutoRefreshEnabled: boolean;
   autoRefreshIntervalSeconds: number;
   feedsToFetchCount: number;
@@ -22,6 +23,7 @@ export interface SettingsStateModel {
 @State<SettingsStateModel>({
   name: 'settings',
   defaults: {
+    feed2jsonApiBaseUrl: 'http://localhost:4201',
     isAutoRefreshEnabled: false,
     autoRefreshIntervalSeconds: 5,
     feedsToFetchCount: 0,

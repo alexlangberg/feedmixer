@@ -7,15 +7,25 @@ import { RedditPost } from '../../models/reddit-post.model';
 import { TokenizerService } from '../tokenizer/tokenizer.service';
 import * as he from 'he';
 import { RedditListing } from '../../models/reddit-listing.model';
+import { Select } from '@ngxs/store';
+import { SettingsState, SettingsStateModel } from '../../state/settings.state';
+import { SettingsFile } from '../../models/settings-file.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ApiService {
-  public static readonly RSS2JSON_API_URL = 'http://localhost:4201/convert?url=';
-  public static readonly REDDIT_API_URL = 'https://www.reddit.com/api/info.json?url=';
+  public static REDDIT_API_URL = 'https://www.reddit.com/api/info.json?url=';
+  @Select(SettingsState.getSettings) settings$: Observable<SettingsFile>;
+  feed2JsonUrl: string;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+    this.settings$.subscribe((settings: SettingsStateModel) => {
+      if (settings) {
+        this.feed2JsonUrl = settings.feed2jsonApiBaseUrl + '/convert?url=';
+      }
+    });
+  }
 
   private static sanitizeText(text: string) {
     const result = text
@@ -28,7 +38,7 @@ export class ApiService {
 
   getFeedFromUrl(rss_url: string, language: string): Observable<Jsonfeed> {
     const request = <Observable<Jsonfeed>>this.http.get(
-      ApiService.RSS2JSON_API_URL + rss_url
+      this.feed2JsonUrl + rss_url
     );
 
     return request.pipe(map(item => {

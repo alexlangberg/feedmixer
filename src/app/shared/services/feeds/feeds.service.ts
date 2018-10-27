@@ -93,7 +93,7 @@ export class FeedsService implements OnDestroy {
 
             // also sets feed.fetching = false
             this.store.dispatch(new SetSettingsFeedError({
-              url: error.url.replace(ApiService.RSS2JSON_API_URL, ''),
+              url: error.url.replace(this.apiService.feed2JsonUrl, ''),
               message: error.message
             }));
 
