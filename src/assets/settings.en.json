@@ -4,8 +4,33 @@
   "autoRefreshIntervalSeconds": 300,
   "feeds": [
     {
+      "name": "Al-Jazeera",
+      "url": "https://www.aljazeera.com/xml/rss/all.xml",
+      "language": "en"
+    },
+    {
       "name": "BBC",
       "url": "http://feeds.bbci.co.uk/news/world/rss.xml",
+      "language": "en"
+    },
+    {
+      "name": "Buzzfeed",
+      "url": "https://www.buzzfeed.com/world.xml",
+      "language": "en"
+    },
+    {
+      "name": "CBC",
+      "url": "https://www.cbc.ca/cmlink/rss-world",
+      "language": "en"
+    },
+    {
+      "name": "CBS",
+      "url": "https://www.cbsnews.com/latest/rss/world",
+      "language": "en"
+    },
+    {
+      "name": "CNBC",
+      "url": "https://www.cnbc.com/id/100727362/device/rss/rss.html",
       "language": "en"
     },
     {
@@ -14,8 +39,68 @@
       "language": "en"
     },
     {
-      "name": "Al-Jazeera",
-      "url": "https://www.aljazeera.com/xml/rss/all.xml",
+      "name": "Fox News",
+      "url": "http://feeds.foxnews.com/foxnews/world",
+      "language": "en"
+    },
+    {
+      "name": "The Guardian",
+      "url": "https://www.theguardian.com/world/rss",
+      "language": "en"
+    },
+    {
+      "name": "The Independent",
+      "url": "http://www.independent.co.uk/news/world/rss",
+      "language": "en"
+    },
+    {
+      "name": "The New York Times",
+      "url": "http://rss.nytimes.com/services/xml/rss/nyt/World.xml",
+      "language": "en"
+    },
+    {
+      "name": "NPR",
+      "url": "https://www.npr.org/rss/rss.php?id=1001",
+      "language": "en"
+    },
+    {
+      "name": "Reddit World News",
+      "url": "https://www.reddit.com/r/worldnews/.rss",
+      "language": "en"
+    },
+    {
+      "name": "Reuters",
+      "url": "http://feeds.reuters.com/Reuters/worldNews",
+      "language": "en"
+    },
+    {
+      "name": "RT",
+      "url": "https://www.rt.com/rss/",
+      "language": "en"
+    },
+    {
+      "name": "Der Spiegel",
+      "url": "http://www.spiegel.de/international/world/index.rss",
+      "language": "en"
+    },
+    {
+      "name": "Time",
+      "url": "http://feeds.feedburner.com/time/world?format=xml",
+      "language": "en"
+    },
+    {
+      "name": "Times of India",
+      "url": "https://timesofindia.indiatimes.com/rssfeeds/296589292.cms",
+      "language": "en"
+    },
+    {
+      "name": "The Washington Post",
+      "url": "http://feeds.washingtonpost.com/rss/world",
+      "language": "en"
+    },
+    {
+      "name": "Yahoo",
+      "url": "https://news.yahoo.com/rss",
       "language": "en"
     }
   ]
