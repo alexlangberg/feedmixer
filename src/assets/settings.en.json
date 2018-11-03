@@ -74,11 +74,6 @@
       "language": "en"
     },
     {
-      "name": "RT",
-      "url": "https://www.rt.com/rss/",
-      "language": "en"
-    },
-    {
       "name": "Der Spiegel",
       "url": "http://www.spiegel.de/international/world/index.rss",
       "language": "en"
@@ -91,11 +86,6 @@
     {
       "name": "Times of India",
       "url": "https://timesofindia.indiatimes.com/rssfeeds/296589292.cms",
-      "language": "en"
-    },
-    {
-      "name": "The Washington Post",
-      "url": "http://feeds.washingtonpost.com/rss/world",
       "language": "en"
     },
     {
