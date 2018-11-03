@@ -94,14 +94,11 @@ export class SearchAdvancedEditComponent implements OnInit {
     const newItem = new AdvancedSearchItem(
       name,
       this.chips.slice(),
-      this.searchForm.controls.mode.value
+      this.searchForm.controls.mode.value,
+      false
     );
 
     this.store.dispatch(new SetAdvancedSearchItem(newItem));
-    this.store.dispatch(new SetCurrentAdvancedSearchItem(name));
-  }
-
-  selectSearch(name: string) {
     this.store.dispatch(new SetCurrentAdvancedSearchItem(name));
   }
 

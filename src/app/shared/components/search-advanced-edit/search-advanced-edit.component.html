@@ -61,22 +61,4 @@
         color="accent">Save</button>
     </div>
   </form>
-
-<mat-divider fxFlex></mat-divider>
-  <button
-    color="accent"
-    mat-button
-    *ngFor="let search of saved"
-    (click)="selectSearch(search.name)"
-    matTooltip="{{ search.mode === 'or' ? OR_LABEL : AND_LABEL }}: {{ search.words.join(', ') }}"
-    matTooltipPosition="right">
-    <span style="width: 100%" fxLayout="row">
-      <span fxFlex fxLayoutAlign="flex-start center">{{ search.name }}</span>
-      <span fxFlex fxLayoutAlign="flex-end center">
-        <span class="app-inline-badge">
-         8
-        </span>
-      </span>
-    </span>
-  </button>
 </div>

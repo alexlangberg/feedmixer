@@ -44,6 +44,7 @@ import { SearchAdvancedEditComponent } from './shared/components/search-advanced
 import {
   SearchAdvancedEditConfirmOverwriteDialogComponent
 } from './shared/components/search-advanced-edit/search-advanced-edit-confirm-overwrite.dialog';
+import { SearchAdvancedDisplayComponent } from './shared/components/search-advanced-display/search-advanced-display.component';
 
 @NgModule({
   declarations: [
@@ -59,7 +60,8 @@ import {
     RedditUrlLookupComponent,
     FeedItemTermsSearchComponent,
     SearchAdvancedEditComponent,
-    SearchAdvancedEditConfirmOverwriteDialogComponent
+    SearchAdvancedEditConfirmOverwriteDialogComponent,
+    SearchAdvancedDisplayComponent
   ],
   imports: [
     BrowserModule,

@@ -1,0 +1,23 @@
+<button
+  [color]="((mode$ | async) === 'advanced' && search.active) ? 'accent' : ''"
+  mat-button
+  *ngFor="let search of (saved$ | async)"
+  (click)="selectSearch(search.name)"
+  matTooltip="{{ search.mode === 'or' ? OR_LABEL : AND_LABEL }}: {{ search.words.join(', ') }}"
+  matTooltipPosition="right">
+    <span style="width: 100%" fxLayout="row">
+      <span fxFlex fxLayoutAlign="flex-start center">{{ search.name }}</span>
+      <span fxFlex fxLayoutAlign="flex-end center">
+        <span class="app-inline-badge">
+         8
+        </span>
+      </span>
+    </span>
+</button>
+
+
+<p *ngIf="(saved$ | async).length < 1">
+  No advanced searches created yet.<br>
+  Add some in the section:<br>
+  <mat-icon [inline]="true">edit</mat-icon> Add/Edit advanced searches".
+</p>
