@@ -1,6 +1,9 @@
-import { Action, Selector, State, StateContext } from '@ngxs/store';
+import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
 import { SetAdvancedSearchItem, SetCurrentAdvancedSearchItem, SetCurrentSimpleSearch } from './search.actions';
 import { AdvancedSearchItem } from '../models/advanced-search-item.model';
+import { UpdateAdvancedSearchHits } from './search.actions';
+import { Jsonfeed } from '../models/jsonfeed.model';
+import { FeedsState } from './feeds.state';
 export interface SearchStateModel {
   mode: 'simple' | 'advanced';
   simple: {
@@ -19,12 +22,14 @@ export interface SearchStateModel {
       current: ''
     },
     advanced: {
-      saved: [new AdvancedSearchItem('Test', ['kashoggi', 'saudi', 'trump'], 'or', false)]
+      saved: [new AdvancedSearchItem('Test', ['kashoggi', 'saudi', 'trump'], 'or', false, 0)]
     }
   }
 })
 
 export class SearchState {
+
+  constructor(private store: Store) {}
 
   @Selector()
   static getCurrentSimpleSearch(state: SearchStateModel) {
@@ -101,5 +106,57 @@ export class SearchState {
         saved: saved
       }
     });
+
+    this.store.dispatch(new UpdateAdvancedSearchHits());
+  }
+
+  @Action(UpdateAdvancedSearchHits)
+  updateAdvancedSearchHits(ctx: StateContext<SearchStateModel>) {
+    const state = ctx.getState();
+    const activeFeeds = this.store.selectSnapshot(FeedsState.getActiveFeeds);
+    const searches = this.store.selectSnapshot(SearchState.getSavedAdvancedSearches);
+
+    const searchesHits = searches.map(search => {
+      return {
+        ... search,
+        hits: this.filterAdvancedSearch(activeFeeds, search).length
+      };
+    });
+
+    console.log(searchesHits);
+
+    ctx.patchState({
+      ...state,
+      advanced: {
+        ...state.advanced,
+        saved: searchesHits
+      }
+    });
+  }
+
+  private filterAdvancedSearch(feeds: Jsonfeed[], search: AdvancedSearchItem) {
+    return search.mode === 'or'
+      ? this.filterAdvancedSearchOr(feeds, search)
+      : this.filterAdvancedSearchAnd(feeds, search);
+  }
+
+  private filterAdvancedSearchOr(feeds: Jsonfeed[], search: AdvancedSearchItem) {
+    return feeds.map(feed => {
+      return feed.items.filter(item => {
+        return item._feedmixer.tags
+          .filter(tag => search.words.includes(tag))
+          .length > 0;
+      });
+    }).reduce((acc, curr) => acc.concat(curr));
+  }
+
+  private filterAdvancedSearchAnd(feeds: Jsonfeed[], search: AdvancedSearchItem) {
+    return feeds.map(feed => {
+      return feed.items.filter(item => {
+        return search.words
+          .filter(word => item._feedmixer.tags.includes(word))
+          .length === search.words.length;
+      });
+    }).reduce((acc, curr) => acc.concat(curr));
   }
 }

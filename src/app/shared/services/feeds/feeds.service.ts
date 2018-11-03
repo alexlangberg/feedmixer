@@ -14,6 +14,7 @@ import {
 } from '../../state/settings.actions';
 import { JsonfeedItem } from '../../models/jsonfeed-item.model';
 import { Jsonfeed } from '../../models/jsonfeed.model';
+import { UpdateAdvancedSearchHits } from '../../state/search.actions';
 
 @Injectable({
   providedIn: 'root'
@@ -115,6 +116,7 @@ export class FeedsService implements OnDestroy {
             .dispatch(new UpdateFeeds({ feeds: results.slice() }))
             .subscribe(() => {
               this.store.dispatch(new UpdateTags());
+              this.store.dispatch(new UpdateAdvancedSearchHits());
             });
         }
       });

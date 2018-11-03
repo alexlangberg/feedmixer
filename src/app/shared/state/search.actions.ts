@@ -14,3 +14,8 @@ export class SetCurrentAdvancedSearchItem {
   static readonly type = '[SEARCH] Set current advanced search item';
   constructor(public payload: string) {}
 }
+
+export class UpdateAdvancedSearchHits {
+  static readonly type = '[SEARCH] Update advanced search hits';
+  constructor() {}
+}

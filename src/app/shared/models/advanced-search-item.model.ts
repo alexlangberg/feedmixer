@@ -3,6 +3,7 @@ export class AdvancedSearchItem {
     public name: string,
     public words: string[],
     public mode: 'or' | 'and',
-    public active: boolean
+    public active: boolean,
+    public hits: number
   ) {}
 }
