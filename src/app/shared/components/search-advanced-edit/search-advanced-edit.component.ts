@@ -8,7 +8,12 @@ import { map, startWith } from 'rxjs/operators';
 import { KeyValue } from '@angular/common';
 import { MatAutocomplete, MatAutocompleteSelectedEvent, MatChipInputEvent, MatDialog } from '@angular/material';
 import { AdvancedSearchItem } from '../../models/advanced-search-item.model';
-import { SetAdvancedSearchItem, SetCurrentAdvancedSearchItem } from '../../state/search.actions';
+import {
+  AddAdvancedSearchChips, RemoveAdvancedSearchChips,
+  SetAdvancedSearchChips,
+  SetAdvancedSearchItem,
+  SetCurrentAdvancedSearchItem
+} from '../../state/search.actions';
 import { SearchState } from '../../state/search.state';
 import { SearchAdvancedEditConfirmOverwriteDialogComponent } from './search-advanced-edit-confirm-overwrite.dialog';
 
@@ -21,6 +26,7 @@ export class SearchAdvancedEditComponent implements OnInit {
   @Select(FeedsState.getTags) tags$: Observable<Map<string, number>>;
   @Select(SearchState.getCurrentAdvancedSearch) current$: Observable<AdvancedSearchItem>;
   @Select(SearchState.getSavedAdvancedSearches) saved$: Observable<AdvancedSearchItem[]>;
+  @Select(SearchState.getAdvancedSearchChips) chips$: Observable<string[]>;
   @ViewChild('wordInput') wordInput: ElementRef<HTMLInputElement>;
   @ViewChild('auto') matAutocomplete: MatAutocomplete;
   public readonly OR_LABEL = 'Match any word';
@@ -55,14 +61,20 @@ export class SearchAdvancedEditComponent implements OnInit {
 
     this.current$.subscribe(search => {
       if (search) {
-        this.chips = search.words.slice();
+        this.store.dispatch(new SetAdvancedSearchChips(search.words.slice()));
         this.searchForm.controls.mode.setValue(search.mode);
         this.searchForm.controls.name.setValue(search.name);
+      } else {
+        this.searchForm.controls.name.setValue('');
       }
     });
 
     this.saved$.subscribe(saved => {
       this.saved = saved;
+    });
+
+    this.chips$.subscribe(chips => {
+      this.chips = chips;
     });
   }
 
@@ -125,7 +137,7 @@ export class SearchAdvancedEditComponent implements OnInit {
       const value = event.value;
 
       if ((value || '').trim()) {
-        this.chips.push(value.trim());
+        this.store.dispatch(new AddAdvancedSearchChips([value.trim()]));
       }
 
       if (input) {
@@ -137,15 +149,11 @@ export class SearchAdvancedEditComponent implements OnInit {
   }
 
   remove(word: string): void {
-    const index = this.chips.indexOf(word);
-
-    if (index >= 0) {
-      this.chips.splice(index, 1);
-    }
+    this.store.dispatch(new RemoveAdvancedSearchChips([word]));
   }
 
   selected(event: MatAutocompleteSelectedEvent): void {
-    this.chips.push(event.option.value);
+    this.store.dispatch(new AddAdvancedSearchChips([event.option.value]));
     this.wordInput.nativeElement.value = '';
     this.searchForm.controls.search.setValue('');
   }

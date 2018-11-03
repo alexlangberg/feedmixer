@@ -1,7 +1,8 @@
 import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
 import {
-  DisableAdvancedSearch,
-  SetAdvancedSearchItem,
+  AddAdvancedSearchChips,
+  DisableAdvancedSearch, RemoveAdvancedSearchChips, SetAdvancedSearchChips,
+  SetAdvancedSearchItem, SetAdvancedSearchName,
   SetCurrentAdvancedSearchItem,
   SetCurrentSimpleSearch
 } from './search.actions';
@@ -14,6 +15,8 @@ export interface SearchStateModel {
     current: string
   };
   advanced: {
+    name: string,
+    chips: string[],
     saved: AdvancedSearchItem[]
   };
 }
@@ -25,7 +28,9 @@ export interface SearchStateModel {
       current: ''
     },
     advanced: {
-      saved: [new AdvancedSearchItem('Test', ['kashoggi', 'saudi', 'trump'], 'or', false, [])]
+      name: '',
+      chips: [],
+      saved: [new AdvancedSearchItem('Khashoggi', ['kashoggi', 'saudi', 'erdogan'], 'or', false, [])]
     }
   }
 })
@@ -40,8 +45,18 @@ export class SearchState {
   }
 
   @Selector()
+  static getAdvancedSearchName(state: SearchStateModel) {
+    return state.advanced.name;
+  }
+
+  @Selector()
   static getCurrentAdvancedSearch(state: SearchStateModel) {
     return state.advanced.saved.find(item => item.active);
+  }
+
+  @Selector()
+  static getAdvancedSearchChips(state: SearchStateModel) {
+    return state.advanced.chips;
   }
 
   @Selector()
@@ -62,7 +77,59 @@ export class SearchState {
     ctx.patchState({
       advanced: {
         ...state.advanced,
+        chips: [],
+        name: '',
         saved: mapped
+      }
+    });
+  }
+
+  @Action(SetAdvancedSearchName)
+  setAdvancedSearchName(ctx: StateContext<SearchStateModel>, action: SetAdvancedSearchName) {
+    const state = ctx.getState();
+
+    ctx.patchState({
+      advanced: {
+        ...state.advanced,
+        name: action.payload
+      }
+    });
+  }
+
+  @Action(SetAdvancedSearchChips)
+  setAdvancedSearchChips(ctx: StateContext<SearchStateModel>, action: SetAdvancedSearchChips) {
+    const state = ctx.getState();
+
+    ctx.patchState({
+      advanced: {
+        ...state.advanced,
+        chips: action.payload
+      }
+    });
+  }
+
+  @Action(AddAdvancedSearchChips)
+  addAdvancedSearchChips(ctx: StateContext<SearchStateModel>, action: AddAdvancedSearchChips) {
+    const state = ctx.getState();
+
+    ctx.patchState({
+      advanced: {
+        ...state.advanced,
+        chips: state.advanced.chips.slice().concat(action.payload)
+      }
+    });
+  }
+
+  @Action(RemoveAdvancedSearchChips)
+  removeAdvancedSearchChips(ctx: StateContext<SearchStateModel>, action: RemoveAdvancedSearchChips) {
+    const state = ctx.getState();
+
+    ctx.patchState({
+      advanced: {
+        ...state.advanced,
+        chips: state.advanced.chips
+          .slice()
+          .filter(chip => !action.payload.includes(chip))
       }
     });
   }

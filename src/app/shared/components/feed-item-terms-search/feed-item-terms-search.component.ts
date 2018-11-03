@@ -4,7 +4,7 @@ import { TokenizerService } from '../../services/tokenizer/tokenizer.service';
 import { Select, Store } from '@ngxs/store';
 import { FeedsState } from '../../state/feeds.state';
 import { Observable } from 'rxjs';
-import { SetCurrentSimpleSearch } from '../../state/search.actions';
+import { AddAdvancedSearchChips, SetCurrentSimpleSearch } from '../../state/search.actions';
 
 @Component({
   selector: 'app-feed-item-terms-search',
@@ -38,5 +38,11 @@ export class FeedItemTermsSearchComponent {
   doSearch(text: string) {
     this.store.dispatch(new SetCurrentSimpleSearch(text));
     this.search$.emit(text);
+  }
+
+  addChipsToAdvancedSearch() {
+    const chips = this.chips.map(chip => chip.word);
+
+    this.store.dispatch(new AddAdvancedSearchChips(chips));
   }
 }
