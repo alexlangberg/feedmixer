@@ -1,5 +1,5 @@
 {
-  "feed2jsonApiBaseUrl": "http://localhost:4201",
+  "feed2jsonApiBaseUrl": "https://feed2json.alexlangberg.dk",
   "isAutoRefreshEnabled": false,
   "autoRefreshIntervalSeconds": 300,
   "feeds": [
