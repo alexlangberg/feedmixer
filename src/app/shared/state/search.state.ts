@@ -226,7 +226,7 @@ export class SearchState {
           .filter(tag => search.words.includes(tag))
           .length > 0;
       });
-    }).reduce((acc, curr) => acc.concat(curr));
+    }).reduce((acc, curr) => acc.concat(curr), []);
   }
 
   private filterAdvancedSearchAnd(feeds: Jsonfeed[], search: AdvancedSearchItem) {
@@ -236,6 +236,6 @@ export class SearchState {
           .filter(word => item._feedmixer.tags.includes(word))
           .length === search.words.length;
       });
-    }).reduce((acc, curr) => acc.concat(curr));
+    }).reduce((acc, curr) => acc.concat(curr), []);
   }
 }
