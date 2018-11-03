@@ -1,11 +1,15 @@
 import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
-import { SetAdvancedSearchItem, SetCurrentAdvancedSearchItem, SetCurrentSimpleSearch } from './search.actions';
+import {
+  DisableAdvancedSearch,
+  SetAdvancedSearchItem,
+  SetCurrentAdvancedSearchItem,
+  SetCurrentSimpleSearch
+} from './search.actions';
 import { AdvancedSearchItem } from '../models/advanced-search-item.model';
 import { UpdateAdvancedSearchHits } from './search.actions';
 import { Jsonfeed } from '../models/jsonfeed.model';
 import { FeedsState } from './feeds.state';
 export interface SearchStateModel {
-  mode: 'simple' | 'advanced';
   simple: {
     current: string
   };
@@ -17,12 +21,11 @@ export interface SearchStateModel {
 @State<SearchStateModel>({
   name: 'search',
   defaults: {
-    mode: 'simple',
     simple: {
       current: ''
     },
     advanced: {
-      saved: [new AdvancedSearchItem('Test', ['kashoggi', 'saudi', 'trump'], 'or', false, 0)]
+      saved: [new AdvancedSearchItem('Test', ['kashoggi', 'saudi', 'trump'], 'or', false, [])]
     }
   }
 })
@@ -42,19 +45,31 @@ export class SearchState {
   }
 
   @Selector()
-  static getCurrentSearchMode(state: SearchStateModel) {
-    return state.mode;
-  }
-
-  @Selector()
   static getSavedAdvancedSearches(state: SearchStateModel): AdvancedSearchItem[] {
     return state.advanced.saved.sort((a, b) => a.name.localeCompare(b.name));
+  }
+
+  @Action(DisableAdvancedSearch)
+  disableAdvancedSearch(ctx: StateContext<SearchStateModel>) {
+    const state = ctx.getState();
+    const mapped = state.advanced.saved
+      .map(item => {
+        item.active = false;
+
+        return item;
+      });
+
+    ctx.patchState({
+      advanced: {
+        ...state.advanced,
+        saved: mapped
+      }
+    });
   }
 
   @Action(SetCurrentSimpleSearch)
   setCurrentSimpleSearch(ctx: StateContext<SearchStateModel>, action: SetCurrentSimpleSearch) {
     ctx.patchState({
-      mode: 'simple',
       simple: {
         current: action.payload
       }
@@ -72,7 +87,6 @@ export class SearchState {
       });
 
     ctx.patchState({
-      mode: 'advanced',
       advanced: {
         ...state.advanced,
         saved: mapped
@@ -119,11 +133,9 @@ export class SearchState {
     const searchesHits = searches.map(search => {
       return {
         ... search,
-        hits: this.filterAdvancedSearch(activeFeeds, search).length
+        hits: this.filterAdvancedSearch(activeFeeds, search)
       };
     });
-
-    console.log(searchesHits);
 
     ctx.patchState({
       ...state,

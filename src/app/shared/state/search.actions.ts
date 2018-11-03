@@ -19,3 +19,8 @@ export class UpdateAdvancedSearchHits {
   static readonly type = '[SEARCH] Update advanced search hits';
   constructor() {}
 }
+
+export class DisableAdvancedSearch {
+  static readonly type = '[SEARCH] Disable advanced search';
+  constructor() {}
+}

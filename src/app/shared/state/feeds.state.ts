@@ -35,7 +35,10 @@ export class FeedsState {
   }
 
   @Selector([SettingsState])
-  static getActiveFeedsItems(state: FeedsStateModel, settingsState: SettingsStateModel) {
+  static getActiveFeedsItems(
+    state: FeedsStateModel,
+    settingsState: SettingsStateModel
+  ) {
     const feeds = FeedsState.getActiveFeeds(state, settingsState);
 
     if (feeds.length) {
@@ -52,7 +55,10 @@ export class FeedsState {
   }
 
   @Selector([SettingsState])
-  static getActiveFeeds(state: FeedsStateModel, settingsState: SettingsStateModel) {
+  static getActiveFeeds(
+    state: FeedsStateModel,
+    settingsState: SettingsStateModel
+  ) {
     const activatedFeeds: string[] = settingsState.feeds
       .filter(item => item.active)
       .map(item => item.url);

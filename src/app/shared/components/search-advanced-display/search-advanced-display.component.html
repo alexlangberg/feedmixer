@@ -1,5 +1,17 @@
 <button
-  [color]="((mode$ | async) === 'advanced' && search.active) ? 'accent' : ''"
+  [color]="!(current$ | async) ? 'accent' : ''"
+  mat-button
+  (click)="selectNone()"
+  matTooltip="Disable advanced search"
+  matTooltipPosition="right">
+    <span style="width: 100%" fxLayout="row">
+      <span fxFlex fxLayoutAlign="flex-start center">None</span>
+      <span fxFlex fxLayoutAlign="flex-end center">
+      </span>
+    </span>
+</button>
+<button
+  [color]="search.active ? 'accent' : ''"
   mat-button
   *ngFor="let search of (saved$ | async)"
   (click)="selectSearch(search.name)"
@@ -9,12 +21,11 @@
       <span fxFlex fxLayoutAlign="flex-start center">{{ search.name }}</span>
       <span fxFlex fxLayoutAlign="flex-end center">
         <span class="app-inline-badge">
-          {{ search.hits }}
+          {{ search.hits.length || '0' }}
         </span>
       </span>
     </span>
 </button>
-
 
 <p *ngIf="(saved$ | async).length < 1">
   No advanced searches created yet.<br>
