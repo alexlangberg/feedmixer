@@ -1,4 +1,4 @@
-import { Action, Selector, State, StateContext } from '@ngxs/store';
+import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
 import {
   SetAllSettingsFeedsStatus,
   SetSettingsFeedStatus,
@@ -9,6 +9,7 @@ import {
   SetSettingsFeedFetching, SetSettingsFeedsFetching
 } from './settings.actions';
 import { SettingsFeed } from '../models/settings-feed.model';
+import { UpdateAdvancedSearchHits } from './search.actions';
 
 export interface SettingsStateModel {
   feed2jsonApiBaseUrl: string;
@@ -35,7 +36,7 @@ export interface SettingsStateModel {
 
 export class SettingsState {
 
-  constructor() {}
+  constructor(private store: Store) {}
 
   @Selector()
   static getSettings(state: SettingsStateModel) {
@@ -77,6 +78,8 @@ export class SettingsState {
         return feed;
       })
     });
+
+    this.store.dispatch(new UpdateAdvancedSearchHits());
   }
 
   @Action(SetSettingsFeedStatus)
@@ -90,6 +93,8 @@ export class SettingsState {
         return item;
       })
     });
+
+    this.store.dispatch(new UpdateAdvancedSearchHits());
   }
 
   @Action(SetSettingsFeedError)
